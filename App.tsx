@@ -1,6 +1,5 @@
 import React from 'react';
-import ProfileScreens from './src/screens/ProfileScreens';
-
+import Navigation from './src/navigation/Navigation';
 export default function App() {
-  return <ProfileScreens />;
+  return <Navigation />;
 }
