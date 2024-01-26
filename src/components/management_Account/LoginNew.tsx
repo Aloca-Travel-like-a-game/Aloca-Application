@@ -10,7 +10,7 @@ import {
 import React from 'react';
 import {TouchableOpacity} from 'react-native';
 
-export default function Login({navigation}: any) {
+export default function LoginNew({navigation}: any) {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 500 : 0}
@@ -21,15 +21,15 @@ export default function Login({navigation}: any) {
       />
       <Text style={styles.textAloca}>ALOCA</Text>
       <View style={styles.containerContent}>
-        <Text style={styles.lable}>Tên đăng nhập</Text>
+        <Text style={styles.lable}>Nhập mật khẩu mới</Text>
         <TextInput
-          placeholder="Tên đăng nhập"
+          placeholder="Mật khẩu"
           style={styles.textInput}
           placeholderTextColor={'#000'}
         />
-        <Text style={styles.lable}>Mật khẩu</Text>
+        <Text style={styles.lable}>Xác nhận mật khẩu mới</Text>
         <TextInput
-          placeholder=" Mật khẩu"
+          placeholder=" Xác nhận mật khẩu"
           style={styles.textInput}
           placeholderTextColor={'#000'}
         />
@@ -39,25 +39,8 @@ export default function Login({navigation}: any) {
         onPress={() => {
           navigation.navigate('VerifyAccount');
         }}>
-        <Text style={styles.textRegister}>Đăng Nhập</Text>
+        <Text style={styles.textRegister}>Đổi mật khẩu</Text>
       </TouchableOpacity>
-      <Text style={styles.textOption}>Hoặc</Text>
-      <View style={styles.optionalLogin}>
-        <TouchableOpacity style={styles.LoginFacebook}>
-          <Image
-            source={require('../../Images/logoface.png')}
-            style={styles.logoFacebook}
-          />
-          <Text style={styles.textFacebook}>Facebook</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.registrationGoogle}>
-          <Image
-            source={require('../../Images/logogoogle.png')}
-            style={styles.logoGoogle}
-          />
-          <Text style={styles.textGoogle}>Google </Text>
-        </TouchableOpacity>
-      </View>
       <View style={styles.contentLogin}>
         <Text style={styles.text}>Chưa có tài khoản,</Text>
         <TouchableOpacity onPress={() => navigation.navigate('Registration')}>
@@ -65,7 +48,7 @@ export default function Login({navigation}: any) {
         </TouchableOpacity>
       </View>
       <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')}>
-        <Text style={styles.textforgotPass}>Quên mật khẩu?</Text>
+        <Text style={styles.textLogin}>Đăng nhập</Text>
       </TouchableOpacity>
     </KeyboardAvoidingView>
   );
@@ -96,7 +79,7 @@ const styles = StyleSheet.create({
     marginLeft: 80,
   },
   textRegister: {
-    color: '#000',
+    color: '#ffff',
     fontWeight: '700',
     fontSize: 18,
   },
@@ -126,10 +109,6 @@ const styles = StyleSheet.create({
     color: '#000',
   },
   textLogin: {
-    color: '#0097A7',
-    fontWeight: '500',
-  },
-  textforgotPass: {
     color: '#0097A7',
     fontWeight: '500',
     textAlign: 'center',

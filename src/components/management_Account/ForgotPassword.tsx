@@ -9,65 +9,61 @@ import {
 } from 'react-native';
 import React from 'react';
 import {TouchableOpacity} from 'react-native';
-
-export default function Login({navigation}: any) {
+import {Formik} from 'formik';
+import {validateSchema} from './ForgotPassword_vadidate';
+export default function ForgotPassword({navigation}: any) {
+  const handleForgotPassword = () => {
+    navigation.navigate('VerifyCode');
+  };
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 500 : 0}
-      style={styles.container}>
-      <Image
-        source={require('../../Images/Icon.png')}
-        style={styles.logoImage}
-      />
-      <Text style={styles.textAloca}>ALOCA</Text>
-      <View style={styles.containerContent}>
-        <Text style={styles.lable}>Tên đăng nhập</Text>
-        <TextInput
-          placeholder="Tên đăng nhập"
-          style={styles.textInput}
-          placeholderTextColor={'#000'}
-        />
-        <Text style={styles.lable}>Mật khẩu</Text>
-        <TextInput
-          placeholder=" Mật khẩu"
-          style={styles.textInput}
-          placeholderTextColor={'#000'}
-        />
-      </View>
-      <TouchableOpacity
-        style={styles.contentRegister}
-        onPress={() => {
-          navigation.navigate('VerifyAccount');
-        }}>
-        <Text style={styles.textRegister}>Đăng Nhập</Text>
-      </TouchableOpacity>
-      <Text style={styles.textOption}>Hoặc</Text>
-      <View style={styles.optionalLogin}>
-        <TouchableOpacity style={styles.LoginFacebook}>
+    <Formik
+      validationSchema={validateSchema}
+      initialValues={{email: ''}}
+      onSubmit={values => {
+        setTimeout(() => {
+          let account = {
+            email: values.email,
+          };
+          handleForgotPassword(account);
+        }, 100);
+      }}>
+      {({errors, touched, handleChange, handleBlur, values, handleSubmit}) => (
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 500 : 0}
+          style={styles.container}>
           <Image
-            source={require('../../Images/logoface.png')}
-            style={styles.logoFacebook}
+            source={require('../../Images/Icon.png')}
+            style={styles.logoImage}
           />
-          <Text style={styles.textFacebook}>Facebook</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.registrationGoogle}>
-          <Image
-            source={require('../../Images/logogoogle.png')}
-            style={styles.logoGoogle}
-          />
-          <Text style={styles.textGoogle}>Google </Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.contentLogin}>
-        <Text style={styles.text}>Chưa có tài khoản,</Text>
-        <TouchableOpacity onPress={() => navigation.navigate('Registration')}>
-          <Text style={styles.textLogin}>Đăng ký</Text>
-        </TouchableOpacity>
-      </View>
-      <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')}>
-        <Text style={styles.textforgotPass}>Quên mật khẩu?</Text>
-      </TouchableOpacity>
-    </KeyboardAvoidingView>
+          <Text style={styles.textAloca}>Xác thực mật khẩu</Text>
+          <View style={styles.containerContent}>
+            <Text style={styles.lable}>Nhập email bạn đã đăng ký</Text>
+            <TextInput
+              placeholder="email"
+              value={values.email}
+              style={styles.textInput}
+              placeholderTextColor={'#000'}
+              onChangeText={handleChange('email')}
+              onBlur={handleBlur('email')}
+            />
+            {errors.email && touched.email ? (
+              <Text style={styles.errorText}>* {errors.email}</Text>
+            ) : null}
+          </View>
+          <TouchableOpacity
+            style={styles.contentRegister}
+            onPress={handleSubmit}>
+            <Text style={styles.textRegister}>Xác nhận</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+            <Image
+              source={require('../../Images/backBlue.png')}
+              style={styles.backIcon}
+            />
+          </TouchableOpacity>
+        </KeyboardAvoidingView>
+      )}
+    </Formik>
   );
 }
 
@@ -113,7 +109,7 @@ const styles = StyleSheet.create({
   },
   textAloca: {
     color: '#000',
-    fontSize: 35,
+    fontSize: 25,
     fontWeight: '500',
     textAlign: 'center',
   },
@@ -127,12 +123,8 @@ const styles = StyleSheet.create({
   },
   textLogin: {
     color: '#0097A7',
-    fontWeight: '500',
-  },
-  textforgotPass: {
-    color: '#0097A7',
-    fontWeight: '500',
-    textAlign: 'center',
+    fontWeight: '400',
+    fontSize: 20,
   },
   contentLogin: {
     flexDirection: 'row',
@@ -191,5 +183,15 @@ const styles = StyleSheet.create({
     color: '#000',
     textAlign: 'center',
     marginTop: 10,
+  },
+  errorText: {
+    fontWeight: 'bold',
+    color: 'red',
+    margin: 0,
+    padding: 0,
+  },
+  backIcon: {
+    marginLeft: 170,
+    marginTop: 15,
   },
 });
