@@ -13,7 +13,7 @@ import {TouchableOpacity} from 'react-native';
 export default function Login({navigation}: any) {
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 500 : 0}
+      behavior={Platform.OS === 'ios' ? 'android' : 0}
       style={styles.container}>
       <Image
         source={require('../../Images/Icon.png')}
@@ -37,7 +37,7 @@ export default function Login({navigation}: any) {
       <TouchableOpacity
         style={styles.contentRegister}
         onPress={() => {
-          navigation.navigate('VerifyAccount');
+          navigation.navigate('Homestack');
         }}>
         <Text style={styles.textRegister}>Đăng Nhập</Text>
       </TouchableOpacity>
