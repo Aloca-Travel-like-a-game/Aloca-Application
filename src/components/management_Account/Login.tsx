@@ -6,67 +6,60 @@ import {
   Image,
   KeyboardAvoidingView,
   Platform,
+  ScrollView,
 } from 'react-native';
 import React from 'react';
 import {TouchableOpacity} from 'react-native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 export default function Login({navigation}: any) {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'android' : 0}
       style={styles.container}>
-      <Image
-        source={require('../../Images/Icon.png')}
-        style={styles.logoImage}
-      />
-      <Text style={styles.textAloca}>ALOCA</Text>
-      <View style={styles.containerContent}>
-        <Text style={styles.lable}>Tên đăng nhập</Text>
-        <TextInput
-          placeholder="Tên đăng nhập"
-          style={styles.textInput}
-          placeholderTextColor={'#000'}
+      <ScrollView>
+        <Image
+          source={require('../../Images/Icon.png')}
+          style={styles.logoImage}
         />
-        <Text style={styles.lable}>Mật khẩu</Text>
-        <TextInput
-          placeholder=" Mật khẩu"
-          style={styles.textInput}
-          placeholderTextColor={'#000'}
-        />
-      </View>
-      <TouchableOpacity
-        style={styles.contentRegister}
-        onPress={() => {
-          navigation.navigate('Homestack');
-        }}>
-        <Text style={styles.textRegister}>Đăng Nhập</Text>
-      </TouchableOpacity>
-      <Text style={styles.textOption}>Hoặc</Text>
-      <View style={styles.optionalLogin}>
-        <TouchableOpacity style={styles.LoginFacebook}>
-          <Image
-            source={require('../../Images/logoface.png')}
-            style={styles.logoFacebook}
+        <Text style={styles.textAloca}>ALOCA</Text>
+        <View style={styles.containerContent}>
+          <Text style={styles.lable}>TÊN ĐĂNG NHẬP</Text>
+          <TextInput style={styles.textInput} placeholderTextColor={'#000'} />
+          <Text style={styles.lable}>MẬT KHẨU</Text>
+          <TextInput
+            secureTextEntry={true}
+            style={styles.textInput}
+            placeholderTextColor={'#000'}
           />
-          <Text style={styles.textFacebook}>Facebook</Text>
+        </View>
+        <TouchableOpacity
+          style={styles.contentRegister}
+          onPress={() => {
+            navigation.navigate('Homestack');
+          }}>
+          <Text style={styles.textLoginBtn}>Đăng nhập</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.registrationGoogle}>
-          <Image
-            source={require('../../Images/logogoogle.png')}
-            style={styles.logoGoogle}
-          />
-          <Text style={styles.textGoogle}>Google </Text>
+        <View style={styles.contentLogin}>
+          <Text style={styles.text}>Chưa có tài khoản,</Text>
+          <TouchableOpacity onPress={() => navigation.navigate('Registration')}>
+            <Text style={styles.textLogin}>Đăng ký</Text>
+          </TouchableOpacity>
+        </View>
+        <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')}>
+          <Text style={styles.textforgotPass}>Quên mật khẩu?</Text>
         </TouchableOpacity>
-      </View>
-      <View style={styles.contentLogin}>
-        <Text style={styles.text}>Chưa có tài khoản,</Text>
-        <TouchableOpacity onPress={() => navigation.navigate('Registration')}>
-          <Text style={styles.textLogin}>Đăng ký</Text>
-        </TouchableOpacity>
-      </View>
-      <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')}>
-        <Text style={styles.textforgotPass}>Quên mật khẩu?</Text>
-      </TouchableOpacity>
+        <View style={styles.optionalLogin}>
+          <TouchableOpacity style={styles.loginWithOtherBtn}>
+            <Ionicons name="logo-google" size={25} color={'#EB4335'}/>
+            <Text style={styles.textGoogle}>Google</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.loginWithOtherBtn}>
+            <Ionicons name="logo-facebook" size={25} color={'#1877F2'}/>
+            <Text style={styles.textFacebook}>Facebook</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
     </KeyboardAvoidingView>
   );
 }
@@ -77,60 +70,70 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   textInput: {
+    width: '100%',
     borderWidth: 1,
     borderColor: '#ffffff',
-    padding: 10,
     marginVertical: 7,
     borderRadius: 10,
     color: '#000',
     backgroundColor: '#ffffff',
     elevation: 2,
+    alignSelf: 'center',
+    marginBottom: 10,
   },
   containerContent: {
     marginHorizontal: 12,
+    width: 320,
+    alignSelf: 'center',
   },
   logoImage: {
-    width: '60%',
-    height: '26%',
+    width: 300,
+    height: 300,
     borderRadius: 12,
-    marginLeft: 80,
+    alignSelf: 'center',
+    marginTop: 55,
   },
-  textRegister: {
-    color: '#000',
+  textLoginBtn: {
+    color: '#fff',
     fontWeight: '700',
-    fontSize: 18,
+    fontSize: 23,
   },
   contentRegister: {
     justifyContent: 'center',
     alignItems: 'center',
+    height: 60,
+    width: 300,
     borderWidth: 1,
     padding: 10,
     marginHorizontal: 12,
     borderRadius: 10,
-    backgroundColor: '#0097A7',
-    borderColor: '#0097A7',
+    backgroundColor: '#2AB6AD',
+    borderColor: '#2AB6AD',
     marginTop: 10,
+    marginBottom: 10,
+    alignSelf: 'center',
   },
   textAloca: {
     color: '#000',
-    fontSize: 35,
+    fontSize: 39,
     fontWeight: '500',
     textAlign: 'center',
+    marginTop: 30,
+    marginBottom: 30,
   },
   lable: {
-    color: '#000',
+    color: '#3E4958',
     fontWeight: '500',
-    paddingTop: 5,
   },
   text: {
     color: '#000',
   },
   textLogin: {
-    color: '#0097A7',
+    color: '#2AB6AD',
     fontWeight: '500',
   },
   textforgotPass: {
-    color: '#0097A7',
+    color: '#2AB6AD',
     fontWeight: '500',
     textAlign: 'center',
   },
@@ -142,54 +145,29 @@ const styles = StyleSheet.create({
   },
   optionalLogin: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    // justifyContent: 'space-around',
+    justifyContent: 'center',
     height: 60,
+    gap: 40,
   },
-  LoginFacebook: {
+
+  loginWithOtherBtn: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 1,
-    padding: 5,
     borderColor: '#fff',
-    borderRadius: 10,
+    borderRadius: 20,
     marginVertical: 10,
     gap: 10,
-    width: 150,
+    width: 125,
     elevation: 2,
     backgroundColor: '#fff',
-  },
-  logoFacebook: {
-    width: 30,
-    height: 30,
-  },
-  logoGoogle: {
-    width: 30,
-    height: 30,
-  },
-  registrationGoogle: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 1,
-    padding: 5,
-    borderColor: '#fff',
-    borderRadius: 10,
-    marginVertical: 10,
-    gap: 10,
-    width: 150,
-    elevation: 2,
-    backgroundColor: '#fff',
-  },
-  textFacebook: {
-    color: '#000',
   },
   textGoogle: {
-    color: '#000',
+    color: '#EB4335',
   },
-  textOption: {
-    color: '#000',
-    textAlign: 'center',
-    marginTop: 10,
+  textFacebook: {
+    color: '#1877F2',
   },
 });

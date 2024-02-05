@@ -1,7 +1,10 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, {useEffect, useRef} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
+
 // import Animatable from 'react-native-animatable';
 
 import Registration from '../components/management_Account/Registration';
@@ -13,14 +16,53 @@ import VerifyCode from '../components/management_Account/VerifyCode';
 import LoginNew from '../components/management_Account/LoginNew';
 import HomeScreens from '../screens/HomeScreens';
 import {ChatScreen} from '../screens/ChatScreen';
+import {TripPlanScreen} from '../screens/TripPlanScreen';
 
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {TouchableOpacity} from 'react-native';
+import {TouchableOpacity, useWindowDimensions} from 'react-native';
+import {View} from 'react-native-animatable';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
-const iconsColor = '#000';
+
+const renderScene = SceneMap({
+  first: ChatScreen,
+  second: TripPlanScreen,
+});
+const renderAssistanceTabBar = (props): any => (
+  <TabBar
+    {...props}
+    indicatorStyle={{backgroundColor: '#2AB6AD'}}
+    style={{backgroundColor: '#D0FFF9'}}
+    activeColor="#2AB6AD"
+    inactiveColor="#000"
+    pressColor="#2AB6AD"
+    bounces={true}
+    labelStyle={{fontSize: 14, fontFamily: ''}}
+    upperCaseLabel={false}
+  />
+);
+const AssistanceScreen = () => {
+  const layout = useWindowDimensions();
+
+  const [index, setIndex] = React.useState(0);
+  const [routes] = React.useState([
+    {key: 'first', title: 'Chat'},
+    {key: 'second', title: 'Kế hoạch'},
+  ]);
+
+  return (
+    <TabView
+      navigationState={{index, routes}}
+      renderScene={renderScene}
+      onIndexChange={setIndex}
+      initialLayout={{width: layout.width}}
+      renderTabBar={renderAssistanceTabBar}
+    />
+  );
+};
+
 const TabArr = [
   {
     route: 'Trang chủ',
@@ -44,7 +86,7 @@ const TabArr = [
     type: AntDesign,
     activeIcon: 'aliwangwang',
     unActiveIcon: 'aliwangwang-o1',
-    component: ChatScreen,
+    component: AssistanceScreen,
   },
   {
     route: 'Xếp hạng',
@@ -63,23 +105,6 @@ const TabArr = [
     component: HomeScreens,
   },
 ];
-// const TabButton = (props: any) => {
-//   const {item, onPress, accessabilityState} = props;
-//   const focused = accessabilityState.selected;
-//   const viewRef = useRef(null);
-//   useEffect(() => {
-//     if (focused) {
-// viewRef.current.animate;
-//     }
-//   }, [focused]);
-//   return (
-//     <TouchableOpacity onPress={onPress}>
-//       <Animatable.View ref={viewRef} duration={1000}>
-//         {/* <Icon></Icon> */}
-//       </Animatable.View>
-//     </TouchableOpacity>
-//   );
-// };
 const Homestack = () => {
   return (
     <Tab.Navigator
@@ -102,7 +127,8 @@ const Homestack = () => {
           return <Ionicons name={iconName} size={size} color={color} />;
         },
         tabBarInactiveTintColor: '#000',
-        tabBarActiveTintColor: '#000',
+        tabBarActiveTintColor: '#fff',
+        tabBarActiveBackgroundColor: '#2AB6AD',
         headerShown: false,
         tabBarStyle: {
           backgroundColor: '#D0FFF9',
@@ -110,12 +136,7 @@ const Homestack = () => {
         },
         tabBarHideOnKeyboard: true,
       })}>
-      {/* <Tab.Screen name="Trang chủ" component={HomeScreens} />
-      <Tab.Screen name="Bảng tin" component={HomeScreens} />
-      <Tab.Screen name="Trợ lý" component={ChatScreen} />
-      <Tab.Screen name="Xếp hạng" component={HomeScreens} />
-      <Tab.Screen name="Tài khoản" component={HomeScreens} /> */}
-      {TabArr.map((item, index) => {
+      {TabArr.map((item, _index) => {
         return (
           <Tab.Screen
             name={item.route}
