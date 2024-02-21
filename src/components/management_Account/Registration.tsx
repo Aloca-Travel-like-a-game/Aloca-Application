@@ -23,7 +23,7 @@ export default function Registration({navigation}: any) {
   }
   const mutation = useMutation({
     mutationFn: async (data: Data) => {
-      axios.post(` https://6ac3-113-176-99-140.ngrok-free.app/auth/register`,data)
+      axios.post(` https://87fd-113-176-99-140.ngrok-free.app/auth/register`,data)
       .then(res => {
         if(res.status === 200) {
           ToastAndroid.show('Registration successful', ToastAndroid.LONG);
