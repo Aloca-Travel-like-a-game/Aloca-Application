@@ -47,6 +47,7 @@ export default function Login({navigation}: any) {
     mutationLogin.mutate(data);
   };
   return (
+
     <Formik
       initialValues={{
         username: '',
@@ -68,6 +69,40 @@ export default function Login({navigation}: any) {
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 500 : 0}
           style={styles.container}>
+
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'android' : 0}
+      style={styles.container}>
+      <Image
+        source={require('../../Images/Icon.png')}
+        style={styles.logoImage}
+      />
+      <Text style={styles.textAloca}>ALOCA</Text>
+      <View style={styles.containerContent}>
+        <Text style={styles.lable}>Tên đăng nhập</Text>
+        <TextInput
+          placeholder="Tên đăng nhập"
+          style={styles.textInput}
+          placeholderTextColor={'#000'}
+        />
+        <Text style={styles.lable}>Mật khẩu</Text>
+        <TextInput
+          placeholder=" Mật khẩu"
+          style={styles.textInput}
+          placeholderTextColor={'#000'}
+        />
+      </View>
+      <TouchableOpacity
+        style={styles.contentRegister}
+        onPress={() => {
+          navigation.navigate('Homestack');
+        }}>
+        <Text style={styles.textRegister}>Đăng Nhập</Text>
+      </TouchableOpacity>
+      <Text style={styles.textOption}>Hoặc</Text>
+      <View style={styles.optionalLogin}>
+        <TouchableOpacity style={styles.LoginFacebook}>
+
           <Image
             source={require('../../Images/Icon.png')}
             style={styles.logoImage}
