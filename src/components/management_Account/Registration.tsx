@@ -6,74 +6,155 @@ import {
   Image,
   KeyboardAvoidingView,
   Platform,
+  Alert,
 } from 'react-native';
 import React from 'react';
-import {TouchableOpacity} from 'react-native';
+import {TouchableOpacity, ToastAndroid} from 'react-native';
+import {Formik} from 'formik';
+import axios from 'axios';
+import {Signup_validate} from './SignUp_validate';
+import { useMutation } from '@tanstack/react-query';
 export default function Registration({navigation}: any) {
+  interface Data {
+    email: string;
+    username: string;
+    password: string;
+    confirmPassword: string;
+  }
+  const mutation = useMutation({
+    mutationFn: async (data: Data) => {
+      axios.post(` https://87fd-113-176-99-140.ngrok-free.app/auth/register`,data)
+      .then(res => {
+        if(res.status === 200) {
+          ToastAndroid.show('Registration successful', ToastAndroid.LONG);
+          navigation.navigate('VerifyAccount')
+        }else{
+          Alert.alert('invalid information')
+        }
+        
+      })
+      .catch(e => {
+        console.log('lôi nhiều quá đi', e); 
+        Alert.alert('không được')
+        
+      })
+    },
+  })
+  const  handleSignUp =(data: Data)=>{
+   if(data && data.confirmPassword === data.password){
+    console.log(data);
+    mutation.mutate(data);
+   }}
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 500 : 0}
-      style={styles.container}>
-      <Image
-        source={require('../../Images/Icon.png')}
-        style={styles.logoImage}
-      />
-      <Text style={styles.textAloca}>ALOCA</Text>
-      <View style={styles.containerContent}>
-        <Text style={styles.lable}>Email</Text>
-        <TextInput
-          placeholder="Email"
-          style={styles.textInput}
-          placeholderTextColor={'#000'}
-        />
-        <Text style={styles.lable}>Tên đăng nhập</Text>
-        <TextInput
-          placeholder="Tên đăng nhập"
-          style={styles.textInput}
-          placeholderTextColor={'#000'}
-        />
-        <Text style={styles.lable}>Mật khẩu</Text>
-        <TextInput
-          placeholder=" Mật khẩu"
-          style={styles.textInput}
-          placeholderTextColor={'#000'}
-        />
-        <Text style={styles.lable}>Xác nhận mật khẩu</Text>
-        <TextInput
-          placeholder="Xác nhận mật khẩu"
-          style={styles.textInput}
-          placeholderTextColor={'#000'}
-        />
-      </View>
-      <TouchableOpacity
-        style={styles.contentRegister}
-        onPress={navigation.navigate('Login')}>
-        <Text style={styles.textRegister}>Đăng ký</Text>
-      </TouchableOpacity>
-      <Text style={styles.textOption}>Hoặc</Text>
-      <View style={styles.optionalLogin}>
-        <TouchableOpacity style={styles.LoginFacebook}>
+    <Formik 
+      initialValues={{
+        email: '',
+        password: '',
+        confirmPassword: '',
+        username: '',
+      }}
+      validationSchema={Signup_validate}
+      onSubmit={values => {
+        let data = {
+
+          email: values.email,
+          username: values.username,
+          password: values.password,
+          confirmPassword: values.confirmPassword,
+        };
+        // const newData = JSON.stringify(data)
+        handleSignUp(data);
+      }}>
+      {({errors, touched, handleChange, handleBlur, handleSubmit, values}) => (
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 500 : 0}
+          style={styles.container}>
           <Image
-            source={require('../../Images/logoface.png')}
-            style={styles.logoFacebook}
+            source={require('../../Images/Icon.png')}
+            style={styles.logoImage}
           />
-          <Text style={styles.textFacebook}>Facebook</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.registrationGoogle}>
-          <Image
-            source={require('../../Images/logogoogle.png')}
-            style={styles.logoGoogle}
-          />
-          <Text style={styles.textGoogle}>Google </Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.contentLogin}>
-        <Text style={styles.text}>Đã có tài khoản,</Text>
-        <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-          <Text style={styles.textLogin}>đăng nhập</Text>
-        </TouchableOpacity>
-      </View>
-    </KeyboardAvoidingView>
+          <Text style={styles.textAloca}>ALOCA</Text>
+          <View style={styles.containerContent}>
+            <Text style={styles.lable}>Email</Text>
+            <TextInput
+              placeholder="Email"
+              style={styles.textInput}
+              placeholderTextColor={'#000'}
+              onChangeText={handleChange('email')}
+              onBlur={handleBlur('email')}
+              value={values.email}
+            />
+            {errors.email && touched.email ? (
+              <Text style={styles.errorText}>* {errors.email}</Text>
+            ) : null}
+            <Text style={styles.lable}>Tên đăng nhập</Text>
+            <TextInput
+              placeholder="Tên đăng nhập"
+              style={styles.textInput}
+              placeholderTextColor={'#000'}
+              onChangeText={handleChange('username')}
+              onBlur={handleBlur('username')}
+              value={values.username}
+            />
+            {errors.username && touched.username ? (
+              <Text style={styles.errorText}>* {errors.username}</Text>
+            ) : null}
+            <Text style={styles.lable}>Mật khẩu</Text>
+            <TextInput
+              placeholder="Mật khẩu"
+              style={styles.textInput}
+              placeholderTextColor={'#000'}
+              onChangeText={handleChange('password')}
+              onBlur={handleBlur('password')}
+              value={values.password}
+            />
+            {errors.password && touched.password ? (
+              <Text style={styles.errorText}>* {errors.password}</Text>
+            ) : null}
+            <Text style={styles.lable}>Xác nhận mật khẩu</Text>
+            <TextInput
+              placeholder="Xác nhận mật khẩu"
+              style={styles.textInput}
+              placeholderTextColor={'#000'}
+              onChangeText={handleChange('confirmPassword')}
+              onBlur={handleBlur('confirmPassword')}
+              value={values.confirmPassword}
+            />
+            {errors.confirmPassword && touched.confirmPassword ? (
+              <Text style={styles.errorText}>* {errors.confirmPassword}</Text>
+            ) : null}
+          </View>
+          <TouchableOpacity
+            style={styles.contentRegister}
+            onPress={handleSubmit}>
+            <Text style={styles.textRegister}>Đăng ký</Text>
+          </TouchableOpacity>
+          <Text style={styles.textOption}>Hoặc</Text>
+          <View style={styles.optionalLogin}>
+            <TouchableOpacity style={styles.LoginFacebook}>
+              <Image
+                source={require('../../Images/logoface.png')}
+                style={styles.logoFacebook}
+              />
+              <Text style={styles.textFacebook}>Facebook</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.registrationGoogle}>
+              <Image
+                source={require('../../Images/logogoogle.png')}
+                style={styles.logoGoogle}
+              />
+              <Text style={styles.textGoogle}>Google </Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.contentLogin}>
+            <Text style={styles.text}>Đã có tài khoản,</Text>
+            <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+              <Text style={styles.textLogin}>đăng nhập</Text>
+            </TouchableOpacity>
+          </View>
+        </KeyboardAvoidingView>
+      )}
+    </Formik>
   );
 }
 
