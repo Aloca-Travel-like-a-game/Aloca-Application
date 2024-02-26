@@ -12,31 +12,31 @@ import React, {useState} from 'react';
 import {TouchableOpacity} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-export default function Login({navigation}: any) {
+export default function Login({ navigation }: any) {
   const [password, setPassword] = useState('');
-
-  // State variable to track password visibility
   const [showPassword, setShowPassword] = useState(false);
 
-  // Function to toggle the password visibility state
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
   };
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'android' : 0}
-      style={styles.container}>
-      <ScrollView>
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      style={styles.container}
+    >
+      <ScrollView
+        keyboardShouldPersistTaps="handled"
+      >
         <Image
           source={require('../../Images/Icon.png')}
           style={styles.logoImage}
         />
         <Text style={styles.textAloca}>ALOCA</Text>
         <View style={styles.containerContent}>
-          <Text style={styles.lable}>TÊN ĐĂNG NHẬP</Text>
+          <Text style={styles.label}>TÊN ĐĂNG NHẬP</Text>
           <TextInput style={styles.textInput} placeholderTextColor={'#000'} />
           <View>
-            <Text style={styles.lable}>MẬT KHẨU</Text>
+            <Text style={styles.label}>MẬT KHẨU</Text>
             <TextInput
               secureTextEntry={!showPassword}
               value={password}
@@ -56,7 +56,8 @@ export default function Login({navigation}: any) {
           style={styles.contentRegister}
           onPress={() => {
             navigation.navigate('Homestack');
-          }}>
+          }}
+        >
           <Text style={styles.textLoginBtn}>Đăng nhập</Text>
         </TouchableOpacity>
         <View style={styles.contentLogin}>
@@ -90,7 +91,7 @@ const styles = StyleSheet.create({
   },
   textInput: {
     height: 45,
-    width: '80%',
+    width: '100%',
     borderWidth: 1,
     borderColor: '#ffffff',
     marginVertical: 7,
@@ -143,7 +144,7 @@ const styles = StyleSheet.create({
     marginTop: 30,
     marginBottom: 30,
   },
-  lable: {
+  label: {
     color: '#3E4958',
     fontWeight: '500',
   },
@@ -194,7 +195,7 @@ const styles = StyleSheet.create({
   },
   toggleShowPassword: {
     position: 'absolute',
-    right: '15%',
+    right: '5%',
     top: '43%',
   },
 });

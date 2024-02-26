@@ -20,8 +20,8 @@ import {TripPlanScreen} from '../screens/TripPlanScreen';
 
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {TouchableOpacity, useWindowDimensions} from 'react-native';
-import {View} from 'react-native-animatable';
+import {useWindowDimensions} from 'react-native';
+
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
