@@ -36,7 +36,7 @@ export default function Login({navigation}: any) {
   const mutationLogin = useMutation({
     mutationFn: async (data: Account) => {
       axios
-        .post('  https://87fd-113-176-99-140.ngrok-free.app/auth/login', data)
+        .post('http://52.63.147.17:8080/auth/login', data)
         .then(res => {
           if (res.status === 200) {
             console.log(res.data);
@@ -119,7 +119,7 @@ export default function Login({navigation}: any) {
           </View>
           <TouchableOpacity
             style={styles.contentRegister}
-            onPress={handleSubmit}>
+            onPressIn={handleSubmit}>
             <Text style={styles.textLoginBtn}>Đăng nhập</Text>
           </TouchableOpacity>
           <View style={styles.contentLogin}>
