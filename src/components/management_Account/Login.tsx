@@ -6,26 +6,20 @@ import {
   Image,
   KeyboardAvoidingView,
   Platform,
-  Alert,
   ScrollView,
 } from 'react-native';
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {TouchableOpacity} from 'react-native';
 import {Formik} from 'formik';
 import {Login_validate} from './Login_validate';
 import {useMutation} from '@tanstack/react-query';
 import axios from 'axios';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-interface Login{
-  password: string;
-}
-export default function Login({navigation}: any) {
-  const [password, setPassword] = useState('');
 
-  // State variable to track password visibility
+export default function Login({navigation}: any) {
+  // const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
-  // Function to toggle the password visibility state
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
   };
@@ -41,14 +35,8 @@ export default function Login({navigation}: any) {
           if (res.status === 200) {
             console.log(res.data);
             const token = res.data.token;
-            // const userid = res.data.user.id;
             const user = JSON.stringify({token});
-            // Alert.alert('Success', 'Login successfully')
-            // {text: 'OK', onPress: () => navigation.navigate('Root')},
-            Alert.alert('Login successfully');
             navigation.navigate('Homestack');
-          } else {
-            Alert.alert('Email or password is invalid');
           }
         })
         .catch(e => {
@@ -77,72 +65,80 @@ export default function Login({navigation}: any) {
       }}>
       {({errors, touched, handleChange, handleBlur, handleSubmit, values}) => (
         <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'android' : 0}
-        style={styles.container}>
-        <ScrollView>
-          <Image
-            source={require('../../Images/Icon.png')}
-            style={styles.logoImage}
-          />
-          <Text style={styles.textAloca}>ALOCA</Text>
-          <View style={styles.containerContent}>
-            <Text style={styles.lable}>TÊN ĐĂNG NHẬP</Text>
-            <TextInput style={styles.textInput} 
-            placeholderTextColor={'#000'} 
-            onChangeText={handleChange('username')}
-            onBlur={handleBlur('username')}
-            value={values.username}
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          style={styles.container}>
+          <ScrollView keyboardShouldPersistTaps="handled">
+            <Image
+              source={require('../../Images/Icon.png')}
+              style={styles.logoImage}
             />
-             {errors.username && touched.username ? (
-              <Text style={styles.errorText}>* {errors.username}</Text>
-            ) : null}
-            <View>
-              <Text style={styles.lable}>MẬT KHẨU</Text>
+            <Text style={styles.textAloca}>ALOCA</Text>
+            <View style={styles.containerContent}>
+              <Text style={styles.label}>TÊN ĐĂNG NHẬP</Text>
               <TextInput
-                secureTextEntry={!showPassword}
                 style={styles.textInput}
-                onChangeText={handleChange('password')}
-                onBlur={handleBlur('password')}
-                value={values.password}
+                placeholder={
+                  errors.username && touched.username
+                    ? 'Cần điền tên đăng nhập'
+                    : ''
+                }
+                placeholderTextColor={'red'}
+                onChangeText={handleChange('username')}
+                onBlur={handleBlur('username')}
+                value={values.username}
               />
-                {errors.password && touched.password ? (
-              <Text style={styles.errorText}>* {errors.password}</Text>
-            ) : null}
-              <Ionicons
-                name={showPassword ? 'eye' : 'eye-off'}
-                size={24}
-                color="#aaa"
-                onPress={toggleShowPassword}
-                style={styles.toggleShowPassword}
-              />
+              <View>
+                <Text style={styles.label}>MẬT KHẨU</Text>
+                <TextInput
+                  placeholder={
+                    errors.password && touched.password
+                      ? 'Cần điền mật khẩu'
+                      : ''
+                  }
+                  placeholderTextColor={'red'}
+                  secureTextEntry={!showPassword}
+                  style={styles.textInput}
+                  onChangeText={handleChange('password')}
+                  onBlur={handleBlur('password')}
+                  value={values.password}
+                />
+                <Ionicons
+                  name={showPassword ? 'eye' : 'eye-off'}
+                  size={24}
+                  color="#aaa"
+                  onPress={toggleShowPassword}
+                  style={styles.toggleShowPassword}
+                />
+              </View>
             </View>
-          </View>
-          <TouchableOpacity
-            style={styles.contentRegister}
-            onPressIn={handleSubmit}>
-            <Text style={styles.textLoginBtn}>Đăng nhập</Text>
-          </TouchableOpacity>
-          <View style={styles.contentLogin}>
-            <Text style={styles.text}>Chưa có tài khoản,</Text>
-            <TouchableOpacity onPress={() => navigation.navigate('Registration')}>
-              <Text style={styles.textLogin}>Đăng ký</Text>
+            <TouchableOpacity
+              style={styles.contentRegister}
+              onPressIn={handleSubmit}>
+              <Text style={styles.textLoginBtn}>Đăng nhập</Text>
             </TouchableOpacity>
-          </View>
-          <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')}>
-            <Text style={styles.textforgotPass}>Quên mật khẩu?</Text>
-          </TouchableOpacity>
-          <View style={styles.optionalLogin}>
-            <TouchableOpacity style={styles.loginWithOtherBtn}>
-              <Ionicons name="logo-google" size={25} color={'#EB4335'} />
-              <Text style={styles.textGoogle}>Google</Text>
+            <View style={styles.contentLogin}>
+              <Text style={styles.text}>Chưa có tài khoản,</Text>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('Registration')}>
+                <Text style={styles.textLogin}>Đăng ký</Text>
+              </TouchableOpacity>
+            </View>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('ForgotPassword')}>
+              <Text style={styles.textforgotPass}>Quên mật khẩu?</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.loginWithOtherBtn}>
-              <Ionicons name="logo-facebook" size={25} color={'#1877F2'} />
-              <Text style={styles.textFacebook}>Facebook</Text>
-            </TouchableOpacity>
-          </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
+            <View style={styles.optionalLogin}>
+              <TouchableOpacity style={styles.loginWithOtherBtn}>
+                <Ionicons name="logo-google" size={25} color={'#EB4335'} />
+                <Text style={styles.textGoogle}>Google</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.loginWithOtherBtn}>
+                <Ionicons name="logo-facebook" size={25} color={'#1877F2'} />
+                <Text style={styles.textFacebook}>Facebook</Text>
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
+        </KeyboardAvoidingView>
       )}
     </Formik>
   );
@@ -208,7 +204,7 @@ const styles = StyleSheet.create({
     marginTop: 30,
     marginBottom: 30,
   },
-  lable: {
+  label: {
     color: '#3E4958',
     fontWeight: '500',
   },

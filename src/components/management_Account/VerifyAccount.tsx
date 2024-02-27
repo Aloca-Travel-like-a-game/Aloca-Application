@@ -23,7 +23,7 @@ export default function VerifyAccount({navigation}: any) {
     const enteredOTP = otp.join('');
     AsyncStorage.getItem('registeredEmail').then(email => {
       axios
-        .post(`https://87fd-113-176-99-140.ngrok-free.app/auth/confirm-account`, {
+        .post(`http://52.63.147.17:8080/auth/confirm-account`, {
           email,
           code: enteredOTP.toString(),
         })

@@ -16,12 +16,12 @@ import VerifyCode from '../components/management_Account/VerifyCode';
 import LoginNew from '../components/management_Account/LoginNew';
 import HomeScreens from '../screens/HomeScreens';
 import {ChatScreen} from '../screens/ChatScreen';
-import {TripPlanScreen} from '../screens/TripPlanScreen';
+import {TripPlanScreen} from '../screens/TripPlannersStack/TripPlanScreen';
 
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {TouchableOpacity, useWindowDimensions} from 'react-native';
-import {View} from 'react-native-animatable';
+import {useWindowDimensions} from 'react-native';
+
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
