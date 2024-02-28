@@ -7,6 +7,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  ToastAndroid,
 } from 'react-native';
 import React, {useState} from 'react';
 import {TouchableOpacity} from 'react-native';
@@ -15,6 +16,12 @@ import {Login_validate} from './Login_validate';
 import {useMutation} from '@tanstack/react-query';
 import axios from 'axios';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+interface Login{
+  password: string;
+}
+export default function Login({navigation}: any) {
+  // const [password, setPassword] = useState('');
 
 export default function Login({navigation}: any) {
   // const [password, setPassword] = useState('');
@@ -31,6 +38,14 @@ export default function Login({navigation}: any) {
     mutationFn: async (data: Account) => {
       axios
         .post('http://52.63.147.17:8080/auth/login', data)
+        .then(async res => {
+          if (res.status === 200) {
+            const token = res.data;
+            console.log('tocken=======',token);
+            const user = JSON.stringify(token);
+            await AsyncStorage.setItem('user', user);
+            console.log('user===', user);
+            ToastAndroid.showWithGravity('Login successful', ToastAndroid.LONG, ToastAndroid.TOP);
         .then(res => {
           if (res.status === 200) {
             console.log(res.data);
@@ -39,8 +54,13 @@ export default function Login({navigation}: any) {
             navigation.navigate('Homestack');
           }
         })
-        .catch(e => {
-          console.log(e);
+        .catch(error => {
+          if (error.response && error.response.status === 404) {
+            Alert.alert('username or password is invalid ');
+          } else {
+            Alert.alert( 'information invalid');
+          }
+          console.error('Verification failed:', error);
         });
     },
   });
@@ -65,12 +85,21 @@ export default function Login({navigation}: any) {
       }}>
       {({errors, touched, handleChange, handleBlur, handleSubmit, values}) => (
         <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-          style={styles.container}>
-          <ScrollView keyboardShouldPersistTaps="handled">
-            <Image
-              source={require('../../Images/Icon.png')}
-              style={styles.logoImage}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.container}>
+        <ScrollView>
+          <Image
+            source={require('../../Images/Icon.png')}
+            style={styles.logoImage}
+          />
+          <Text style={styles.textAloca}>ALOCA</Text>
+          <View style={styles.containerContent}>
+            <Text style={styles.lable}>TÊN ĐĂNG NHẬP</Text>
+            <TextInput style={styles.textInput}
+            placeholderTextColor={'#000'}
+            onChangeText={handleChange('username')}
+            onBlur={handleBlur('username')}
+            value={values.username}
             />
             <Text style={styles.textAloca}>ALOCA</Text>
             <View style={styles.containerContent}>

@@ -7,8 +7,22 @@ import {
   Image,
 } from 'react-native';
 import React from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function LandingPage({navigation}: any) {
+  const handleGetStart = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem('user');
+      const value = jsonValue != null ? JSON.parse(jsonValue) : null;
+      if (value !== null) {
+        navigation.navigate('Homestack');
+      } else {
+        navigation.navigate('Login');
+      }
+    } catch (error) {
+      console.log('lỗi', error);
+    }
+  };
   return (
     <ImageBackground
       source={require('../../Images/BackgroundApp.png')}
@@ -18,7 +32,7 @@ export default function LandingPage({navigation}: any) {
         <Text style={styles.textAloca}>Aloca</Text>
         <TouchableOpacity
           style={styles.ButtomNext}
-          onPress={() => navigation.navigate('Registration')}>
+          onPress={handleGetStart}>
           <Text style={styles.textStart}>Bắt đầu thôi</Text>
           <Image
             source={require('../../Images/angle-right.png')}
