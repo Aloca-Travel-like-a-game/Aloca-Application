@@ -9,7 +9,6 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import { url } from '../url/urlNgrock';
 
 export default function VerifyAccount({navigation}: any) {
   const [otp, setOtp] = useState(['', '', '', '', '', '']);

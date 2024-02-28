@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -8,65 +9,60 @@ import {
   Platform,
   ScrollView,
   ToastAndroid,
+  Alert,
+  TouchableOpacity,
 } from 'react-native';
-import React, {useState} from 'react';
-import {TouchableOpacity} from 'react-native';
-import {Formik} from 'formik';
-import {Login_validate} from './Login_validate';
-import {useMutation} from '@tanstack/react-query';
+import { Formik } from 'formik';
+import { Login_validate } from './Login_validate';
+import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-interface Login{
+
+interface Account {
+  username: string;
   password: string;
 }
-export default function Login({navigation}: any) {
-  // const [password, setPassword] = useState('');
 
-export default function Login({navigation}: any) {
-  // const [password, setPassword] = useState('');
+export default function Login({ navigation }: any) {
   const [showPassword, setShowPassword] = useState(false);
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
   };
-  interface Account {
-    username: string;
-    password: string;
-  }
+
   const mutationLogin = useMutation({
     mutationFn: async (data: Account) => {
-      axios
-        .post('http://52.63.147.17:8080/auth/login', data)
-        .then(async res => {
-          if (res.status === 200) {
-            const token = res.data;
-            console.log('tocken=======',token);
-            const user = JSON.stringify(token);
-            await AsyncStorage.setItem('user', user);
-            console.log('user===', user);
-            ToastAndroid.showWithGravity('Login successful', ToastAndroid.LONG, ToastAndroid.TOP);
-        .then(res => {
-          if (res.status === 200) {
-            console.log(res.data);
-            const token = res.data.token;
-            const user = JSON.stringify({token});
-            navigation.navigate('Homestack');
-          }
-        })
-        .catch(error => {
-          if (error.response && error.response.status === 404) {
-            Alert.alert('username or password is invalid ');
-          } else {
-            Alert.alert( 'information invalid');
-          }
-          console.error('Verification failed:', error);
-        });
+      try {
+        const res = await axios.post('http://52.63.147.17:8080/auth/login', data);
+        if (res.status === 200) {
+          const token = res.data;
+          console.log('token=======', token);
+          const user = JSON.stringify(token);
+          await AsyncStorage.setItem('user', user);
+          console.log('user===', user);
+          ToastAndroid.showWithGravity(
+            'Login successful',
+            ToastAndroid.LONG,
+            ToastAndroid.TOP
+          );
+          navigation.navigate('Homestack');
+        }
+      } catch (error) {
+        if (error.response && error.response.status === 404) {
+          Alert.alert('username or password is invalid');
+        } else {
+          Alert.alert('information invalid');
+        }
+        console.error('Verification failed:', error);
+      }
     },
   });
+
   const handleLogin = (data: Account) => {
     mutationLogin.mutate(data);
   };
+
   return (
     <Formik
       initialValues={{
@@ -74,7 +70,7 @@ export default function Login({navigation}: any) {
         password: '',
       }}
       validationSchema={Login_validate}
-      onSubmit={values => {
+      onSubmit={(values) => {
         setTimeout(() => {
           let account = {
             username: values.username,
@@ -83,23 +79,21 @@ export default function Login({navigation}: any) {
           handleLogin(account);
         }, 100);
       }}>
-      {({errors, touched, handleChange, handleBlur, handleSubmit, values}) => (
+      {({
+        errors,
+        touched,
+        handleChange,
+        handleBlur,
+        handleSubmit,
+        values,
+      }) => (
         <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.container}>
-        <ScrollView>
-          <Image
-            source={require('../../Images/Icon.png')}
-            style={styles.logoImage}
-          />
-          <Text style={styles.textAloca}>ALOCA</Text>
-          <View style={styles.containerContent}>
-            <Text style={styles.lable}>TÊN ĐĂNG NHẬP</Text>
-            <TextInput style={styles.textInput}
-            placeholderTextColor={'#000'}
-            onChangeText={handleChange('username')}
-            onBlur={handleBlur('username')}
-            value={values.username}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={styles.container}>
+          <ScrollView>
+            <Image
+              source={require('../../Images/Icon.png')}
+              style={styles.logoImage}
             />
             <Text style={styles.textAloca}>ALOCA</Text>
             <View style={styles.containerContent}>
@@ -116,8 +110,8 @@ export default function Login({navigation}: any) {
                 onBlur={handleBlur('username')}
                 value={values.username}
               />
-              <View>
-                <Text style={styles.label}>MẬT KHẨU</Text>
+              <Text style={styles.label}>MẬT KHẨU</Text>
+              <View style={{ position: 'relative' }}>
                 <TextInput
                   placeholder={
                     errors.password && touched.password
@@ -142,7 +136,7 @@ export default function Login({navigation}: any) {
             </View>
             <TouchableOpacity
               style={styles.contentRegister}
-              onPressIn={handleSubmit}>
+              onPress={handleSubmit}>
               <Text style={styles.textLoginBtn}>Đăng nhập</Text>
             </TouchableOpacity>
             <View style={styles.contentLogin}>
@@ -162,7 +156,11 @@ export default function Login({navigation}: any) {
                 <Text style={styles.textGoogle}>Google</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.loginWithOtherBtn}>
-                <Ionicons name="logo-facebook" size={25} color={'#1877F2'} />
+                <Ionicons
+                  name="logo-facebook"
+                  size={25}
+                  color={'#1877F2'}
+                />
                 <Text style={styles.textFacebook}>Facebook</Text>
               </TouchableOpacity>
             </View>
