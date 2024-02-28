@@ -74,6 +74,7 @@ const styles = StyleSheet.create({
     height: 55,
     margin: 5,
     textAlign: 'center',
+    
   },
   contentInput: {
     marginHorizontal: 10,

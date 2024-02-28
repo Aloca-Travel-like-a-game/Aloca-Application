@@ -23,30 +23,28 @@ export default function Registration({navigation}: any) {
   }
   const mutation = useMutation({
     mutationFn: async (data: Data) => {
-      axios.post(` https://87fd-113-176-99-140.ngrok-free.app/auth/register`,data)
+      axios.post('http://52.63.147.17:8080/auth/register',data)
       .then(res => {
-        if(res.status === 200) {
+        if (res.status === 200) {
           ToastAndroid.show('Registration successful', ToastAndroid.LONG);
-          navigation.navigate('VerifyAccount')
-        }else{
-          Alert.alert('invalid information')
+          navigation.navigate('VerifyAccount');
+        } else {
+          Alert.alert('invalid information');
         }
-        
       })
       .catch(e => {
-        console.log('lôi nhiều quá đi', e); 
-        Alert.alert('không được')
-        
-      })
+        console.log('error', e);
+        Alert.alert('faild');
+      });
     },
-  })
-  const  handleSignUp =(data: Data)=>{
-   if(data && data.confirmPassword === data.password){
+  });
+  const  handleSignUp = (data: Data)=>{
+   if (data && data.confirmPassword === data.password){
     console.log(data);
     mutation.mutate(data);
-   }}
+   }};
   return (
-    <Formik 
+    <Formik
       initialValues={{
         email: '',
         password: '',

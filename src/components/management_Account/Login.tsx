@@ -8,6 +8,7 @@ import {
   Platform,
   Alert,
   ScrollView,
+  ToastAndroid,
 } from 'react-native';
 import React, { useState } from 'react';
 import {TouchableOpacity} from 'react-native';
@@ -16,11 +17,12 @@ import {Login_validate} from './Login_validate';
 import {useMutation} from '@tanstack/react-query';
 import axios from 'axios';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 interface Login{
   password: string;
 }
 export default function Login({navigation}: any) {
-  const [password, setPassword] = useState('');
+  // const [password, setPassword] = useState('');
 
   // State variable to track password visibility
   const [showPassword, setShowPassword] = useState(false);
@@ -36,23 +38,25 @@ export default function Login({navigation}: any) {
   const mutationLogin = useMutation({
     mutationFn: async (data: Account) => {
       axios
-        .post('  https://87fd-113-176-99-140.ngrok-free.app/auth/login', data)
-        .then(res => {
+        .post('http://52.63.147.17:8080/auth/login', data)
+        .then(async res => {
           if (res.status === 200) {
-            console.log(res.data);
-            const token = res.data.token;
-            // const userid = res.data.user.id;
-            const user = JSON.stringify({token});
-            // Alert.alert('Success', 'Login successfully')
-            // {text: 'OK', onPress: () => navigation.navigate('Root')},
-            Alert.alert('Login successfully');
+            const token = res.data;
+            console.log('tocken=======',token);
+            const user = JSON.stringify(token);
+            await AsyncStorage.setItem('user', user);
+            console.log('user===', user);
+            ToastAndroid.showWithGravity('Login successful', ToastAndroid.LONG, ToastAndroid.TOP);
             navigation.navigate('Homestack');
-          } else {
-            Alert.alert('Email or password is invalid');
           }
         })
-        .catch(e => {
-          console.log(e);
+        .catch(error => {
+          if (error.response && error.response.status === 404) {
+            Alert.alert('username or password is invalid ');
+          } else {
+            Alert.alert( 'information invalid');
+          }
+          console.error('Verification failed:', error);
         });
     },
   });
@@ -77,7 +81,7 @@ export default function Login({navigation}: any) {
       }}>
       {({errors, touched, handleChange, handleBlur, handleSubmit, values}) => (
         <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'android' : 0}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.container}>
         <ScrollView>
           <Image
@@ -87,8 +91,8 @@ export default function Login({navigation}: any) {
           <Text style={styles.textAloca}>ALOCA</Text>
           <View style={styles.containerContent}>
             <Text style={styles.lable}>TÊN ĐĂNG NHẬP</Text>
-            <TextInput style={styles.textInput} 
-            placeholderTextColor={'#000'} 
+            <TextInput style={styles.textInput}
+            placeholderTextColor={'#000'}
             onChangeText={handleChange('username')}
             onBlur={handleBlur('username')}
             value={values.username}

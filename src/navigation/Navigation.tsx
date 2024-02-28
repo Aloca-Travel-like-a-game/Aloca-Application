@@ -17,6 +17,8 @@ import {ChatScreen} from '../screens/ChatScreen';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {TouchableOpacity} from 'react-native';
+import ProfileScreens from '../screens/ProfileScreens';
+import EditProfile from '../components/management_Account/EditProfile';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -60,7 +62,7 @@ const TabArr = [
     type: Ionicons,
     activeIcon: 'person',
     unActiveIcon: 'person-outline',
-    component: HomeScreens,
+    component: ProfileScreens,
   },
 ];
 // const TabButton = (props: any) => {
@@ -141,6 +143,7 @@ export default function Navigation() {
         <Stack.Screen name="VerifyCode" component={VerifyCode} />
         <Stack.Screen name="LoginNew" component={LoginNew} />
         <Stack.Screen name="Homestack" component={Homestack} />
+        <Stack.Screen name="Editprofile" component={EditProfile} />
       </Stack.Navigator>
     </NavigationContainer>
   );
