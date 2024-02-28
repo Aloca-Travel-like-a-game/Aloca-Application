@@ -6,11 +6,10 @@ import {
   Image,
   KeyboardAvoidingView,
   Platform,
-  Alert,
   ScrollView,
   ToastAndroid,
 } from 'react-native';
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {TouchableOpacity} from 'react-native';
 import {Formik} from 'formik';
 import {Login_validate} from './Login_validate';
@@ -24,10 +23,10 @@ interface Login{
 export default function Login({navigation}: any) {
   // const [password, setPassword] = useState('');
 
-  // State variable to track password visibility
+export default function Login({navigation}: any) {
+  // const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
-  // Function to toggle the password visibility state
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
   };
@@ -47,6 +46,11 @@ export default function Login({navigation}: any) {
             await AsyncStorage.setItem('user', user);
             console.log('user===', user);
             ToastAndroid.showWithGravity('Login successful', ToastAndroid.LONG, ToastAndroid.TOP);
+        .then(res => {
+          if (res.status === 200) {
+            console.log(res.data);
+            const token = res.data.token;
+            const user = JSON.stringify({token});
             navigation.navigate('Homestack');
           }
         })
@@ -97,56 +101,73 @@ export default function Login({navigation}: any) {
             onBlur={handleBlur('username')}
             value={values.username}
             />
-             {errors.username && touched.username ? (
-              <Text style={styles.errorText}>* {errors.username}</Text>
-            ) : null}
-            <View>
-              <Text style={styles.lable}>MẬT KHẨU</Text>
+            <Text style={styles.textAloca}>ALOCA</Text>
+            <View style={styles.containerContent}>
+              <Text style={styles.label}>TÊN ĐĂNG NHẬP</Text>
               <TextInput
-                secureTextEntry={!showPassword}
                 style={styles.textInput}
-                onChangeText={handleChange('password')}
-                onBlur={handleBlur('password')}
-                value={values.password}
+                placeholder={
+                  errors.username && touched.username
+                    ? 'Cần điền tên đăng nhập'
+                    : ''
+                }
+                placeholderTextColor={'red'}
+                onChangeText={handleChange('username')}
+                onBlur={handleBlur('username')}
+                value={values.username}
               />
-                {errors.password && touched.password ? (
-              <Text style={styles.errorText}>* {errors.password}</Text>
-            ) : null}
-              <Ionicons
-                name={showPassword ? 'eye' : 'eye-off'}
-                size={24}
-                color="#aaa"
-                onPress={toggleShowPassword}
-                style={styles.toggleShowPassword}
-              />
+              <View>
+                <Text style={styles.label}>MẬT KHẨU</Text>
+                <TextInput
+                  placeholder={
+                    errors.password && touched.password
+                      ? 'Cần điền mật khẩu'
+                      : ''
+                  }
+                  placeholderTextColor={'red'}
+                  secureTextEntry={!showPassword}
+                  style={styles.textInput}
+                  onChangeText={handleChange('password')}
+                  onBlur={handleBlur('password')}
+                  value={values.password}
+                />
+                <Ionicons
+                  name={showPassword ? 'eye' : 'eye-off'}
+                  size={24}
+                  color="#aaa"
+                  onPress={toggleShowPassword}
+                  style={styles.toggleShowPassword}
+                />
+              </View>
             </View>
-          </View>
-          <TouchableOpacity
-            style={styles.contentRegister}
-            onPress={handleSubmit}>
-            <Text style={styles.textLoginBtn}>Đăng nhập</Text>
-          </TouchableOpacity>
-          <View style={styles.contentLogin}>
-            <Text style={styles.text}>Chưa có tài khoản,</Text>
-            <TouchableOpacity onPress={() => navigation.navigate('Registration')}>
-              <Text style={styles.textLogin}>Đăng ký</Text>
+            <TouchableOpacity
+              style={styles.contentRegister}
+              onPressIn={handleSubmit}>
+              <Text style={styles.textLoginBtn}>Đăng nhập</Text>
             </TouchableOpacity>
-          </View>
-          <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')}>
-            <Text style={styles.textforgotPass}>Quên mật khẩu?</Text>
-          </TouchableOpacity>
-          <View style={styles.optionalLogin}>
-            <TouchableOpacity style={styles.loginWithOtherBtn}>
-              <Ionicons name="logo-google" size={25} color={'#EB4335'} />
-              <Text style={styles.textGoogle}>Google</Text>
+            <View style={styles.contentLogin}>
+              <Text style={styles.text}>Chưa có tài khoản,</Text>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('Registration')}>
+                <Text style={styles.textLogin}>Đăng ký</Text>
+              </TouchableOpacity>
+            </View>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('ForgotPassword')}>
+              <Text style={styles.textforgotPass}>Quên mật khẩu?</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.loginWithOtherBtn}>
-              <Ionicons name="logo-facebook" size={25} color={'#1877F2'} />
-              <Text style={styles.textFacebook}>Facebook</Text>
-            </TouchableOpacity>
-          </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
+            <View style={styles.optionalLogin}>
+              <TouchableOpacity style={styles.loginWithOtherBtn}>
+                <Ionicons name="logo-google" size={25} color={'#EB4335'} />
+                <Text style={styles.textGoogle}>Google</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.loginWithOtherBtn}>
+                <Ionicons name="logo-facebook" size={25} color={'#1877F2'} />
+                <Text style={styles.textFacebook}>Facebook</Text>
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
+        </KeyboardAvoidingView>
       )}
     </Formik>
   );
@@ -212,7 +233,7 @@ const styles = StyleSheet.create({
     marginTop: 30,
     marginBottom: 30,
   },
-  lable: {
+  label: {
     color: '#3E4958',
     fontWeight: '500',
   },
