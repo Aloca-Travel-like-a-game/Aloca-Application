@@ -4,9 +4,6 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
-
-// import Animatable from 'react-native-animatable';
-
 import Registration from '../components/management_Account/Registration';
 import Login from '../components/management_Account/Login';
 import VerifyAccount from '../components/management_Account/VerifyAccount';
@@ -16,19 +13,27 @@ import VerifyCode from '../components/management_Account/VerifyCode';
 import LoginNew from '../components/management_Account/LoginNew';
 import HomeScreens from '../screens/HomeScreens';
 import {ChatScreen} from '../screens/ChatScreen';
-import {TripPlanScreen} from '../screens/TripPlannersStack/TripPlanScreen';
-
+import {TripPlanScreen} from '../screens/TripPlannersStack/AddNewTripPlanScreen';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useWindowDimensions} from 'react-native';
-
+import {TripPlanChoose} from '../screens/TripPlannersStack/CreateTripPlanScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
+const TripPlanStack = () => {
+  return (
+    <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Screen name="AddNewTrip" component={TripPlanScreen} />
+      <Stack.Screen name="TripPlanChoose" component={TripPlanChoose} />
+    </Stack.Navigator>
+  );
+};
+
 const renderScene = SceneMap({
   first: ChatScreen,
-  second: TripPlanScreen,
+  second: TripPlanStack,
 });
 const renderAssistanceTabBar = (props): any => (
   <TabBar
@@ -136,10 +141,11 @@ const Homestack = () => {
         },
         tabBarHideOnKeyboard: true,
       })}>
-      {TabArr.map((item, _index) => {
+      {TabArr.map((item, index) => {
         return (
           <Tab.Screen
             name={item.route}
+            key={index}
             component={item.component}
             options={{
               tabBarLabel: item.label,
@@ -153,10 +159,13 @@ const Homestack = () => {
 export default function Navigation() {
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Navigator
+        // initialRouteName="Homestack"
+        screenOptions={{headerShown: false}}
+        >
         <Stack.Screen name="LandingPage" component={LandingPage} />
-        <Stack.Screen name="Registration" component={Registration} />
         <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name="Registration" component={Registration} />
         <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
         <Stack.Screen name="VerifyAccount" component={VerifyAccount} />
         <Stack.Screen name="VerifyCode" component={VerifyCode} />

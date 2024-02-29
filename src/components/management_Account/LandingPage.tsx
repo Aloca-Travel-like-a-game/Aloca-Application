@@ -18,7 +18,7 @@ export default function LandingPage({navigation}: any) {
         <Text style={styles.textAloca}>Aloca</Text>
         <TouchableOpacity
           style={styles.ButtomNext}
-          onPress={() => navigation.navigate('Registration')}>
+          onPress={() => navigation.navigate('Login')}>
           <Text style={styles.textStart}>Bắt đầu thôi</Text>
           <Image
             source={require('../../Images/angle-right.png')}
