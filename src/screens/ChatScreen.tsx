@@ -52,6 +52,7 @@ export const ChatScreen: FC = (): JSX.Element => {
   const reloadSend = async (prompt: string) => {
     setAnalyzing(true);
     const response = await sendRequest(prompt);
+    setData(data.filter(item => item.error !== true));
     if (response.data.message === 'Send message successfully') {
       setAnalyzing(false);
       const text = response.data.data.ChatResponse;
@@ -72,7 +73,6 @@ export const ChatScreen: FC = (): JSX.Element => {
       setData([...data, {type: 'bot', text: text, error: false}]);
       setIdChat(response?.data.chatAi._id);
     }
-    setData(data.filter(item => item.error !== true));
   };
   const handleSend = async () => {
     setAnalyzing(true);
@@ -80,15 +80,15 @@ export const ChatScreen: FC = (): JSX.Element => {
     setReloadQuest(prompt);
     setData(
       textInput === ''
-      ? data
-      : [...data, {type: 'user', text: textInput, error: false}],
-      );
-      setTextInput('');
-      const response = await sendRequest(prompt);
-      if (response.data.message === 'Send message successfully') {
-        setAnalyzing(false);
+        ? data
+        : [...data, {type: 'user', text: textInput, error: false}],
+    );
+    setTextInput('');
+    const response = await sendRequest(prompt);
+    if (response.data.message === 'Send message successfully') {
+      setAnalyzing(false);
       const text = response.data.data.ChatResponse;
-        setData(data.filter(item => item.error !== true));
+      setData(data.filter(item => item.error !== true));
       setData([
         ...data,
         {type: 'user', text: textInput, error: false},
