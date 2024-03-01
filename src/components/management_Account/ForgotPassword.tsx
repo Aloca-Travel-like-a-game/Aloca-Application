@@ -29,7 +29,7 @@ export default function ForgotPassword({navigation}: any) {
       }}>
       {({errors, touched, handleChange, handleBlur, values, handleSubmit}) => (
         <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 500 : 0}
+          behavior={Platform.OS === 'ios' ? 100 : 0}
           style={styles.container}>
           <Image
             source={require('../../Images/Icon.png')}
@@ -39,7 +39,6 @@ export default function ForgotPassword({navigation}: any) {
           <View style={styles.containerContent}>
             <Text style={styles.lable}>Nhập email bạn đã đăng ký</Text>
             <TextInput
-              placeholder="email"
               value={values.email}
               style={styles.textInput}
               placeholderTextColor={'#000'}
@@ -83,16 +82,17 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   containerContent: {
-    marginHorizontal: 12,
+    marginHorizontal: 30,
+    marginTop:60,
   },
   logoImage: {
     width: '60%',
-    height: '26%',
+    height: '30%',
     borderRadius: 12,
     marginLeft: 80,
   },
   textRegister: {
-    color: '#000',
+    color: '#FFF',
     fontWeight: '700',
     fontSize: 18,
   },
@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 1,
     padding: 10,
-    marginHorizontal: 12,
+    marginHorizontal: 30,
     borderRadius: 10,
     backgroundColor: '#0097A7',
     borderColor: '#0097A7',
@@ -112,6 +112,7 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: '500',
     textAlign: 'center',
+    marginTop:20,
   },
   lable: {
     color: '#000',

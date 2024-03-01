@@ -12,7 +12,7 @@ import React, {useEffect, useState} from 'react';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useMutation} from '@tanstack/react-query';
+import {useMutation, useQueryClient} from '@tanstack/react-query';
 import {launchImageLibrary} from 'react-native-image-picker';
 import { string } from 'yup';
 interface getProfile {
@@ -31,7 +31,10 @@ export default function EditProfile({navigation}: any): getProfile[] {
   const [newPhone, setNewPhone] = useState<string>();
   const [newAddress, setNewAddress] = useState<string>('');
   const [selectedImage, setSelectedImage] = useState(null);
+  const queryClient = useQueryClient();
 console.log('oo',selectedImage );
+console.log('addd', newAddress);
+
 console.log('oppp', _userData);
 
 
@@ -56,13 +59,13 @@ console.log('oppp', _userData);
         if (userData) {
           setNewName(userData.data.fullname);
           setNewEmail(userData.data.email);
+          setNewAddress(userData.data.address);
           if (userData.data.phone !== undefined) {
             setNewPhone(userData.data.phone.toString());
+
           } else {
             setNewPhone('');
           }
-          // setNewPhone(userData.data.phone.toString());
-          setNewAddress(userData.data.address);
           setSelectedImage(userData.data.image);
          
         }
@@ -93,6 +96,16 @@ console.log('oppp', _userData);
         if (response.status === 200) {
           Alert.alert('Success', 'Update successfully');
           setUserData(response.data)
+          let newUser = JSON.parse(await AsyncStorage.getItem('user'));
+          console.log('data', data);
+          console.log('user data', newUser)
+          for (const [key,value] of Object.entries(data)) {
+            console.log('k, v', key, value);
+            newUser.data[key] = value;
+          }
+          await AsyncStorage.setItem('user', JSON.stringify(newUser));
+          console.log('invalidate')
+          queryClient.invalidateQueries({ queryKey: ['profile'] });
         } else {
           Alert.alert('Invalid information!');
         }
@@ -127,6 +140,7 @@ console.log('oppp', _userData);
         image: selectedImage,
       });
       setUserData(response.data);
+      // setNewAddress(response.data.address);
     //  setUserData(response.data)
     } catch (error) {
       console.error('Error updating profile: ', error);
@@ -213,7 +227,7 @@ console.log('oppp', _userData);
           value={newPhone}
           onChangeText={text => handleOnChange('phone', text)}
         />
-        <Text style={styles.text}>Địa chỉ </Text>
+        <Text style={styles.text}>Địa chỉ  {newAddress} </Text>
         <TextInput
           style={styles.textInput}
           value={newAddress}
