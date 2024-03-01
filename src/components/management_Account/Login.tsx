@@ -78,7 +78,7 @@ export default function Login({navigation}: any) {
         values,
       }) => (
         <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
           style={styles.container}>
           <ScrollView>
             <Image
@@ -273,7 +273,7 @@ const styles = StyleSheet.create({
   toggleShowPassword: {
     position: 'absolute',
     right: '5%',
-    top: '43%',
+    top: '28%',
   },
   errorText: {
     fontWeight: 'bold',
