@@ -28,6 +28,7 @@ export const ChatScreen: FC = (): JSX.Element => {
   const [reloadQuest, setReloadQuest] = useState(textInput);
   const [reload, setReload] = useState(false);
   const [isAnalyzing, setAnalyzing] = useState(false);
+  const rotateValue = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     AsyncStorage.getItem('AccessToken').then(result => setToken(result));
@@ -51,8 +52,6 @@ export const ChatScreen: FC = (): JSX.Element => {
   const reloadSend = async (prompt: string) => {
     setAnalyzing(true);
     const response = await sendRequest(prompt);
-    setData(data.filter(item => item.error !== true));
-    console.log(data);
     if (response.data.message === 'Send message successfully') {
       setAnalyzing(false);
       const text = response.data.data.ChatResponse;
@@ -73,23 +72,23 @@ export const ChatScreen: FC = (): JSX.Element => {
       setData([...data, {type: 'bot', text: text, error: false}]);
       setIdChat(response?.data.chatAi._id);
     }
-    console.log(idChat);
+    setData(data.filter(item => item.error !== true));
   };
   const handleSend = async () => {
     setAnalyzing(true);
     const prompt = textInput;
     setReloadQuest(prompt);
-    setData(data.filter(item => item.error !== true));
     setData(
       textInput === ''
-        ? data
-        : [...data, {type: 'user', text: textInput, error: false}],
-    );
-    setTextInput('');
-    const response = await sendRequest(prompt);
-    if (response.data.message === 'Send message successfully') {
-      setAnalyzing(false);
+      ? data
+      : [...data, {type: 'user', text: textInput, error: false}],
+      );
+      setTextInput('');
+      const response = await sendRequest(prompt);
+      if (response.data.message === 'Send message successfully') {
+        setAnalyzing(false);
       const text = response.data.data.ChatResponse;
+        setData(data.filter(item => item.error !== true));
       setData([
         ...data,
         {type: 'user', text: textInput, error: false},
@@ -118,27 +117,24 @@ export const ChatScreen: FC = (): JSX.Element => {
         {type: 'bot', text: text, error: false},
       ]);
     }
-    console.log(response.data);
-    console.log(idChat);
   };
-  const spinValue = new Animated.Value(0);
 
-  const startAnimation = () => {
+  const startRotation = () => {
     Animated.loop(
-      Animated.timing(spinValue, {
+      Animated.timing(rotateValue, {
         toValue: 1,
-        duration: 1000,
+        duration: 2000,
         easing: Easing.linear,
         useNativeDriver: true,
       }),
     ).start();
   };
 
-  const stopAnimation = () => {
-    spinValue.stopAnimation();
+  const stopRotation = () => {
+    rotateValue.stopAnimation();
   };
 
-  const spin = spinValue.interpolate({
+  const rotate = rotateValue.interpolate({
     inputRange: [0, 1],
     outputRange: ['0deg', '360deg'],
   });
@@ -199,15 +195,17 @@ export const ChatScreen: FC = (): JSX.Element => {
             style={styles.sendBtn}
             onPress={() => {
               handleSend();
-              isAnalyzing ? startAnimation() : stopAnimation();
+              isAnalyzing ? startRotation : stopRotation;
             }}
             disabled={isAnalyzing || textInput === '' ? true : false}>
-            <Animated.View style={{transform: [{rotate: spin}]}}>
-              <Feather
-                name={isAnalyzing ? 'loader' : 'send'}
-                size={24}
-                color={'#2AB6AD'}
-              />
+            <Animated.View style={{transform: [{rotate: rotate}]}}>
+              <View>
+                <Feather
+                  name={isAnalyzing ? 'loader' : 'send'}
+                  size={24}
+                  color={'#2AB6AD'}
+                />
+              </View>
             </Animated.View>
           </TouchableOpacity>
         </View>

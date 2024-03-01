@@ -163,6 +163,7 @@ export default function Navigation() {
         // initialRouteName="Homestack"
         screenOptions={{headerShown: false}}
         >
+        {/* <Stack.Screen name="RotatingElement" component={RotatingElement} /> */}
         <Stack.Screen name="LandingPage" component={LandingPage} />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Registration" component={Registration} />
