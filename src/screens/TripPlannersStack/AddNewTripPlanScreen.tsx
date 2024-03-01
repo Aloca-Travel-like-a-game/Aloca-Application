@@ -1,6 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {FC} from 'react';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import { useNavigation } from '@react-navigation/native';
 import {
   View,
   StyleSheet,
@@ -12,12 +13,13 @@ import {
 } from 'react-native';
 
 export const TripPlanScreen: FC = (): JSX.Element => {
+  const navigation = useNavigation();
   return (
     <KeyboardAvoidingView style={styles.container}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.container}>
           <View style={styles.addNewTrip}>
-            <TouchableOpacity style={styles.plusCircle}>
+            <TouchableOpacity style={styles.plusCircle} onPress={() => navigation.navigate('TripPlanChoose')}>
               <AntDesign name="pluscircle" size={47} color={'#2AB6AD'} />
             </TouchableOpacity>
             <Text style={{color: '#000', marginTop: 5, fontWeight: '600'}}>Thêm mới một kế hoạch</Text>
