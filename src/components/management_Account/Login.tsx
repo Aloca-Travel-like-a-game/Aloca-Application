@@ -33,6 +33,29 @@ export default function Login({navigation}: any) {
 
   const mutationLogin = useMutation({
     mutationFn: async (data: Account) => {
+      try {
+        const res = await axios.post('http://52.63.147.17:8080/auth/login', data);
+        if (res.status === 200) {
+          const token = res.data;
+          console.log('token=======', token);
+          const user = JSON.stringify(token);
+          await AsyncStorage.setItem('user', user);
+          console.log('user===', user);
+          ToastAndroid.showWithGravity(
+            'Login successful',
+            ToastAndroid.LONG,
+            ToastAndroid.TOP
+          );
+          navigation.navigate('Homestack');
+        }
+      } catch (error) {
+        if (error.response && error.response.status === 404) {
+          Alert.alert('username or password is invalid');
+        } else {
+          Alert.alert('information invalid');
+        }
+        console.error('Verification failed:', error);
+      }
       axios
         .post('http://52.63.147.17:8080/auth/login', data)
         .then(async res => {

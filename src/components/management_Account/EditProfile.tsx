@@ -6,47 +6,68 @@ import {
   TextInput,
   Alert,
   Image,
-  Button,
   ScrollView,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useMutation} from '@tanstack/react-query';
-import {launchImageLibrary, launchCamera} from 'react-native-image-picker';
+import {useMutation, useQueryClient} from '@tanstack/react-query';
+import {launchImageLibrary} from 'react-native-image-picker';
+import { string } from 'yup';
 interface getProfile {
   fullname: string;
   email: string;
-  phone:string,
-  address:string
+  phone: string;
+  address: string;
+  selectedImage:string;
+  image: string;
 }
 
-export default function EditProfile({navigation}: any) {
+export default function EditProfile({navigation}: any): getProfile[] {
   const [_userData, setUserData] = useState<any>();
   const [newName, setNewName] = useState<string>('');
   const [newEmail, setNewEmail] = useState<string>('');
-  const [newPhone, setNewPhone] = useState<string|null>(null);
+  const [newPhone, setNewPhone] = useState<string>();
   const [newAddress, setNewAddress] = useState<string>('');
   const [selectedImage, setSelectedImage] = useState(null);
+  const queryClient = useQueryClient();
+console.log('oo',selectedImage );
+console.log('addd', newAddress);
 
+console.log('oppp', _userData);
+
+
+
+  const formData = new FormData();
+    formData.append('files', {
+      uri: selectedImage,
+      type: 'image/jpeg',
+      name: 'product_image.jpg',
+    });
+
+    Object.keys(string).forEach(key => {
+      formData.append(key, string[key]);
+    });
+    
   useEffect(() => {
     const fetchData = async () => {
       try {
         const data = await AsyncStorage.getItem('user');
         const userData = data ? JSON.parse(data) : null;
         setUserData(userData);
-        console.log(userData);
-        
-        const savedImageUri = await AsyncStorage.getItem(
-          `selectedImage_${userData.data.username}`,
-        );
-        setSelectedImage(savedImageUri || null);
         if (userData) {
           setNewName(userData.data.fullname);
           setNewEmail(userData.data.email);
-          setNewPhone(userData.data.phone.toString());
-          
+          setNewAddress(userData.data.address);
+          if (userData.data.phone !== undefined) {
+            setNewPhone(userData.data.phone.toString());
+
+          } else {
+            setNewPhone('');
+          }
+          setSelectedImage(userData.data.image);
+         
         }
       } catch (error) {
         console.error('Error fetching data: ', error);
@@ -54,13 +75,13 @@ export default function EditProfile({navigation}: any) {
     };
     fetchData();
   }, []);
+
   const mutationEdit = useMutation({
     mutationFn: async (data: any) => {
       try {
         const jsonValue: any = await AsyncStorage.getItem('user');
         const dataProfile = JSON.parse(jsonValue);
         const token = dataProfile.accessToken;
-        console.log(token);
 
         const response = await axios.post(
           'http://52.63.147.17:8080/user/profile',
@@ -74,7 +95,17 @@ export default function EditProfile({navigation}: any) {
         );
         if (response.status === 200) {
           Alert.alert('Success', 'Update successfully');
-          setUserData(data);
+          setUserData(response.data)
+          let newUser = JSON.parse(await AsyncStorage.getItem('user'));
+          console.log('data', data);
+          console.log('user data', newUser)
+          for (const [key,value] of Object.entries(data)) {
+            console.log('k, v', key, value);
+            newUser.data[key] = value;
+          }
+          await AsyncStorage.setItem('user', JSON.stringify(newUser));
+          console.log('invalidate')
+          queryClient.invalidateQueries({ queryKey: ['profile'] });
         } else {
           Alert.alert('Invalid information!');
         }
@@ -99,29 +130,23 @@ export default function EditProfile({navigation}: any) {
 
   const handleSaveProfile = async () => {
     try {
-      const response = await mutationEdit.mutateAsync({
+      // const formData = new FormData();
+      // formData.append('image', selectedImage);
+      const response =  await mutationEdit.mutate({
         fullname: newName,
         email: newEmail,
         phone: newPhone,
         address: newAddress,
+        image: selectedImage,
       });
-      // Cập nhật dữ liệu mới từ backend vào state _userData
       setUserData(response.data);
-      Alert.alert('Success', 'Update successfully');
+      // setNewAddress(response.data.address);
+    //  setUserData(response.data)
     } catch (error) {
       console.error('Error updating profile: ', error);
-      Alert.alert('Error', 'Failed to update profile');
+      // Alert.alert('Error', 'Failed to update profile');
     }
   };
-  // const handleSaveProfile = () => {
-  //   mutationEdit.mutate({
-  //     fullname: newName,
-  //     email: newEmail,
-  //     phone: newPhone,
-  //     address: newAddress,
-  //   });
-  //   console.log('Data của user====>hihihii:',(_userData.data.phone));
-  // };
   const handleGoBack = () => {
     navigation.goBack();
   };
@@ -132,7 +157,7 @@ export default function EditProfile({navigation}: any) {
       maxHeight: 2000,
       maxWidth: 2000,
     };
-    launchImageLibrary(options, async response => {
+    launchImageLibrary(options , async response => {
       if (response.didCancel) {
         console.log('User cancelled image picker');
       } else if (response.error) {
@@ -141,11 +166,6 @@ export default function EditProfile({navigation}: any) {
         try {
           let imageUri = response.uri || response.assets?.[0]?.uri;
           setSelectedImage(imageUri);
-          await AsyncStorage.setItem(`selectedImage_${_userData.data.username}`, imageUri);
-          // const base64Image = response.base64;
-          // // Gửi dữ liệu hình ảnh lên máy chủ
-          // const imageData = { image: base64Image };
-          // await axios.post('http://52.63.147.17:8080/user/profile', imageData);
         } catch (error) {
           console.error('Error saving image: ', error);
         }
@@ -180,10 +200,15 @@ export default function EditProfile({navigation}: any) {
               </View>
             </TouchableOpacity>
           )}
+          <TouchableOpacity
+              onPress={openImagePicker}
+              style={styles.cameraIcon}>
+              <View style={styles.imagePlaceholder}>
+                <AntDesign name="camera" size={28} color="#000" />
+              </View>
+            </TouchableOpacity>
         </View>
-        {/* <View style={{marginTop: 20, marginBottom: 50}}>
-          <Button title="Chụp" onPress={handleCameraLaunch} />
-        </View> */}
+        <View style={styles.InputData}>
         <Text style={styles.text}>Họ và tên</Text>
         <TextInput
           style={styles.textInput}
@@ -202,12 +227,13 @@ export default function EditProfile({navigation}: any) {
           value={newPhone}
           onChangeText={text => handleOnChange('phone', text)}
         />
-        <Text style={styles.text}>Địa chỉ </Text>
+        <Text style={styles.text}>Địa chỉ  {newAddress} </Text>
         <TextInput
           style={styles.textInput}
           value={newAddress}
           onChangeText={text => handleOnChange('address', text)}
         />
+        </View>
       </View>
       <TouchableOpacity style={styles.save} onPress={handleSaveProfile}>
         <Text style={styles.textSave}>Lưu lại</Text>
@@ -235,12 +261,12 @@ const styles = StyleSheet.create({
   },
   contentTextInput: {
     marginHorizontal: 16,
-    marginTop: 10,
+    marginTop: 25,
   },
   text: {
     color: '#000',
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: '400',
   },
   save: {
     height: 50,
@@ -256,22 +282,31 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   image: {
-    width: 140,
-    height: 140,
+    width: 90,
+    height: 90,
+    borderRadius:50,
   },
   contentImage: {
     justifyContent: 'center',
     alignItems: 'center',
   },
   imagePlaceholder: {
-    width: 150,
-    height: 150,
+    width: 50,
+    height: 50,
     borderWidth: 1,
-    borderColor: '#808080',
     justifyContent: 'center',
     alignItems: 'center',
+    borderRadius:50,
+    position:'absolute',
+    marginTop:-15,
+    backgroundColor:'#FFF',
   },
   cameraIcon: {
     backgroundColor: 'rgba(255, 255, 255, 0.5)',
+    
   },
+  InputData:{
+    marginHorizontal: 16,
+    marginTop: 40,
+  }
 });

@@ -6,14 +6,14 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useQuery} from '@tanstack/react-query';
 export default function ProfileScreens({navigation}: any) {
-  const selectedImage = null;
   const {data} = useQuery({
-    queryKey: ['todos'],
+    queryKey: ['profile'],
     queryFn: async () => {
       const tokenst = await AsyncStorage.getItem('user');
       const datauser = JSON.parse(tokenst);
@@ -21,10 +21,8 @@ export default function ProfileScreens({navigation}: any) {
     },
   });
   const handleEditprofile = () => {
-    navigation.navigate('Editprofile',{data: data});
+    navigation.navigate('Editprofile');
   };
-  // console.log(data?.data?.fullname);
-  
   const handleLogout = async () => {
     await AsyncStorage.removeItem('user');
     const user = await AsyncStorage.getItem('user');
@@ -33,16 +31,14 @@ export default function ProfileScreens({navigation}: any) {
     }
   };
   return (
-    <ScrollView style={styles.containerContent}>
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      style={styles.containerContent}>
       <View style={styles.editProfile}>
-      {selectedImage ? (
-      <Image style={styles.image} source={{ uri: selectedImage }} />
-      ) : (
-        <View style={[styles.image, styles.imagePlaceholder]} />
-      )}
-        <Text style ={styles.textEditprofile}>{data?.data?.fullname}</Text>
+        <Image style={styles.image} source={{uri: data?.data.image}} />
+        <Text style={styles.textfullname}>{data?.data?.fullname}</Text>
         <TouchableOpacity onPress={handleEditprofile}>
-          <AntDesign name="form" size={24} color="black" />
+          <AntDesign name="form" size={28} color="black" />
         </TouchableOpacity>
       </View>
       <View style={styles.editProfile}>
@@ -56,7 +52,7 @@ export default function ProfileScreens({navigation}: any) {
           <Text style={styles.textEditprofile}>Yêu thích</Text>
         </TouchableOpacity>
         <TouchableOpacity>
-          <AntDesign name="bells" size={24} color="black" style={styles.icon} />
+          <Ionicons name="notifications-outline" size={24} color="black" style={styles.icon} />
           <Text style={styles.textEditprofile}>Thông báo</Text>
         </TouchableOpacity>
         <TouchableOpacity>
@@ -77,7 +73,7 @@ export default function ProfileScreens({navigation}: any) {
           <Text style={styles.textbenefit}>Lợi ích</Text>
         </View>
         <View>
-        <Image style={styles.image1} source={require('../Images/Genz.png')} />
+          <Image style={styles.image1} source={require('../Images/Genz.png')} />
         </View>
       </View>
       <View style={styles.contentManage}>
@@ -136,17 +132,23 @@ const styles = StyleSheet.create({
   containerContent: {
     flex: 1,
     marginHorizontal: 20,
+    marginTop: 10,
     // marginVertical:20,
   },
   editProfile: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop: 10,
+    marginTop: 20,
   },
   textEditprofile: {
     color: '#000',
     fontSize: 18,
+  },
+  textfullname: {
+    color: '#000',
+    fontSize: 25,
+    fontWeight: '800',
   },
   contentAloca: {
     flexDirection: 'row',
@@ -239,15 +241,15 @@ const styles = StyleSheet.create({
   icon: {
     textAlign: 'center',
   },
-  image:{
-    width:80,
-    height:80,
-    borderRadius:50,
+  image: {
+    width: 80,
+    height: 80,
+    borderRadius: 50,
   },
-  image1:{
-    width:70,
-    height:70,
-    borderRadius:50,
+  image1: {
+    width: 70,
+    height: 70,
+    borderRadius: 50,
   },
   imagePlaceholder: {
     backgroundColor: '#ccc',
