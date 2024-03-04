@@ -7,7 +7,6 @@ import {
   Image,
   KeyboardAvoidingView,
   Platform,
-  ScrollView,
   ToastAndroid,
   Alert,
   TouchableOpacity,
@@ -18,6 +17,7 @@ import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+// import Toast from 'react-native-toast-message';
 
 interface Account {
   username: string;
@@ -36,10 +36,10 @@ export default function Login({navigation}: any) {
         const res = await axios.post('http://52.63.147.17:8080/auth/login', data);
         if (res.status === 200) {
           const token = res.data;
-          console.log('token=======', token);
+          // console.log('token=======', token);
           const user = JSON.stringify(token);
           await AsyncStorage.setItem('user', user);
-          console.log('user===', user);
+          // console.log('user===', user);
           ToastAndroid.showWithGravity(
             'Login successful',
             ToastAndroid.LONG,
@@ -49,11 +49,11 @@ export default function Login({navigation}: any) {
         }
       } catch (error: any) {
         if (error.response && error.response.status === 404) {
-          Alert.alert('username or password is invalid');
+          ToastAndroid.show('Vui lòng nhập đầy đủ thông tin', ToastAndroid.SHORT);
         } else {
-          Alert.alert('information invalid');
+          Alert.alert('Thông tin không hợp lệ ');
         }
-        console.error('Verification failed:', error);
+        // console.error('Verification failed:', error);
       }
     },
   });
@@ -87,9 +87,9 @@ export default function Login({navigation}: any) {
         values,
       }) => (
         <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        behavior={Platform.OS === 'ios' ? 700 : 0}
           style={styles.container}>
-          <ScrollView>
+          <View>
             <Image
               source={require('../../Images/Icon.png')}
               style={styles.logoImage}
@@ -163,7 +163,7 @@ export default function Login({navigation}: any) {
                 <Text style={styles.textFacebook}>Facebook</Text>
               </TouchableOpacity>
             </View>
-          </ScrollView>
+          </View>
         </KeyboardAvoidingView>
       )}
     </Formik>
@@ -258,6 +258,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     height: 60,
     gap: 40,
+    marginBottom:90,
   },
 
   loginWithOtherBtn: {
@@ -290,4 +291,10 @@ const styles = StyleSheet.create({
     margin: 0,
     padding: 0,
   },
+  // Toast.show({
+  //   type: 'info',
+  //   position: 'top',
+  //   text1: 'Vui lòng nhập đầy đủ thông tin',
+  //   visibilityTime: 2000,
+  // });
 });

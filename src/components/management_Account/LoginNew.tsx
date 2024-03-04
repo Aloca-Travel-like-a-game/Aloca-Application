@@ -6,51 +6,176 @@ import {
   Image,
   KeyboardAvoidingView,
   Platform,
+  ToastAndroid,
 } from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import {TouchableOpacity} from 'react-native';
-
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import {Formik} from 'formik';
+import {useMutation} from '@tanstack/react-query';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+// import { useMutation } from '@tanstack/react-query';
+// import axios from 'axios';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
+interface NewAccount {
+  password: string;
+  newPassword: string;
+  confirmPassword: string;
+}
 export default function LoginNew({navigation}: any) {
+  const [showPassword, setShowPassword] = useState(false);
+  const [confirmShow, setConfirmShow] = useState(false);
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+  const confirmShowPassword = () => {
+    setConfirmShow(!confirmShow);
+  };
+  const mutationNewLogin = useMutation({
+    mutationFn: async (data: NewAccount) => {
+      try {
+        const jsonValue: any = await AsyncStorage.getItem('user');
+        const newpass = JSON.parse(jsonValue);
+        const token = newpass.accessToken;
+        console.log('token', token);
+
+        const res = await axios.post(
+          'http://52.63.147.17:8080/auth/reset-password/:token',
+          data,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        );
+        if (res.status === 200) {
+          ToastAndroid.showWithGravity(
+            'Cập nhật mật khẩu thành công',
+            ToastAndroid.LONG,
+            ToastAndroid.TOP,
+          );
+          navigation.navigate('Login');
+        }
+      } catch (error: any) {
+        if (error.response && error.response.status === 404) {
+          ToastAndroid.showWithGravity(
+            'Vui lòng nhập thông tin chính xác',
+            ToastAndroid.LONG,
+            ToastAndroid.TOP,
+          );
+        } else {
+          ToastAndroid.showWithGravity(
+            'xác thực không thành công',
+            ToastAndroid.LONG,
+            ToastAndroid.TOP,
+          );
+        }
+        console.error('Verification failed:', error);
+      }
+    },
+  });
+  const handleNewLogin = (data: NewAccount) => {
+    try {
+      if (data && data.confirmPassword === data.newPassword) {
+        mutationNewLogin.mutate(data);
+        console.log('data=>', data);
+      }
+    } catch (error) {
+      ToastAndroid.showWithGravity(
+        'không thành công',
+        ToastAndroid.LONG,
+        ToastAndroid.TOP,
+      );
+    }
+  };
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 500 : 0}
-      style={styles.container}>
-      <Image
-        source={require('../../Images/Icon.png')}
-        style={styles.logoImage}
-      />
-      <Text style={styles.textAloca}>ALOCA</Text>
-      <View style={styles.containerContent}>
-        <Text style={styles.lable}>Nhập mật khẩu mới</Text>
-        <TextInput
-          placeholder="Mật khẩu"
-          style={styles.textInput}
-          placeholderTextColor={'#000'}
-        />
-        <Text style={styles.lable}>Xác nhận mật khẩu mới</Text>
-        <TextInput
-          placeholder=" Xác nhận mật khẩu"
-          style={styles.textInput}
-          placeholderTextColor={'#000'}
-        />
-      </View>
-      <TouchableOpacity
-        style={styles.contentRegister}
-        onPress={() => {
-          navigation.navigate('VerifyAccount');
-        }}>
-        <Text style={styles.textRegister}>Đổi mật khẩu</Text>
-      </TouchableOpacity>
-      <View style={styles.contentLogin}>
-        <Text style={styles.text}>Chưa có tài khoản,</Text>
-        <TouchableOpacity onPress={() => navigation.navigate('Registration')}>
-          <Text style={styles.textLogin}>Đăng ký</Text>
-        </TouchableOpacity>
-      </View>
-      <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')}>
-        <Text style={styles.textLogin}>Đăng nhập</Text>
-      </TouchableOpacity>
-    </KeyboardAvoidingView>
+    <Formik
+      initialValues={{
+        newPassword: '',
+        confirmPassword: '',
+      }}
+      onSubmit={values => {
+        setTimeout(() => {
+          let account = {
+            password: values.newPassword,
+            // confirmPassword: values.confirmPassword,
+          };
+          handleNewLogin(account);
+        }, 100);
+      }}>
+      {({errors, touched, handleChange, handleBlur, handleSubmit, values}) => (
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 500 : 0}
+          style={styles.container}>
+          <Image
+            source={require('../../Images/Icon.png')}
+            style={styles.logoImage}
+          />
+          <Text style={styles.textAloca}>ALOCA</Text>
+          <View style={styles.containerContent}>
+            <Text style={styles.lable}>Nhập mật khẩu mới</Text>
+            <TextInput
+              style={styles.textInput}
+              secureTextEntry={!showPassword}
+              placeholder={
+                errors.newPassword && touched.newPassword
+                  ? 'Cần điền tên đăng nhập'
+                  : ''
+              }
+              placeholderTextColor={'red'}
+              onChangeText={handleChange('newPassword')}
+              onBlur={handleBlur('newPassword')}
+              value={values.newPassword}
+            />
+            <Ionicons
+              name={showPassword ? 'eye' : 'eye-off'}
+              size={24}
+              color="#aaa"
+              onPress={toggleShowPassword}
+              style={styles.toggleShowPassword}
+            />
+            <Text style={styles.lable}>Xác nhận mật khẩu mới</Text>
+            <TextInput
+              style={styles.textInput}
+              secureTextEntry={!confirmShow}
+              placeholder={
+                errors.confirmPassword && touched.confirmPassword
+                  ? 'Cần điền tên đăng nhập'
+                  : ''
+              }
+              placeholderTextColor={'red'}
+              onChangeText={handleChange('confirmPassword')}
+              onBlur={handleBlur('confirmPassword')}
+              value={values.confirmPassword}
+            />
+            <Ionicons
+              name={confirmShow ? 'eye' : 'eye-off'}
+              size={24}
+              color="#aaa"
+              onPress={confirmShowPassword}
+              style={styles.ConfirmShowPassword}
+            />
+          </View>
+          <TouchableOpacity
+            style={styles.contentRegister}
+            onPress={handleSubmit}>
+            <Text style={styles.textRegister}>Đổi mật khẩu</Text>
+          </TouchableOpacity>
+          <View style={styles.contentLogin}>
+            <Text style={styles.text}>Chưa có tài khoản,</Text>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('Registration')}>
+              <Text style={styles.textLogin}>Đăng ký</Text>
+            </TouchableOpacity>
+          </View>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('ForgotPassword')}>
+            <Text style={styles.textLogin}>Đăng nhập</Text>
+          </TouchableOpacity>
+        </KeyboardAvoidingView>
+      )}
+    </Formik>
   );
 }
 
@@ -170,5 +295,15 @@ const styles = StyleSheet.create({
     color: '#000',
     textAlign: 'center',
     marginTop: 10,
+  },
+  toggleShowPassword: {
+    position: 'absolute',
+    right: '5%',
+    top: '27%',
+  },
+  ConfirmShowPassword: {
+    position: 'absolute',
+    top: '75%',
+    left: '90%',
   },
 });

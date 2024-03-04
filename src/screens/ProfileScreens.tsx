@@ -15,7 +15,7 @@ export default function ProfileScreens({navigation}: any) {
   const {data} = useQuery({
     queryKey: ['profile'],
     queryFn: async () => {
-      const tokenst = await AsyncStorage.getItem('user');
+      const tokenst : any = await AsyncStorage.getItem('user');
       const datauser = JSON.parse(tokenst);
       return datauser;
     },
@@ -36,7 +36,7 @@ export default function ProfileScreens({navigation}: any) {
       showsVerticalScrollIndicator={false}
       style={styles.containerContent}>
       <View style={styles.editProfile}>
-        <Image style={styles.image} source={{uri: data?.data.image}} />
+        {data?.data.image !== '' ? <Image style={styles.image} source={{uri: data?.data.image}} /> : null}
         <Text style={styles.textfullname}>{data?.data?.fullname}</Text>
         <TouchableOpacity onPress={handleEditprofile}>
           <AntDesign name="form" size={28} color="black" />
@@ -120,8 +120,7 @@ export default function ProfileScreens({navigation}: any) {
           </Text>
           <Text style={styles.evaluate}>đánh giá</Text>
         </View>
-        <Image source={require('../Images/Polygon 2.png')} />
-        <Image source={require('../Images/image 5.png')} />
+        <Image source={require('../Images/user.png')} />
       </View>
       <TouchableOpacity style={styles.contentAloca} onPress={handleLogout}>
         <Text style={styles.textLogout}>Đăng xuất</Text>
@@ -161,6 +160,8 @@ const styles = StyleSheet.create({
     borderColor: '#FFFFFF',
     marginTop: 10,
     elevation: 2,
+    marginBottom: 10,
+    // height:60,
   },
   textAloca: {
     color: '#000',
@@ -169,21 +170,23 @@ const styles = StyleSheet.create({
   alocaforGenZ: {
     flexDirection: 'row',
     color: '#000',
-fontSize: 15,
+    fontSize: 15,
     backgroundColor: '#FFFFFF',
     borderColor: '#FFFFFF',
     marginTop: 10,
     elevation: 2,
     borderWidth: 1,
     borderRadius: 10,
-    padding: 10,
+    padding: 20,
   },
   textbenefit: {
     color: '#000',
     backgroundColor: '#2AB6AD',
-    padding: 5,
-    width: 60,
+    padding: 8,
+    width: 80,
     borderRadius: 10,
+    textAlign:'center',
+    marginTop:10,
   },
   contentManage: {
     backgroundColor: '#FFFFFF',
@@ -213,21 +216,23 @@ fontSize: 15,
   evaluate: {
     color: '#ffff',
     backgroundColor: '#2AB6AD',
-    padding: 10,
+    padding: 8,
     width: 80,
     borderRadius: 10,
     textAlign: 'center',
+    marginTop:10,
   },
   contentEvaluate: {
     flexDirection: 'row',
-    backgroundColor: '#87CEFA',
+    backgroundColor: '#E0F7FA',
     marginTop: 12,
     elevation: 2,
-    borderWidth: 1,
+    // borderWidth: 1,
     borderRadius: 10,
-    borderColor: '#87CEFA',
+    // borderColor: '#87CEFA',
     justifyContent: 'space-around',
     alignItems: 'center',
+    padding:20,
   },
   textevaluateAloca: {
     color: '#000',
@@ -238,6 +243,7 @@ fontSize: 15,
     color: '#000',
     fontWeight: 'bold',
     borderBottomWidth: 1,
+    padding:5,
   },
   icon: {
     textAlign: 'center',

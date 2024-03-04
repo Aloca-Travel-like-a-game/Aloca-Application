@@ -6,26 +6,47 @@ import {
   Image,
   KeyboardAvoidingView,
   Platform,
+  Alert,
 } from 'react-native';
 import React from 'react';
 import {TouchableOpacity} from 'react-native';
 import {Formik} from 'formik';
 import {validateSchema} from './ForgotPassword_vadidate';
+import {  useMutation } from '@tanstack/react-query';
+import axios from 'axios';
+interface Account {
+  email: string;
+}
 export default function ForgotPassword({navigation}: any) {
-  const handleForgotPassword = () => {
-    navigation.navigate('VerifyCode');
+  const mutationForgotpassword = useMutation({
+    mutationFn: async (email: Account)=>{
+      try {
+        const res = await axios.post('http://52.63.147.17:8080/auth/forgot-password', email);
+          if (res.status === 200){
+            Alert.alert('mã xác thực đã được gửi đến email của bạn');
+            navigation.navigate('RefreshVerifyCode');
+          }
+      } catch (error) {
+        Alert.alert(' gửi mã không thành công');
+      }
+    },
+  });
+  const handleForgotPassword = (email: Account) => {
+    if (email){
+      console.log(email);
+      mutationForgotpassword.mutate(email);
+     }
   };
   return (
     <Formik
       validationSchema={validateSchema}
       initialValues={{email: ''}}
-      onSubmit={values => {
-        setTimeout(() => {
-          let account = {
-            email: values.email,
-          };
-          handleForgotPassword(account);
-        }, 100);
+      onSubmit={ values => {
+        let data = {
+          email: values.email,
+        }
+          handleForgotPassword(data);
+
       }}>
       {({errors, touched, handleChange, handleBlur, values, handleSubmit}) => (
         <KeyboardAvoidingView
@@ -39,7 +60,6 @@ export default function ForgotPassword({navigation}: any) {
           <View style={styles.containerContent}>
             <Text style={styles.lable}>Nhập email bạn đã đăng ký</Text>
             <TextInput
-              placeholder="email"
               value={values.email}
               style={styles.textInput}
               placeholderTextColor={'#000'}

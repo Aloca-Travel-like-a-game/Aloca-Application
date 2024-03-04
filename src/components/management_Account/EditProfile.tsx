@@ -14,42 +14,35 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
 import {launchImageLibrary} from 'react-native-image-picker';
-import { string } from 'yup';
+import {string} from 'yup';
 interface getProfile {
   fullname: string;
   email: string;
   phone: string;
   address: string;
-  selectedImage:string;
+  selectedImage: string;
   image: string;
 }
 
 export default function EditProfile({navigation}: any): getProfile[] {
   const [_userData, setUserData] = useState<any>();
   const [newName, setNewName] = useState<string>('');
-  const [newEmail, setNewEmail] = useState<string>('');
+  // const [newEmail, setNewEmail] = useState<string>('');
   const [newPhone, setNewPhone] = useState<string>();
   const [newAddress, setNewAddress] = useState<string>('');
   const [selectedImage, setSelectedImage] = useState(null);
   const queryClient = useQueryClient();
-console.log('oo',selectedImage );
-console.log('addd', newAddress);
-
-console.log('oppp', _userData);
-
-
-
   const formData = new FormData();
-    formData.append('files', {
-      uri: selectedImage,
-      type: 'image/jpeg',
-      name: 'product_image.jpg',
-    });
+  formData.append('files', {
+    uri: selectedImage,
+    type: 'image/jpeg',
+    name: 'product_image.jpg',
+  });
 
-    Object.keys(string).forEach(key => {
-      formData.append(key, string[key]);
-    });
-    
+  Object.keys(string).forEach(key => {
+    formData.append(key, string[key]);
+  });
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -58,16 +51,18 @@ console.log('oppp', _userData);
         setUserData(userData);
         if (userData) {
           setNewName(userData.data.fullname);
-          setNewEmail(userData.data.email);
+          // setNewEmail(userData.data.email);
           setNewAddress(userData.data.address);
           if (userData.data.phone !== undefined) {
             setNewPhone(userData.data.phone.toString());
-
           } else {
             setNewPhone('');
           }
-          setSelectedImage(userData.data.image);
-         
+          if (userData.data.image !== undefined) {
+            setSelectedImage(userData.data.image);
+          } else {
+            setSelectedImage(null);
+          }
         }
       } catch (error) {
         console.error('Error fetching data: ', error);
@@ -95,17 +90,16 @@ console.log('oppp', _userData);
         );
         if (response.status === 200) {
           Alert.alert('Success', 'Update successfully');
-          setUserData(response.data)
+          setUserData(response.data);
           let newUser = JSON.parse(await AsyncStorage.getItem('user'));
-          console.log('data', data);
-console.log('user data', newUser)
-          for (const [key,value] of Object.entries(data)) {
-            console.log('k, v', key, value);
+          for (const [key, value] of Object.entries(data)) {
+            // console.log('k, v', key, value);
             newUser.data[key] = value;
           }
           await AsyncStorage.setItem('user', JSON.stringify(newUser));
-          console.log('invalidate')
-          queryClient.invalidateQueries({ queryKey: ['profile'] });
+          // console.log('invalidate');
+          queryClient.invalidateQueries({queryKey: ['profile']});
+          navigation.navigate('Tài khoản');
         } else {
           Alert.alert('Invalid information!');
         }
@@ -119,8 +113,9 @@ console.log('user data', newUser)
   const handleOnChange = (key: keyof getProfile, value: string) => {
     if (key === 'fullname') {
       setNewName(value);
-    } else if (key === 'email') {
-      setNewEmail(value);
+    
+    // } else if (key === 'email') {
+    //   setNewEmail(value);
     } else if (key === 'phone') {
       setNewPhone(value);
     } else if (key === 'address') {
@@ -132,18 +127,22 @@ console.log('user data', newUser)
     try {
       // const formData = new FormData();
       // formData.append('image', selectedImage);
-      const response =  await mutationEdit.mutate({
-        fullname: newName,
-        email: newEmail,
-        phone: newPhone,
-        address: newAddress,
-        image: selectedImage,
-      });
-      setUserData(response.data);
+      if (!newName || !newPhone || !newAddress || !selectedImage) {
+        Alert.alert('vui lòng nhập đầy đủ thông tin');
+      } else {
+        const response = await mutationEdit.mutate({
+          fullname: newName,
+          // email: newEmail,
+          phone: newPhone,
+          address: newAddress,
+          image: selectedImage,
+        });
+        setUserData(response.data);
+      }
       // setNewAddress(response.data.address);
-    //  setUserData(response.data)
+      //  setUserData(response.data)
     } catch (error) {
-      console.error('Error updating profile: ', error);
+      // console.error('Error updating profile: ', error);
       // Alert.alert('Error', 'Failed to update profile');
     }
   };
@@ -157,7 +156,7 @@ console.log('user data', newUser)
       maxHeight: 2000,
       maxWidth: 2000,
     };
-    launchImageLibrary(options , async response => {
+    launchImageLibrary(options, async response => {
       if (response.didCancel) {
         console.log('User cancelled image picker');
       } else if (response.error) {
@@ -176,7 +175,12 @@ console.log('user data', newUser)
     <ScrollView style={styles.container}>
       <View style={styles.headerBack}>
         <TouchableOpacity onPress={handleGoBack}>
-          <AntDesign name="arrowleft" size={24} color="white" />
+          <AntDesign
+            name="arrowleft"
+            size={24}
+            color="white"
+            style={styles.icongoBack}
+          />
         </TouchableOpacity>
         <Text style={styles.textInformation}> Thông tin </Text>
       </View>
@@ -188,53 +192,52 @@ console.log('user data', newUser)
           {selectedImage ? (
             <Image
               source={{uri: selectedImage}}
-              resizeMode="contain"
+              // resizeMode="contain"
               style={styles.image}
             />
           ) : (
             <TouchableOpacity
               onPress={openImagePicker}
               style={styles.cameraIcon}>
-<View style={styles.imagePlaceholder}>
-                <AntDesign name="camera" size={28} color="#000" />
-              </View>
-            </TouchableOpacity>
-          )}
-          <TouchableOpacity
-              onPress={openImagePicker}
-              style={styles.cameraIcon}>
               <View style={styles.imagePlaceholder}>
                 <AntDesign name="camera" size={28} color="#000" />
               </View>
             </TouchableOpacity>
+          )}
+          <TouchableOpacity onPress={openImagePicker} style={styles.cameraIcon}>
+            <View style={styles.imagePlaceholder}>
+              <AntDesign name="camera" size={28} color="#000" />
+            </View>
+          </TouchableOpacity>
         </View>
         <View style={styles.InputData}>
-        <Text style={styles.text}>Họ và tên</Text>
-        <TextInput
-          style={styles.textInput}
-          value={newName}
-          onChangeText={text => handleOnChange('fullname', text)}
-        />
-        <Text style={styles.text}>Email</Text>
-        <TextInput
-          style={styles.textInput}
-          value={newEmail}
-          onChangeText={text => handleOnChange('email', text)}
-        />
-        <Text style={styles.text}>Số điện thoại</Text>
-        <TextInput
-          style={styles.textInput}
-          value={newPhone}
-          onChangeText={text => handleOnChange('phone', text)}
-        />
-        <Text style={styles.text}>Địa chỉ </Text>
-        <TextInput
-          style={styles.textInput}
-          value={newAddress}
-          onChangeText={text => handleOnChange('address', text)}
-        />
+          <Text style={styles.text}>Họ và tên</Text>
+          <TextInput
+            style={styles.textInput}
+            value={newName}
+            onChangeText={text => handleOnChange('fullname', text)}
+          />
+          <Text style={styles.text}>Email</Text>
+          <TextInput
+            style={styles.textInput}
+            value={_userData?.data?.email}
+            onChangeText={text => handleOnChange('email', text)}
+          />
+          <Text style={styles.text}>Số điện thoại</Text>
+          <TextInput
+            style={styles.textInput}
+            value={newPhone}
+            onChangeText={text => handleOnChange('phone', text)}
+          />
+          <Text style={styles.text}>Địa chỉ </Text>
+          <TextInput
+            style={styles.textInput}
+            value={newAddress}
+            onChangeText={text => handleOnChange('address', text)}
+          />
         </View>
       </View>
+
       <TouchableOpacity style={styles.save} onPress={handleSaveProfile}>
         <Text style={styles.textSave}>Lưu lại</Text>
       </TouchableOpacity>
@@ -258,6 +261,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderColor: '#808080',
     color: '#000',
+    fontSize: 20,
+    fontWeight: '300',
   },
   contentTextInput: {
     marginHorizontal: 16,
@@ -266,7 +271,7 @@ const styles = StyleSheet.create({
   text: {
     color: '#000',
     fontSize: 18,
-    fontWeight: '400',
+    fontWeight: '200',
   },
   save: {
     height: 50,
@@ -282,9 +287,9 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   image: {
-    width: 90,
-    height: 90,
-    borderRadius:50,
+    width: 100,
+    height: 100,
+    borderRadius: 50,
   },
   contentImage: {
     justifyContent: 'center',
@@ -293,20 +298,23 @@ const styles = StyleSheet.create({
   imagePlaceholder: {
     width: 50,
     height: 50,
-    borderWidth: 1,
+    // borderWidth: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius:50,
-    position:'absolute',
-    marginTop:-15,
-    backgroundColor:'#FFF',
+    borderRadius: 50,
+    position: 'absolute',
+    marginTop: -15,
+    backgroundColor: '#FFF',
+    elevation: 2,
   },
   cameraIcon: {
     backgroundColor: 'rgba(255, 255, 255, 0.5)',
-    
   },
-  InputData:{
+  InputData: {
     marginHorizontal: 16,
     marginTop: 40,
-  }
+  },
+  icongoBack: {
+    marginLeft: 20,
+  },
 });

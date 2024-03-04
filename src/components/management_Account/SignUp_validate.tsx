@@ -2,16 +2,16 @@ import * as Yup from 'yup';
 
 export const Signup_validate = Yup.object().shape({
   username: Yup.string()
-    .min(5, 'name must be at least 5 characters!')
-    .max(12, 'name must have a maximum of 20 characters!')
-    .required('Required'),
-  email: Yup.string().email('Invalid email').required('Required'),
+    .min(5, 'Tên phải có ít nhất 5 ký tự!')
+    .max(12, 'Tên tối đa 20 ký tự!')
+    .required('Nhập Tên Đăng Nhập'),
+  email: Yup.string().email('Email không hợp lệ').required('Nhập Email'),
   password: Yup.string()
-    .min(6, 'Passwords must be at least 6 characters!')
-    .max(20, 'Password must have a maximum of 20 characters!')
-    .required('Required'),
+    .min(6, 'Mật khẩu phải có ít nhất 6 ký tự!')
+    .max(20, 'Mật khẩu tối đa 12 ký tự')
+    .required('Nhập Mật Khẩu'),
   confirmPassword: Yup.string()
-    .min(6, 'Passwords must be at least 6 characters!')
-    .max(20, 'Password must have a maximum of 20 characters!')
-    .required('Required'),
+    .min(6, 'Mật khẩu phải có ít nhất 6 ký tự!')
+    .max(20, 'Mật khẩu tối đa 12 ký tự')
+    .required('Nhập Xác Nhận Mật Khẩu '),
 });
