@@ -222,6 +222,7 @@ export default function EditProfile({navigation}: any): getProfile[] {
             style={styles.textInput}
             value={_userData?.data?.email}
             onChangeText={text => handleOnChange('email', text)}
+            editable={false}
           />
           <Text style={styles.text}>Số điện thoại</Text>
           <TextInput

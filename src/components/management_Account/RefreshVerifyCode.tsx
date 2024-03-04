@@ -19,32 +19,38 @@ export default function RefreshVerifyCode({navigation}: any) {
   const fifthInput = useRef();
   const sixthInput = useRef();
 
-  const handleVerification = () => {
-    const enteredOTP = otp.join('');
-    if (enteredOTP.length !== 6) {
-      Alert.alert('Lỗi', 'Vui lòng nhập đầy đủ mã OTP');
-      return;
+  const handleVerification = async () => {
+    try{
+      const enteredOTP = otp.join('');
+      if (enteredOTP.length !== 6) {
+        Alert.alert('Lỗi', 'Vui lòng nhập đầy đủ mã OTP');
+        return;
+      }
+      let code = enteredOTP.toString();
+      let email = await AsyncStorage.getItem('emailResetPassword');
+     console.log('showemail==',email);
+     
+        axios
+          .post(`http://52.63.147.17:8080/auth/reset-password/${code}`, {
+            email,
+          })
+          .then(response => {
+            console.log('Verification successful:', response.data);
+            Alert.alert('Xác thực thành công!');
+            navigation.navigate('LoginNew');
+          })
+          .catch(error => {
+            if (error.response && error.response.status === 401) { 
+              Alert.alert('Lỗi', 'Mã OTP không chính xác');
+            } else {
+              Alert.alert('Lỗi', 'Xác thực không thành công');
+            }
+            console.error('Verification failed:', error);
+          });
     }
-    AsyncStorage.getItem('registeredEmail').then(email => {
-      axios
-        .post('http://52.63.147.17:8080/auth/confirm-account', {
-          email,
-          code: enteredOTP.toString(),
-        })
-        .then(response => {
-          console.log('Verification successful:', response.data);
-          Alert.alert('Xác thực thành công!');
-          navigation.navigate('LoginNew');
-        })
-        .catch(error => {
-          if (error.response && error.response.status === 401) { 
-            Alert.alert('Lỗi', 'Mã OTP không chính xác');
-          } else {
-            Alert.alert('Lỗi', 'Xác thực không thành công');
-          }
-          console.error('Verification failed:', error);
-        });
-    });
+    catch(err){
+      console.log(err);
+    }
   };
 
   const handleInputChange = (index: number, value: string) => {
