@@ -21,6 +21,7 @@ import EditProfile from '../components/management_Account/EditProfile';
 import {useWindowDimensions} from 'react-native';
 import {TripPlanChoose} from '../screens/TripPlannersStack/CreateTripPlanScreen';
 import { useState } from 'react';
+import NewFeed from '../screens/NewFeed';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -86,7 +87,7 @@ const TabArr = [
     type: Ionicons,
     activeIcon: 'newspaper',
     unActiveIcon: 'newspaper-outline',
-    component: HomeScreens,
+    component: NewFeed,
   },
   {
     route: 'Trợ lý',
