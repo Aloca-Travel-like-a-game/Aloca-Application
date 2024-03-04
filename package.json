@@ -1,5 +1,5 @@
 {
-  "name": "Aloca_Application",
+  "name": "Aloca",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -18,9 +18,10 @@
     "@tanstack/react-query": "^5.18.0",
     "axios": "^1.6.7",
     "formik": "^2.4.5",
-    "react": "18.2.0",
+    "react": "^18.2.0",
     "react-native": "0.73.2",
     "react-native-animatable": "^1.4.0",
+    "react-native-date-picker": "^4.3.7",
     "react-native-gesture-handler": "^2.14.1",
     "react-native-image-picker": "^7.1.0",
     "react-native-pager-view": "^6.2.3",
