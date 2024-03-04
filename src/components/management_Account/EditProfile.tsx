@@ -27,16 +27,11 @@ interface getProfile {
 export default function EditProfile({navigation}: any): getProfile[] {
   const [_userData, setUserData] = useState<any>();
   const [newName, setNewName] = useState<string>('');
-  const [newEmail, setNewEmail] = useState<string>('');
+  // const [newEmail, setNewEmail] = useState<string>('');
   const [newPhone, setNewPhone] = useState<string>();
   const [newAddress, setNewAddress] = useState<string>('');
   const [selectedImage, setSelectedImage] = useState(null);
   const queryClient = useQueryClient();
-  console.log('oo', selectedImage);
-  console.log('addd', newAddress);
-
-  console.log('oppp', _userData);
-
   const formData = new FormData();
   formData.append('files', {
     uri: selectedImage,
@@ -56,14 +51,18 @@ export default function EditProfile({navigation}: any): getProfile[] {
         setUserData(userData);
         if (userData) {
           setNewName(userData.data.fullname);
-          setNewEmail(userData.data.email);
+          // setNewEmail(userData.data.email);
           setNewAddress(userData.data.address);
           if (userData.data.phone !== undefined) {
-            setNewPhone(userData.data?.phone?.toString());
+            setNewPhone(userData.data.phone.toString());
           } else {
             setNewPhone('');
           }
-          setSelectedImage(userData.data.image);
+          if (userData.data.image !== undefined) {
+            setSelectedImage(userData.data.image);
+          } else {
+            setSelectedImage(null);
+          }
         }
       } catch (error) {
         console.error('Error fetching data: ', error);
@@ -93,15 +92,14 @@ export default function EditProfile({navigation}: any): getProfile[] {
           Alert.alert('Success', 'Update successfully');
           setUserData(response.data);
           let newUser = JSON.parse(await AsyncStorage.getItem('user'));
-          // console.log('data', data);
-          // console.log('user data', newUser)
           for (const [key, value] of Object.entries(data)) {
             // console.log('k, v', key, value);
             newUser.data[key] = value;
           }
           await AsyncStorage.setItem('user', JSON.stringify(newUser));
-          // console.log('invalidate')
+          // console.log('invalidate');
           queryClient.invalidateQueries({queryKey: ['profile']});
+          navigation.navigate('Tài khoản');
         } else {
           Alert.alert('Invalid information!');
         }
@@ -115,8 +113,9 @@ export default function EditProfile({navigation}: any): getProfile[] {
   const handleOnChange = (key: keyof getProfile, value: string) => {
     if (key === 'fullname') {
       setNewName(value);
-    } else if (key === 'email') {
-      setNewEmail(value);
+    
+    // } else if (key === 'email') {
+    //   setNewEmail(value);
     } else if (key === 'phone') {
       setNewPhone(value);
     } else if (key === 'address') {
@@ -128,18 +127,22 @@ export default function EditProfile({navigation}: any): getProfile[] {
     try {
       // const formData = new FormData();
       // formData.append('image', selectedImage);
-      const response = await mutationEdit.mutate({
-        fullname: newName,
-        email: newEmail,
-        phone: newPhone,
-        address: newAddress,
-        image: selectedImage,
-      });
-      setUserData(response.data);
+      if (!newName || !newPhone || !newAddress || !selectedImage) {
+        Alert.alert('vui lòng nhập đầy đủ thông tin');
+      } else {
+        const response = await mutationEdit.mutate({
+          fullname: newName,
+          // email: newEmail,
+          phone: newPhone,
+          address: newAddress,
+          image: selectedImage,
+        });
+        setUserData(response.data);
+      }
       // setNewAddress(response.data.address);
       //  setUserData(response.data)
     } catch (error) {
-      console.error('Error updating profile: ', error);
+      // console.error('Error updating profile: ', error);
       // Alert.alert('Error', 'Failed to update profile');
     }
   };
@@ -172,7 +175,12 @@ export default function EditProfile({navigation}: any): getProfile[] {
     <ScrollView style={styles.container}>
       <View style={styles.headerBack}>
         <TouchableOpacity onPress={handleGoBack}>
-          <AntDesign name="arrowleft" size={24} color="white" />
+          <AntDesign
+            name="arrowleft"
+            size={24}
+            color="white"
+            style={styles.icongoBack}
+          />
         </TouchableOpacity>
         <Text style={styles.textInformation}> Thông tin </Text>
       </View>
@@ -184,7 +192,7 @@ export default function EditProfile({navigation}: any): getProfile[] {
           {selectedImage ? (
             <Image
               source={{uri: selectedImage}}
-              resizeMode="contain"
+              // resizeMode="contain"
               style={styles.image}
             />
           ) : (
@@ -212,8 +220,9 @@ export default function EditProfile({navigation}: any): getProfile[] {
           <Text style={styles.text}>Email</Text>
           <TextInput
             style={styles.textInput}
-            value={newEmail}
+            value={_userData?.data?.email}
             onChangeText={text => handleOnChange('email', text)}
+            editable={false}
           />
           <Text style={styles.text}>Số điện thoại</Text>
           <TextInput
@@ -221,7 +230,7 @@ export default function EditProfile({navigation}: any): getProfile[] {
             value={newPhone}
             onChangeText={text => handleOnChange('phone', text)}
           />
-          <Text style={styles.text}>Địa chỉ {newAddress} </Text>
+          <Text style={styles.text}>Địa chỉ </Text>
           <TextInput
             style={styles.textInput}
             value={newAddress}
@@ -229,12 +238,8 @@ export default function EditProfile({navigation}: any): getProfile[] {
           />
         </View>
       </View>
-      <TouchableOpacity
-        style={styles.save}
-        onPress={() => {
-          handleSaveProfile();
-          navigation.navigate('Tài khoản');
-        }}>
+
+      <TouchableOpacity style={styles.save} onPress={handleSaveProfile}>
         <Text style={styles.textSave}>Lưu lại</Text>
       </TouchableOpacity>
     </ScrollView>
@@ -257,6 +262,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderColor: '#808080',
     color: '#000',
+    fontSize: 20,
+    fontWeight: '300',
   },
   contentTextInput: {
     marginHorizontal: 16,
@@ -265,7 +272,7 @@ const styles = StyleSheet.create({
   text: {
     color: '#000',
     fontSize: 18,
-    fontWeight: '400',
+    fontWeight: '200',
   },
   save: {
     height: 50,
@@ -281,8 +288,8 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   image: {
-    width: 90,
-    height: 90,
+    width: 100,
+    height: 100,
     borderRadius: 50,
   },
   contentImage: {
@@ -292,13 +299,14 @@ const styles = StyleSheet.create({
   imagePlaceholder: {
     width: 50,
     height: 50,
-    borderWidth: 1,
+    // borderWidth: 1,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 50,
     position: 'absolute',
     marginTop: -15,
     backgroundColor: '#FFF',
+    elevation: 2,
   },
   cameraIcon: {
     backgroundColor: 'rgba(255, 255, 255, 0.5)',
@@ -306,5 +314,8 @@ const styles = StyleSheet.create({
   InputData: {
     marginHorizontal: 16,
     marginTop: 40,
+  },
+  icongoBack: {
+    marginLeft: 20,
   },
 });

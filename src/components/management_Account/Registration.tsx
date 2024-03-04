@@ -8,13 +8,23 @@ import {
   Platform,
   Alert,
 } from 'react-native';
-import React from 'react';
+import React, { useState } from 'react';
 import {TouchableOpacity, ToastAndroid} from 'react-native';
 import {Formik} from 'formik';
 import axios from 'axios';
 import {Signup_validate} from './SignUp_validate';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useMutation } from '@tanstack/react-query';
 export default function Registration({navigation}: any) {
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+  const toggleShowConfirmPassword = () => {
+    setShowConfirmPassword(!showConfirmPassword);
+  };
   interface Data {
     email: string;
     username: string;
@@ -42,7 +52,10 @@ export default function Registration({navigation}: any) {
    if (data && data.confirmPassword === data.password){
     console.log(data);
     mutation.mutate(data);
-   }};
+   }else {
+    Alert.alert('Vui lòng kiểm tra lại mật khẩu')
+   }
+  };
   return (
     <Formik
       initialValues={{
@@ -73,11 +86,9 @@ export default function Registration({navigation}: any) {
           />
           <Text style={styles.textAloca}>ALOCA</Text>
           <View style={styles.containerContent}>
-            <Text style={styles.lable}>Email</Text>
+            <Text style={styles.lable}>EMAIL</Text>
             <TextInput
-              placeholder="Email"
               style={styles.textInput}
-              placeholderTextColor={'#000'}
               onChangeText={handleChange('email')}
               onBlur={handleBlur('email')}
               value={values.email}
@@ -85,9 +96,8 @@ export default function Registration({navigation}: any) {
             {errors.email && touched.email ? (
               <Text style={styles.errorText}>* {errors.email}</Text>
             ) : null}
-            <Text style={styles.lable}>Tên đăng nhập</Text>
+            <Text style={styles.lable}>TÊN ĐĂNG NHẬP</Text>
             <TextInput
-              placeholder="Tên đăng nhập"
               style={styles.textInput}
               placeholderTextColor={'#000'}
               onChangeText={handleChange('username')}
@@ -97,11 +107,18 @@ export default function Registration({navigation}: any) {
             {errors.username && touched.username ? (
               <Text style={styles.errorText}>* {errors.username}</Text>
             ) : null}
-            <Text style={styles.lable}>Mật khẩu</Text>
+            <Ionicons
+                  name={showPassword ? 'eye' : 'eye-off'}
+                  size={24}
+                  color="#aaa"
+                  onPress={toggleShowPassword}
+                  style={styles.toggleShowPassword}
+                />
+            <Text style={styles.lable}>MẬT KHẨU</Text>
             <TextInput
-              placeholder="Mật khẩu"
               style={styles.textInput}
-              placeholderTextColor={'#000'}
+              placeholderTextColor={'red'}
+              secureTextEntry={!showPassword}
               onChangeText={handleChange('password')}
               onBlur={handleBlur('password')}
               value={values.password}
@@ -109,11 +126,18 @@ export default function Registration({navigation}: any) {
             {errors.password && touched.password ? (
               <Text style={styles.errorText}>* {errors.password}</Text>
             ) : null}
-            <Text style={styles.lable}>Xác nhận mật khẩu</Text>
+             <Ionicons
+                  name={showConfirmPassword ? 'eye' : 'eye-off'}
+                  size={24}
+                  color="#aaa"
+                  onPress={toggleShowConfirmPassword}
+                  style={styles.toggleShowConfirmPassword}
+                />
+            <Text style={styles.lable}>XÁC NHẬN MẬT KHẨU</Text>
             <TextInput
-              placeholder="Xác nhận mật khẩu"
               style={styles.textInput}
               placeholderTextColor={'#000'}
+              secureTextEntry={!showConfirmPassword}
               onChangeText={handleChange('confirmPassword')}
               onBlur={handleBlur('confirmPassword')}
               value={values.confirmPassword}
@@ -173,17 +197,19 @@ const styles = StyleSheet.create({
   },
   containerContent: {
     marginHorizontal: 12,
+    width: 320,
+    alignSelf: 'center',
   },
   logoImage: {
-    width: '60%',
-    height: '26%',
+    width: '40%',
+    height: '20%',
     borderRadius: 12,
-    marginLeft: 80,
+    alignSelf: 'center',
   },
   textRegister: {
-    color: '#000',
+    color: '#ffff',
     fontWeight: '700',
-    fontSize: 18,
+    fontSize: 23,
   },
   contentRegister: {
     justifyContent: 'center',
@@ -192,10 +218,13 @@ const styles = StyleSheet.create({
     padding: 10,
     marginHorizontal: 12,
     borderRadius: 10,
-    backgroundColor: '#0097A7',
-    borderColor: '#0097A7',
-    marginTop: 15,
+    backgroundColor: '#2AB6AD',
+    borderColor: '#2AB6AD',
+    marginTop: 20,
     bottom: 10,
+    height: 60,
+    width: 300,
+    alignSelf: 'center',
   },
   textAloca: {
     color: '#000',
@@ -204,7 +233,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   lable: {
-    color: '#000',
+    color: '#3E4958',
     fontWeight: '500',
     paddingTop: 5,
   },
@@ -220,6 +249,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     gap: 5,
+    marginBottom: 20,
   },
   optionalLogin: {
     flexDirection: 'row',
@@ -279,4 +309,17 @@ const styles = StyleSheet.create({
     margin: 0,
     padding: 0,
   },
+  toggleShowPassword: {
+    position: 'absolute',
+    top:'63%',
+    right:'5%',
+    zIndex: 1,
+
+  },
+  toggleShowConfirmPassword:{
+    position: 'absolute',
+    top:'87%',
+    right:'5%',
+    zIndex: 1,
+  }
 });

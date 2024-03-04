@@ -8,9 +8,6 @@ import Registration from '../components/management_Account/Registration';
 import Login from '../components/management_Account/Login';
 import VerifyAccount from '../components/management_Account/VerifyAccount';
 import LandingPage from '../components/management_Account/LandingPage';
-// import ForgotPassword from '../components/management_Account/ForgotPassword';
-import VerifyCode from '../components/management_Account/VerifyCode';
-// import LoginNew from '../components/management_Account/LoginNew';
 import HomeScreens from '../screens/HomeScreens';
 import {ChatScreen} from '../screens/ChatScreen';
 import {TripPlanScreen} from '../screens/TripPlannersStack/AddNewTripPlanScreen';
@@ -21,10 +18,10 @@ import EditProfile from '../components/management_Account/EditProfile';
 import {useWindowDimensions} from 'react-native';
 import {TripPlanChoose} from '../screens/TripPlannersStack/CreateTripPlanScreen';
 import { useState } from 'react';
-
+import RefreshVerifyCode from '../components/management_Account/RefreshVerifyCode';
+import LoginNew from '../components/management_Account/LoginNew';
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
-
 const TripPlanStack = () => {
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
@@ -172,8 +169,8 @@ export default function Navigation() {
         <Stack.Screen name="Registration" component={Registration} />
         {/* <Stack.Screen name="ForgotPassword" component={ForgotPassword} /> */}
         <Stack.Screen name="VerifyAccount" component={VerifyAccount} />
-        <Stack.Screen name="VerifyCode" component={VerifyCode} />
-        {/* <Stack.Screen name="LoginNew" component={LoginNew} /> */}
+        <Stack.Screen name="RefreshVerifyCode" component={RefreshVerifyCode} />
+        <Stack.Screen name="LoginNew" component={LoginNew} />
         <Stack.Screen name="Homestack" component={Homestack} />
         <Stack.Screen name="Editprofile" component={EditProfile} />
       </Stack.Navigator>
