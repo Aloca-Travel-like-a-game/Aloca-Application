@@ -20,7 +20,8 @@ import ProfileScreens from '../screens/ProfileScreens';
 import EditProfile from '../components/management_Account/EditProfile';
 import {useWindowDimensions} from 'react-native';
 import {TripPlanChoose} from '../screens/TripPlannersStack/CreateTripPlanScreen';
-import { useState } from 'react';
+import {GenerateTripsScreen} from '../screens/TripPlannersStack/GenerateTripsScreen';
+import {useState} from 'react';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -30,6 +31,10 @@ const TripPlanStack = () => {
     <Stack.Navigator screenOptions={{headerShown: false}}>
       <Stack.Screen name="AddNewTrip" component={TripPlanScreen} />
       <Stack.Screen name="TripPlanChoose" component={TripPlanChoose} />
+      <Stack.Screen
+        name="GenerateTripsScreen"
+        component={GenerateTripsScreen}
+      />
     </Stack.Navigator>
   );
 };
@@ -164,8 +169,7 @@ export default function Navigation() {
     <NavigationContainer>
       <Stack.Navigator
         // initialRouteName="Homestack"
-        screenOptions={{headerShown: false}}
-        >
+        screenOptions={{headerShown: false}}>
         {/* <Stack.Screen name="RotatingElement" component={RotatingElement} /> */}
         <Stack.Screen name="LandingPage" component={LandingPage} />
         <Stack.Screen name="Login" component={Login} />

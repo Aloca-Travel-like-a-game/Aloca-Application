@@ -23,6 +23,7 @@ import {removeVietnameseTones} from '../../Helper/removeVietNamTone';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import DatePicker from 'react-native-date-picker';
 import {convertDatetoString} from '../../Helper/convertDate';
+import {useNavigation} from '@react-navigation/native';
 
 const budgetList = [
   'Dưới 1.000.000 VND',
@@ -41,6 +42,8 @@ const AreaTypes = [
 ];
 
 export const TripPlanChoose: FC = (): JSX.Element => {
+  const navigation = useNavigation();
+
   const [proviceShow, setProviceShow] = useState(false);
   const [isChoosingStartDate, setIsChoosingStartDate] = useState(true);
   const [showPicker, setShowPicker] = useState(false);
@@ -121,7 +124,7 @@ export const TripPlanChoose: FC = (): JSX.Element => {
     );
   };
 
-  const handleCalculateDateRange = (startDate: any, endDate: any) => {
+  const handleCalculateDateRange = (startDate: Date, endDate: Date) => {
     if (startDate > endDate) {
       Alert.alert('Vui lòng chọn lại ngày');
     } else {
@@ -360,16 +363,25 @@ export const TripPlanChoose: FC = (): JSX.Element => {
           <TouchableOpacity
             style={styles.sendBtn}
             onPress={() => {
-              handleCalculateDateRange(startDate, endDate);
+              const days = handleCalculateDateRange(startDate, endDate);
               console.log(
                 location,
                 startDate,
                 endDate,
-                handleCalculateDateRange(startDate, endDate),
+                days,
                 quantity,
                 budget,
                 areaTypes,
               );
+              if (days !== undefined && days <= 7) {
+                navigation.navigate('GenerateTripsScreen', {
+                  location: location,
+                  quantity: quantity,
+                  budget: budget,
+                  areaTypes: areaTypes,
+                  days: days,
+                });
+              }
             }}>
             <Text
               style={{
