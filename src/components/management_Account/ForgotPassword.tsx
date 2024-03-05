@@ -14,6 +14,7 @@ import {Formik} from 'formik';
 import {validateSchema} from './ForgotPassword_vadidate';
 import {  useMutation } from '@tanstack/react-query';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 interface Account {
   email: string;
 }
@@ -23,6 +24,8 @@ export default function ForgotPassword({navigation}: any) {
       try {
         const res = await axios.post('http://52.63.147.17:8080/auth/forgot-password', email);
           if (res.status === 200){
+            const emailResetPassword =  email.email;
+            await AsyncStorage.setItem('emailResetPassword', emailResetPassword);
             Alert.alert('mã xác thực đã được gửi đến email của bạn');
             navigation.navigate('RefreshVerifyCode');
           }
@@ -33,7 +36,6 @@ export default function ForgotPassword({navigation}: any) {
   });
   const handleForgotPassword = (email: Account) => {
     if (email){
-      console.log(email);
       mutationForgotpassword.mutate(email);
      }
   };

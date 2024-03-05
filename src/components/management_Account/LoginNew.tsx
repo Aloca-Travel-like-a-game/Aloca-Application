@@ -20,7 +20,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 interface NewAccount {
   password: string;
-  newPassword: string;
+  // newPassword: string;
   confirmPassword: string;
 }
 export default function LoginNew({navigation}: any) {
@@ -35,21 +35,18 @@ export default function LoginNew({navigation}: any) {
   const mutationNewLogin = useMutation({
     mutationFn: async (data: NewAccount) => {
       try {
-        const jsonValue: any = await AsyncStorage.getItem('user');
-        const newpass = JSON.parse(jsonValue);
-        const token = newpass.accessToken;
-        console.log('token', token);
+        let email = await AsyncStorage.getItem('emailResetPassword');
+        console.log('email', email);
+        const dataPass = data;
 
-        const res = await axios.post(
-          'http://52.63.147.17:8080/auth/reset-password/:token',
-          data,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          },
+        const res = await axios.post(`http://52.63.147.17:8080/auth/reset-password/`,
+            {password: dataPass.password,
+            confirmPassword: dataPass.confirmPassword,
+            email},
         );
         if (res.status === 200) {
+          const dataNew = res.data.data;
+          console.log('dataNew--', dataNew);
           ToastAndroid.showWithGravity(
             'Cập nhật mật khẩu thành công',
             ToastAndroid.LONG,
@@ -71,13 +68,13 @@ export default function LoginNew({navigation}: any) {
             ToastAndroid.TOP,
           );
         }
-        console.error('Verification failed:', error);
+        // console.error('Verification failed:', error);
       }
     },
   });
   const handleNewLogin = (data: NewAccount) => {
     try {
-      if (data && data.confirmPassword === data.newPassword) {
+      if (data && data.confirmPassword === data.password) {
         mutationNewLogin.mutate(data);
         console.log('data=>', data);
       }
@@ -92,14 +89,14 @@ export default function LoginNew({navigation}: any) {
   return (
     <Formik
       initialValues={{
-        newPassword: '',
+        password: '',
         confirmPassword: '',
       }}
       onSubmit={values => {
         setTimeout(() => {
           let account = {
-            password: values.newPassword,
-            // confirmPassword: values.confirmPassword,
+            password: values.password,
+            confirmPassword: values.confirmPassword,
           };
           handleNewLogin(account);
         }, 100);
@@ -119,14 +116,14 @@ export default function LoginNew({navigation}: any) {
               style={styles.textInput}
               secureTextEntry={!showPassword}
               placeholder={
-                errors.newPassword && touched.newPassword
+                errors.password && touched.password
                   ? 'Cần điền tên đăng nhập'
                   : ''
               }
               placeholderTextColor={'red'}
-              onChangeText={handleChange('newPassword')}
-              onBlur={handleBlur('newPassword')}
-              value={values.newPassword}
+              onChangeText={handleChange('password')}
+              onBlur={handleBlur('password')}
+              value={values.password}
             />
             <Ionicons
               name={showPassword ? 'eye' : 'eye-off'}
