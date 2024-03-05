@@ -7,6 +7,7 @@ import {
   Alert,
   ImageBackground,
   StyleSheet,
+  ToastAndroid,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
@@ -22,7 +23,10 @@ export default function RefreshVerifyCode({navigation}: any) {
     try {
       const enteredOTP = otp.join('');
       if (enteredOTP.length !== 6) {
-        Alert.alert('Lỗi', 'Vui lòng nhập đầy đủ mã OTP');
+        ToastAndroid.show(
+          'Vui lòng nhập đầy đủ mã OTP! ',
+          ToastAndroid.SHORT,
+        );
         return;
       }
       let code = enteredOTP.toString();
@@ -34,19 +38,26 @@ export default function RefreshVerifyCode({navigation}: any) {
         })
         .then(response => {
           console.log('Verification successful:', response.data);
-          Alert.alert('Xác thực thành công!');
+          ToastAndroid.show(
+            'Xác thực thành công! ',
+            ToastAndroid.SHORT,
+          );
           navigation.navigate('NewPassword');
         })
         .catch(error => {
           if (error.response && error.response.status === 401) {
-            Alert.alert('Lỗi', 'Mã OTP không chính xác');
+            ToastAndroid.show(
+              'Mã OTP không chính xác! ',
+              ToastAndroid.SHORT,
+            );
           } else {
-            Alert.alert('Lỗi', 'Xác thực không thành công');
+            ToastAndroid.show(
+              'Xác thực không thành công! ',
+              ToastAndroid.SHORT,
+            );
           }
-          console.error('Verification failed:', error);
         });
     } catch (err) {
-      console.log(err);
     }
   };
 

@@ -37,15 +37,15 @@ export default function Registration({navigation}: any) {
         .post('http://52.63.147.17:8080/auth/register', data)
         .then(res => {
           if (res.status === 200) {
-            ToastAndroid.show('Registration successful', ToastAndroid.LONG);
+            ToastAndroid.show('Đăng ký tài khoản thành công', ToastAndroid.LONG);
             navigation.navigate('VerifyAccount');
           } else {
-            Alert.alert('invalid information');
+            Alert.alert('Thông tin không hợp lệ');
           }
         })
         .catch(e => {
           console.log('error', e);
-          Alert.alert('faild');
+          Alert.alert('Tài khoản này đã tồn tại');
         });
     },
   });

@@ -8,7 +8,6 @@ import {
   KeyboardAvoidingView,
   Platform,
   ToastAndroid,
-  Alert,
   TouchableOpacity,
 } from 'react-native';
 import {Formik} from 'formik';
@@ -38,7 +37,7 @@ export default function Login({navigation}: any) {
           const user = JSON.stringify(token);
           await AsyncStorage.setItem('user', user);
           ToastAndroid.showWithGravity(
-            'Login successful',
+            'Đăng nhập thành công ',
             ToastAndroid.LONG,
             ToastAndroid.TOP,
           );
@@ -47,11 +46,14 @@ export default function Login({navigation}: any) {
       } catch (error: any) {
         if (error.response && error.response.status === 404) {
           ToastAndroid.show(
-            'Vui lòng nhập đầy đủ thông tin',
+            'Sai tên đăng nhập hoặc mật khẩu ',
             ToastAndroid.SHORT,
           );
         } else {
-          Alert.alert('Thông tin không hợp lệ ');
+          ToastAndroid.show(
+            'Thông tin đăng nhập không chính xác',
+            ToastAndroid.SHORT,
+          );
         }
       }
     },
@@ -102,18 +104,15 @@ export default function Login({navigation}: any) {
               <Text style={styles.label}>MẬT KHẨU</Text>
               <View style={{position: 'relative'}}>
                 <TextInput
-                  placeholder={
-                    errors.password && touched.password
-                      ? 'Cần điền mật khẩu'
-                      : ''
-                  }
-                  placeholderTextColor={'red'}
                   secureTextEntry={!showPassword}
                   style={styles.textInput}
                   onChangeText={handleChange('password')}
                   onBlur={handleBlur('password')}
                   value={values.password}
                 />
+                {errors.password && touched.password ? (
+                <Text style={styles.errorText}>* {errors.password}</Text>
+                ) : null}
                 <Ionicons
                   name={showPassword ? 'eye' : 'eye-off'}
                   size={24}

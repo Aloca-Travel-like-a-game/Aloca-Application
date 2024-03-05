@@ -5,7 +5,7 @@ export const Login_validate = Yup.object().shape({
     .max(12, 'name must have a maximum of 20 characters!')
     .required('Required'),
   password: Yup.string()
-    .min(6, 'Passwords must be at least 6 characters!')
-    .max(20, 'Password must have a maximum of 20 characters!')
-    .required('Required'),
+    .min(6, 'Mật khẩu phải có ít nhất 6 ký tự!')
+    .max(20, 'Mật khẩu tối đa 20 ký tự!')
+    .required('Nhập Mật Khẩu'),
 });

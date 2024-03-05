@@ -6,7 +6,7 @@ import {
   Image,
   KeyboardAvoidingView,
   Platform,
-  Alert,
+  ToastAndroid,
 } from 'react-native';
 import React from 'react';
 import {TouchableOpacity} from 'react-native';
@@ -29,11 +29,17 @@ export default function ForgotPassword({navigation}: any) {
         if (res.status === 200) {
           const emailResetPassword = email.email;
           await AsyncStorage.setItem('emailResetPassword', emailResetPassword);
-          Alert.alert('mã xác thực đã được gửi đến email của bạn');
+          ToastAndroid.show(
+            'mã xác thực đã được gửi đến email của bạn ',
+            ToastAndroid.SHORT,
+          );
           navigation.navigate('RefreshVerifyCode');
         }
       } catch (error) {
-        Alert.alert(' gửi mã không thành công');
+        ToastAndroid.show(
+          'gửi mã không thành công ',
+          ToastAndroid.SHORT,
+        );
       }
     },
   });
@@ -107,6 +113,9 @@ const styles = StyleSheet.create({
   },
   containerContent: {
     marginHorizontal: 12,
+    width: 320,
+    alignSelf: 'center',
+    marginTop:50,
   },
   logoImage: {
     width: '60%',
@@ -125,6 +134,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     padding: 10,
     marginHorizontal: 12,
+    width: 320,
+    alignSelf: 'center',
     borderRadius: 10,
     backgroundColor: '#0097A7',
     borderColor: '#0097A7',
@@ -135,6 +146,7 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: '500',
     textAlign: 'center',
+    marginTop: 18,
   },
   lable: {
     color: '#000',

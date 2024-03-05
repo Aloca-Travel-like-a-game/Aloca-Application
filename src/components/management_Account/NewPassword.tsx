@@ -190,6 +190,9 @@ const styles = StyleSheet.create({
   },
   containerContent: {
     marginHorizontal: 12,
+    width: 320,
+    alignSelf: 'center',
+    marginTop:20,
   },
   logoImage: {
     width: '60%',
@@ -208,16 +211,19 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     padding: 10,
     marginHorizontal: 12,
+    width: 320,
+    alignSelf: 'center',
+    marginTop:10,
     borderRadius: 10,
     backgroundColor: '#0097A7',
     borderColor: '#0097A7',
-    marginTop: 10,
   },
   textAloca: {
     color: '#000',
     fontSize: 35,
     fontWeight: '500',
     textAlign: 'center',
+    marginTop:15,
   },
   lable: {
     color: '#000',
