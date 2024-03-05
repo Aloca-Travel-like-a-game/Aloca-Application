@@ -15,15 +15,11 @@ import {Formik} from 'formik';
 import {useMutation} from '@tanstack/react-query';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-// import { useMutation } from '@tanstack/react-query';
-// import axios from 'axios';
-// import AsyncStorage from '@react-native-async-storage/async-storage';
 interface NewAccount {
   password: string;
-  // newPassword: string;
   confirmPassword: string;
 }
-export default function LoginNew({navigation}: any) {
+export default function NewPassword({navigation}: any) {
   const [showPassword, setShowPassword] = useState(false);
   const [confirmShow, setConfirmShow] = useState(false);
   const toggleShowPassword = () => {
@@ -39,10 +35,13 @@ export default function LoginNew({navigation}: any) {
         console.log('email', email);
         const dataPass = data;
 
-        const res = await axios.post(`http://52.63.147.17:8080/auth/reset-password/`,
-            {password: dataPass.password,
+        const res = await axios.post(
+          `http://52.63.147.17:8080/auth/reset-password/`,
+          {
+            password: dataPass.password,
             confirmPassword: dataPass.confirmPassword,
-            email},
+            email,
+          },
         );
         if (res.status === 200) {
           const dataNew = res.data.data;
@@ -68,11 +67,10 @@ export default function LoginNew({navigation}: any) {
             ToastAndroid.TOP,
           );
         }
-        // console.error('Verification failed:', error);
       }
     },
   });
-  const handleNewLogin = (data: NewAccount) => {
+  const handleNewPassword = (data: NewAccount) => {
     try {
       if (data && data.confirmPassword === data.password) {
         mutationNewLogin.mutate(data);
@@ -98,7 +96,7 @@ export default function LoginNew({navigation}: any) {
             password: values.password,
             confirmPassword: values.confirmPassword,
           };
-          handleNewLogin(account);
+          handleNewPassword(account);
         }, 100);
       }}>
       {({errors, touched, handleChange, handleBlur, handleSubmit, values}) => (
@@ -175,7 +173,6 @@ export default function LoginNew({navigation}: any) {
     </Formik>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

@@ -19,7 +19,8 @@ import {useWindowDimensions} from 'react-native';
 import {TripPlanChoose} from '../screens/TripPlannersStack/CreateTripPlanScreen';
 import { useState } from 'react';
 import RefreshVerifyCode from '../components/management_Account/RefreshVerifyCode';
-import LoginNew from '../components/management_Account/LoginNew';
+import ForgotPassword from '../components/management_Account/ForgotPassword';
+import NewPassword from '../components/management_Account/NewPassword';
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 const TripPlanStack = () => {
@@ -167,10 +168,10 @@ export default function Navigation() {
         <Stack.Screen name="LandingPage" component={LandingPage} />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Registration" component={Registration} />
-        {/* <Stack.Screen name="ForgotPassword" component={ForgotPassword} /> */}
+        <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
         <Stack.Screen name="VerifyAccount" component={VerifyAccount} />
         <Stack.Screen name="RefreshVerifyCode" component={RefreshVerifyCode} />
-        <Stack.Screen name="LoginNew" component={LoginNew} />
+        <Stack.Screen name="NewPassword" component={NewPassword} />
         <Stack.Screen name="Homestack" component={Homestack} />
         <Stack.Screen name="Editprofile" component={EditProfile} />
       </Stack.Navigator>

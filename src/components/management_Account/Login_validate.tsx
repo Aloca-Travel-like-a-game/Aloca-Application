@@ -1,5 +1,4 @@
 import * as Yup from 'yup';
-
 export const Login_validate = Yup.object().shape({
   username: Yup.string()
     .min(5, 'name must be at least 5 characters!')

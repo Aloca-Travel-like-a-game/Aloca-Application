@@ -23,11 +23,9 @@ interface getProfile {
   selectedImage: string;
   image: string;
 }
-
 export default function EditProfile({navigation}: any): getProfile[] {
   const [_userData, setUserData] = useState<any>();
   const [newName, setNewName] = useState<string>('');
-  // const [newEmail, setNewEmail] = useState<string>('');
   const [newPhone, setNewPhone] = useState<string>();
   const [newAddress, setNewAddress] = useState<string>('');
   const [selectedImage, setSelectedImage] = useState(null);
@@ -38,11 +36,9 @@ export default function EditProfile({navigation}: any): getProfile[] {
     type: 'image/jpeg',
     name: 'product_image.jpg',
   });
-
   Object.keys(string).forEach(key => {
     formData.append(key, string[key]);
   });
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -51,7 +47,6 @@ export default function EditProfile({navigation}: any): getProfile[] {
         setUserData(userData);
         if (userData) {
           setNewName(userData.data.fullname);
-          // setNewEmail(userData.data.email);
           setNewAddress(userData.data.address);
           if (userData.data.phone !== undefined) {
             setNewPhone(userData.data.phone.toString());
@@ -70,14 +65,12 @@ export default function EditProfile({navigation}: any): getProfile[] {
     };
     fetchData();
   }, []);
-
   const mutationEdit = useMutation({
     mutationFn: async (data: any) => {
       try {
         const jsonValue: any = await AsyncStorage.getItem('user');
         const dataProfile = JSON.parse(jsonValue);
         const token = dataProfile.accessToken;
-
         const response = await axios.post(
           'http://52.63.147.17:8080/user/profile',
           data,
@@ -93,11 +86,9 @@ export default function EditProfile({navigation}: any): getProfile[] {
           setUserData(response.data);
           let newUser = JSON.parse(await AsyncStorage.getItem('user'));
           for (const [key, value] of Object.entries(data)) {
-            // console.log('k, v', key, value);
             newUser.data[key] = value;
           }
           await AsyncStorage.setItem('user', JSON.stringify(newUser));
-          // console.log('invalidate');
           queryClient.invalidateQueries({queryKey: ['profile']});
           navigation.navigate('Tài khoản');
         } else {
@@ -109,42 +100,29 @@ export default function EditProfile({navigation}: any): getProfile[] {
       }
     },
   });
-
   const handleOnChange = (key: keyof getProfile, value: string) => {
     if (key === 'fullname') {
       setNewName(value);
-    
-    // } else if (key === 'email') {
-    //   setNewEmail(value);
     } else if (key === 'phone') {
       setNewPhone(value);
     } else if (key === 'address') {
       setNewAddress(value);
     }
   };
-
   const handleSaveProfile = async () => {
     try {
-      // const formData = new FormData();
-      // formData.append('image', selectedImage);
       if (!newName || !newPhone || !newAddress || !selectedImage) {
         Alert.alert('vui lòng nhập đầy đủ thông tin');
       } else {
         const response = await mutationEdit.mutate({
           fullname: newName,
-          // email: newEmail,
           phone: newPhone,
           address: newAddress,
           image: selectedImage,
         });
         setUserData(response.data);
       }
-      // setNewAddress(response.data.address);
-      //  setUserData(response.data)
-    } catch (error) {
-      // console.error('Error updating profile: ', error);
-      // Alert.alert('Error', 'Failed to update profile');
-    }
+    } catch (error) {}
   };
   const handleGoBack = () => {
     navigation.goBack();
@@ -190,11 +168,7 @@ export default function EditProfile({navigation}: any): getProfile[] {
           onPress={openImagePicker}
           onTouchEnd={openImagePicker}>
           {selectedImage ? (
-            <Image
-              source={{uri: selectedImage}}
-              // resizeMode="contain"
-              style={styles.image}
-            />
+            <Image source={{uri: selectedImage}} style={styles.image} />
           ) : (
             <TouchableOpacity
               onPress={openImagePicker}
@@ -238,7 +212,6 @@ export default function EditProfile({navigation}: any): getProfile[] {
           />
         </View>
       </View>
-
       <TouchableOpacity style={styles.save} onPress={handleSaveProfile}>
         <Text style={styles.textSave}>Lưu lại</Text>
       </TouchableOpacity>
@@ -262,8 +235,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderColor: '#808080',
     color: '#000',
-    fontSize: 20,
-    fontWeight: '300',
+    fontSize: 18,
+    fontWeight: '400',
   },
   contentTextInput: {
     marginHorizontal: 16,
@@ -272,7 +245,7 @@ const styles = StyleSheet.create({
   text: {
     color: '#000',
     fontSize: 18,
-    fontWeight: '200',
+    fontWeight: '500',
   },
   save: {
     height: 50,
@@ -299,7 +272,6 @@ const styles = StyleSheet.create({
   imagePlaceholder: {
     width: 50,
     height: 50,
-    // borderWidth: 1,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 50,

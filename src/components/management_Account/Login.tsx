@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -11,57 +11,54 @@ import {
   Alert,
   TouchableOpacity,
 } from 'react-native';
-import { Formik } from 'formik';
-import { Login_validate } from './Login_validate';
-import { useMutation } from '@tanstack/react-query';
+import {Formik} from 'formik';
+import {Login_validate} from './Login_validate';
+import {useMutation} from '@tanstack/react-query';
 import axios from 'axios';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-// import Toast from 'react-native-toast-message';
-
 interface Account {
   username: string;
   password: string;
 }
-
 export default function Login({navigation}: any) {
   const [showPassword, setShowPassword] = useState(false);
-
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
   };
   const mutationLogin = useMutation({
     mutationFn: async (data: Account) => {
       try {
-        const res = await axios.post('http://52.63.147.17:8080/auth/login', data);
+        const res = await axios.post(
+          'http://52.63.147.17:8080/auth/login',
+          data,
+        );
         if (res.status === 200) {
           const token = res.data;
-          // console.log('token=======', token);
           const user = JSON.stringify(token);
           await AsyncStorage.setItem('user', user);
-          // console.log('user===', user);
           ToastAndroid.showWithGravity(
             'Login successful',
             ToastAndroid.LONG,
-            ToastAndroid.TOP
+            ToastAndroid.TOP,
           );
           navigation.navigate('Homestack');
         }
       } catch (error: any) {
         if (error.response && error.response.status === 404) {
-          ToastAndroid.show('Vui lòng nhập đầy đủ thông tin', ToastAndroid.SHORT);
+          ToastAndroid.show(
+            'Vui lòng nhập đầy đủ thông tin',
+            ToastAndroid.SHORT,
+          );
         } else {
           Alert.alert('Thông tin không hợp lệ ');
         }
-        // console.error('Verification failed:', error);
       }
     },
   });
-
   const handleLogin = (data: Account) => {
     mutationLogin.mutate(data);
   };
-
   return (
     <Formik
       initialValues={{
@@ -69,7 +66,7 @@ export default function Login({navigation}: any) {
         password: '',
       }}
       validationSchema={Login_validate}
-      onSubmit={(values) => {
+      onSubmit={values => {
         setTimeout(() => {
           let account = {
             username: values.username,
@@ -78,16 +75,9 @@ export default function Login({navigation}: any) {
           handleLogin(account);
         }, 100);
       }}>
-      {({
-        errors,
-        touched,
-        handleChange,
-        handleBlur,
-        handleSubmit,
-        values,
-      }) => (
+      {({errors, touched, handleChange, handleBlur, handleSubmit, values}) => (
         <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 700 : 0}
+          behavior={Platform.OS === 'ios' ? 700 : 0}
           style={styles.container}>
           <View>
             <Image
@@ -110,7 +100,7 @@ export default function Login({navigation}: any) {
                 value={values.username}
               />
               <Text style={styles.label}>MẬT KHẨU</Text>
-              <View style={{ position: 'relative' }}>
+              <View style={{position: 'relative'}}>
                 <TextInput
                   placeholder={
                     errors.password && touched.password
@@ -155,11 +145,7 @@ export default function Login({navigation}: any) {
                 <Text style={styles.textGoogle}>Google</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.loginWithOtherBtn}>
-                <Ionicons
-                  name="logo-facebook"
-                  size={25}
-                  color={'#1877F2'}
-                />
+                <Ionicons name="logo-facebook" size={25} color={'#1877F2'} />
                 <Text style={styles.textFacebook}>Facebook</Text>
               </TouchableOpacity>
             </View>
@@ -169,7 +155,6 @@ export default function Login({navigation}: any) {
     </Formik>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -254,13 +239,11 @@ const styles = StyleSheet.create({
   },
   optionalLogin: {
     flexDirection: 'row',
-    // justifyContent: 'space-around',
     justifyContent: 'center',
     height: 60,
     gap: 40,
-    marginBottom:90,
+    marginBottom: 90,
   },
-
   loginWithOtherBtn: {
     flexDirection: 'row',
     justifyContent: 'center',
@@ -291,10 +274,4 @@ const styles = StyleSheet.create({
     margin: 0,
     padding: 0,
   },
-  // Toast.show({
-  //   type: 'info',
-  //   position: 'top',
-  //   text1: 'Vui lòng nhập đầy đủ thông tin',
-  //   visibilityTime: 2000,
-  // });
 });

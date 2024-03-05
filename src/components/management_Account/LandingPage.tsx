@@ -7,7 +7,6 @@ import {
 } from 'react-native';
 import React from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
 export default function LandingPage({navigation}: any) {
   const handleGetStart = async () => {
     try {
@@ -29,15 +28,8 @@ export default function LandingPage({navigation}: any) {
       <View>
         <Text style={styles.textWellcome}>Chào mừng bạn {'\n'} đến với </Text>
         <Text style={styles.textAloca}>Aloca</Text>
-        <TouchableOpacity
-          style={styles.ButtomNext}
-          onPress={handleGetStart}>
-          {/* onPress={() => navigation.navigate('Login')}> */}
+        <TouchableOpacity style={styles.ButtomNext} onPress={handleGetStart}>
           <Text style={styles.textStart}>Bắt đầu thôi</Text>
-          {/* <Image
-            source={require('../../Images/angle-right.png')}
-            style={styles.iconNext}
-          /> */}
         </TouchableOpacity>
       </View>
     </ImageBackground>

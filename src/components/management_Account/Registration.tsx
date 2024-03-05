@@ -8,13 +8,13 @@ import {
   Platform,
   Alert,
 } from 'react-native';
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {TouchableOpacity, ToastAndroid} from 'react-native';
 import {Formik} from 'formik';
 import axios from 'axios';
 import {Signup_validate} from './SignUp_validate';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { useMutation } from '@tanstack/react-query';
+import {useMutation} from '@tanstack/react-query';
 export default function Registration({navigation}: any) {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -33,28 +33,29 @@ export default function Registration({navigation}: any) {
   }
   const mutation = useMutation({
     mutationFn: async (data: Data) => {
-      axios.post('http://52.63.147.17:8080/auth/register',data)
-      .then(res => {
-        if (res.status === 200) {
-          ToastAndroid.show('Registration successful', ToastAndroid.LONG);
-          navigation.navigate('VerifyAccount');
-        } else {
-          Alert.alert('invalid information');
-        }
-      })
-      .catch(e => {
-        console.log('error', e);
-        Alert.alert('faild');
-      });
+      axios
+        .post('http://52.63.147.17:8080/auth/register', data)
+        .then(res => {
+          if (res.status === 200) {
+            ToastAndroid.show('Registration successful', ToastAndroid.LONG);
+            navigation.navigate('VerifyAccount');
+          } else {
+            Alert.alert('invalid information');
+          }
+        })
+        .catch(e => {
+          console.log('error', e);
+          Alert.alert('faild');
+        });
     },
   });
-  const  handleSignUp = (data: Data)=>{
-   if (data && data.confirmPassword === data.password){
-    console.log(data);
-    mutation.mutate(data);
-   }else {
-    Alert.alert('Vui lòng kiểm tra lại mật khẩu')
-   }
+  const handleSignUp = (data: Data) => {
+    if (data && data.confirmPassword === data.password) {
+      console.log(data);
+      mutation.mutate(data);
+    } else {
+      Alert.alert('Vui lòng kiểm tra lại mật khẩu');
+    }
   };
   return (
     <Formik
@@ -67,13 +68,11 @@ export default function Registration({navigation}: any) {
       validationSchema={Signup_validate}
       onSubmit={values => {
         let data = {
-
           email: values.email,
           username: values.username,
           password: values.password,
           confirmPassword: values.confirmPassword,
         };
-        // const newData = JSON.stringify(data)
         handleSignUp(data);
       }}>
       {({errors, touched, handleChange, handleBlur, handleSubmit, values}) => (
@@ -108,12 +107,12 @@ export default function Registration({navigation}: any) {
               <Text style={styles.errorText}>* {errors.username}</Text>
             ) : null}
             <Ionicons
-                  name={showPassword ? 'eye' : 'eye-off'}
-                  size={24}
-                  color="#aaa"
-                  onPress={toggleShowPassword}
-                  style={styles.toggleShowPassword}
-                />
+              name={showPassword ? 'eye' : 'eye-off'}
+              size={24}
+              color="#aaa"
+              onPress={toggleShowPassword}
+              style={styles.toggleShowPassword}
+            />
             <Text style={styles.lable}>MẬT KHẨU</Text>
             <TextInput
               style={styles.textInput}
@@ -126,13 +125,13 @@ export default function Registration({navigation}: any) {
             {errors.password && touched.password ? (
               <Text style={styles.errorText}>* {errors.password}</Text>
             ) : null}
-             <Ionicons
-                  name={showConfirmPassword ? 'eye' : 'eye-off'}
-                  size={24}
-                  color="#aaa"
-                  onPress={toggleShowConfirmPassword}
-                  style={styles.toggleShowConfirmPassword}
-                />
+            <Ionicons
+              name={showConfirmPassword ? 'eye' : 'eye-off'}
+              size={24}
+              color="#aaa"
+              onPress={toggleShowConfirmPassword}
+              style={styles.toggleShowConfirmPassword}
+            />
             <Text style={styles.lable}>XÁC NHẬN MẬT KHẨU</Text>
             <TextInput
               style={styles.textInput}
@@ -179,7 +178,6 @@ export default function Registration({navigation}: any) {
     </Formik>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -311,15 +309,14 @@ const styles = StyleSheet.create({
   },
   toggleShowPassword: {
     position: 'absolute',
-    top:'63%',
-    right:'5%',
+    top: '63%',
+    right: '5%',
     zIndex: 1,
-
   },
-  toggleShowConfirmPassword:{
+  toggleShowConfirmPassword: {
     position: 'absolute',
-    top:'87%',
-    right:'5%',
+    top: '87%',
+    right: '5%',
     zIndex: 1,
-  }
+  },
 });

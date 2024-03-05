@@ -6,10 +6,10 @@ import {
   TouchableOpacity,
   Alert,
   ImageBackground,
+  StyleSheet,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-
 export default function RefreshVerifyCode({navigation}: any) {
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const firstInput = useRef();
@@ -18,9 +18,8 @@ export default function RefreshVerifyCode({navigation}: any) {
   const fourthInput = useRef();
   const fifthInput = useRef();
   const sixthInput = useRef();
-
   const handleVerification = async () => {
-    try{
+    try {
       const enteredOTP = otp.join('');
       if (enteredOTP.length !== 6) {
         Alert.alert('Lỗi', 'Vui lòng nhập đầy đủ mã OTP');
@@ -28,27 +27,25 @@ export default function RefreshVerifyCode({navigation}: any) {
       }
       let code = enteredOTP.toString();
       let email = await AsyncStorage.getItem('emailResetPassword');
-     console.log('showemail==',email);
-     
-        axios
-          .post(`http://52.63.147.17:8080/auth/reset-password/${code}`, {
-            email,
-          })
-          .then(response => {
-            console.log('Verification successful:', response.data);
-            Alert.alert('Xác thực thành công!');
-            navigation.navigate('LoginNew');
-          })
-          .catch(error => {
-            if (error.response && error.response.status === 401) { 
-              Alert.alert('Lỗi', 'Mã OTP không chính xác');
-            } else {
-              Alert.alert('Lỗi', 'Xác thực không thành công');
-            }
-            console.error('Verification failed:', error);
-          });
-    }
-    catch(err){
+      console.log('showemail==', email);
+      axios
+        .post(`http://52.63.147.17:8080/auth/reset-password/${code}`, {
+          email,
+        })
+        .then(response => {
+          console.log('Verification successful:', response.data);
+          Alert.alert('Xác thực thành công!');
+          navigation.navigate('NewPassword');
+        })
+        .catch(error => {
+          if (error.response && error.response.status === 401) {
+            Alert.alert('Lỗi', 'Mã OTP không chính xác');
+          } else {
+            Alert.alert('Lỗi', 'Xác thực không thành công');
+          }
+          console.error('Verification failed:', error);
+        });
+    } catch (err) {
       console.log(err);
     }
   };
@@ -129,7 +126,7 @@ export default function RefreshVerifyCode({navigation}: any) {
   );
 }
 
-const styles = {
+const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -137,17 +134,17 @@ const styles = {
   },
   contentText: {
     alignItems: 'center',
-    marginTop:80
+    marginTop: 80,
   },
   textAloca: {
     fontSize: 30,
     fontWeight: 'bold',
-    color:'#000'
-   },
+    color: '#000',
+  },
   textVerify: {
     textAlign: 'center',
     marginTop: 20,
-    color:'#FFFF'
+    color: '#FFFF',
   },
   contentInput: {
     flexDirection: 'row',
@@ -162,7 +159,7 @@ const styles = {
     marginHorizontal: 5,
     textAlign: 'center',
     backgroundColor: '#DCDCDC',
-    color:'#000'
+    color: '#000',
   },
   buttonVerify: {
     backgroundColor: '#FFF',
@@ -170,7 +167,7 @@ const styles = {
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 10,
-    width:200,
+    width: 200,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -184,10 +181,10 @@ const styles = {
   },
   codeOTP: {
     marginRight: 5,
-    color:'#000',
+    color: '#000',
   },
   sendCode: {
     textDecorationLine: 'underline',
-    color:'#FFFF'
+    color: '#FFFF',
   },
-};
+});

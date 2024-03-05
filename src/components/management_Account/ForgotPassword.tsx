@@ -11,44 +11,46 @@ import {
 import React from 'react';
 import {TouchableOpacity} from 'react-native';
 import {Formik} from 'formik';
-import {validateSchema} from './ForgotPassword_vadidate';
-import {  useMutation } from '@tanstack/react-query';
+import {useMutation} from '@tanstack/react-query';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {validateSchema} from './ForgotPassword_Validate';
 interface Account {
   email: string;
 }
 export default function ForgotPassword({navigation}: any) {
   const mutationForgotpassword = useMutation({
-    mutationFn: async (email: Account)=>{
+    mutationFn: async (email: Account) => {
       try {
-        const res = await axios.post('http://52.63.147.17:8080/auth/forgot-password', email);
-          if (res.status === 200){
-            const emailResetPassword =  email.email;
-            await AsyncStorage.setItem('emailResetPassword', emailResetPassword);
-            Alert.alert('mã xác thực đã được gửi đến email của bạn');
-            navigation.navigate('RefreshVerifyCode');
-          }
+        const res = await axios.post(
+          'http://52.63.147.17:8080/auth/forgot-password',
+          email,
+        );
+        if (res.status === 200) {
+          const emailResetPassword = email.email;
+          await AsyncStorage.setItem('emailResetPassword', emailResetPassword);
+          Alert.alert('mã xác thực đã được gửi đến email của bạn');
+          navigation.navigate('RefreshVerifyCode');
+        }
       } catch (error) {
         Alert.alert(' gửi mã không thành công');
       }
     },
   });
   const handleForgotPassword = (email: Account) => {
-    if (email){
+    if (email) {
       mutationForgotpassword.mutate(email);
-     }
+    }
   };
   return (
     <Formik
       validationSchema={validateSchema}
       initialValues={{email: ''}}
-      onSubmit={ values => {
+      onSubmit={values => {
         let data = {
           email: values.email,
-        }
-          handleForgotPassword(data);
-
+        };
+        handleForgotPassword(data);
       }}>
       {({errors, touched, handleChange, handleBlur, values, handleSubmit}) => (
         <KeyboardAvoidingView
@@ -88,7 +90,6 @@ export default function ForgotPassword({navigation}: any) {
     </Formik>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

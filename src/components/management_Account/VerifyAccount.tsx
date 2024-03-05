@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Alert,
   ImageBackground,
+  StyleSheet,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
@@ -37,7 +38,7 @@ export default function VerifyAccount({navigation}: any) {
           navigation.navigate('Login');
         })
         .catch(error => {
-          if (error.response && error.response.status === 401) { 
+          if (error.response && error.response.status === 401) {
             Alert.alert('Lỗi', 'Mã OTP không chính xác');
           } else {
             Alert.alert('Lỗi', 'Xác thực không thành công');
@@ -123,7 +124,7 @@ export default function VerifyAccount({navigation}: any) {
   );
 }
 
-const styles = {
+const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -131,17 +132,17 @@ const styles = {
   },
   contentText: {
     alignItems: 'center',
-    marginTop:80
+    marginTop: 80,
   },
   textAloca: {
     fontSize: 30,
     fontWeight: 'bold',
-    color:'#000'
-   },
+    color: '#000',
+  },
   textVerify: {
     textAlign: 'center',
     marginTop: 20,
-    color:'#FFFF'
+    color: '#FFFF',
   },
   contentInput: {
     flexDirection: 'row',
@@ -156,7 +157,7 @@ const styles = {
     marginHorizontal: 5,
     textAlign: 'center',
     backgroundColor: '#DCDCDC',
-    color:'#000'
+    color: '#000',
   },
   buttonVerify: {
     backgroundColor: '#FFF',
@@ -164,7 +165,7 @@ const styles = {
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 10,
-    width:200,
+    width: 200,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -178,10 +179,10 @@ const styles = {
   },
   codeOTP: {
     marginRight: 5,
-    color:'#000',
+    color: '#000',
   },
   sendCode: {
     textDecorationLine: 'underline',
-    color:'#FFFF'
+    color: '#FFFF',
   },
-};
+});

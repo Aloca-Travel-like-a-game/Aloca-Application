@@ -1,5 +1,4 @@
 import * as Yup from 'yup';
-
 export const Signup_validate = Yup.object().shape({
   username: Yup.string()
     .min(5, 'Tên phải có ít nhất 5 ký tự!')
