@@ -34,6 +34,7 @@ export default function Login({navigation}: any) {
         );
         if (res.status === 200) {
           const token = res.data;
+          console.log(token);
           const user = JSON.stringify(token);
           await AsyncStorage.setItem('AccessToken', token.accessToken);
           await AsyncStorage.setItem('user', user);
