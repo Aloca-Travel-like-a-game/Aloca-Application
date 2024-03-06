@@ -18,7 +18,7 @@ export default function LandingPage({navigation}: any) {
         navigation.navigate('Login');
       }
     } catch (error) {
-      console.log('lỗi', error);
+      // console.log('lỗi', error);
     }
   };
   return (

@@ -36,7 +36,7 @@ export default function NewPassword({navigation}: any) {
         const dataPass = data;
 
         const res = await axios.post(
-          `http://52.63.147.17:8080/auth/reset-password/`,
+          'http://52.63.147.17:8080/auth/reset-password/',
           {
             password: dataPass.password,
             confirmPassword: dataPass.confirmPassword,
@@ -109,13 +109,13 @@ export default function NewPassword({navigation}: any) {
           />
           <Text style={styles.textAloca}>ALOCA</Text>
           <View style={styles.containerContent}>
-            <Text style={styles.lable}>Nhập mật khẩu mới</Text>
+            <Text style={styles.lable}>NHẬP MẬT KHẨU MỚI</Text>
             <TextInput
               style={styles.textInput}
               secureTextEntry={!showPassword}
               placeholder={
                 errors.password && touched.password
-                  ? 'Cần điền tên đăng nhập'
+                  ? 'Cần nhập mật khẩu'
                   : ''
               }
               placeholderTextColor={'red'}
@@ -130,13 +130,13 @@ export default function NewPassword({navigation}: any) {
               onPress={toggleShowPassword}
               style={styles.toggleShowPassword}
             />
-            <Text style={styles.lable}>Xác nhận mật khẩu mới</Text>
+            <Text style={styles.lable}>XÁC NHẬN MẬT KHẨU MỚI</Text>
             <TextInput
               style={styles.textInput}
               secureTextEntry={!confirmShow}
               placeholder={
                 errors.confirmPassword && touched.confirmPassword
-                  ? 'Cần điền tên đăng nhập'
+                  ? 'Cần xác nhận mật khẩu'
                   : ''
               }
               placeholderTextColor={'red'}
@@ -215,8 +215,8 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginTop:10,
     borderRadius: 10,
-    backgroundColor: '#0097A7',
-    borderColor: '#0097A7',
+    backgroundColor: '#2AB6AD',
+    borderColor: '#2AB6AD',
   },
   textAloca: {
     color: '#000',

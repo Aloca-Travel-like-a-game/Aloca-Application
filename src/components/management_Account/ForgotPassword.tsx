@@ -137,8 +137,8 @@ const styles = StyleSheet.create({
     width: 320,
     alignSelf: 'center',
     borderRadius: 10,
-    backgroundColor: '#0097A7',
-    borderColor: '#0097A7',
+    backgroundColor: '#2AB6AD',
+    borderColor: '#2AB6AD',
     marginTop: 10,
   },
   textAloca: {
@@ -226,7 +226,8 @@ const styles = StyleSheet.create({
     padding: 0,
   },
   backIcon: {
-    marginLeft: 170,
+    // marginLeft: 170,
+    alignSelf: 'center',
     marginTop: 15,
   },
 });
