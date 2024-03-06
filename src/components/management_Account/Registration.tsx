@@ -106,41 +106,46 @@ export default function Registration({navigation}: any) {
             {errors.username && touched.username ? (
               <Text style={styles.errorText}>* {errors.username}</Text>
             ) : null}
-            <Ionicons
-              name={showPassword ? 'eye' : 'eye-off'}
-              size={24}
-              color="#aaa"
-              onPress={toggleShowPassword}
-              style={styles.toggleShowPassword}
-            />
+
             <Text style={styles.lable}>MẬT KHẨU</Text>
-            <TextInput
-              style={styles.textInput}
-              placeholderTextColor={'red'}
-              secureTextEntry={!showPassword}
-              onChangeText={handleChange('password')}
-              onBlur={handleBlur('password')}
-              value={values.password}
-            />
+            <View>
+              <TextInput
+                style={styles.textInput}
+                placeholderTextColor={'red'}
+                secureTextEntry={!showPassword}
+                onChangeText={handleChange('password')}
+                onBlur={handleBlur('password')}
+                value={values.password}
+              />
+              <Ionicons
+                name={showPassword ? 'eye' : 'eye-off'}
+                size={24}
+                color="#aaa"
+                onPress={toggleShowPassword}
+                style={styles.toggleShowPassword}
+              />
+            </View>
             {errors.password && touched.password ? (
               <Text style={styles.errorText}>* {errors.password}</Text>
             ) : null}
-            <Ionicons
-              name={showConfirmPassword ? 'eye' : 'eye-off'}
-              size={24}
-              color="#aaa"
-              onPress={toggleShowConfirmPassword}
-              style={styles.toggleShowConfirmPassword}
-            />
             <Text style={styles.lable}>XÁC NHẬN MẬT KHẨU</Text>
-            <TextInput
-              style={styles.textInput}
-              placeholderTextColor={'#000'}
-              secureTextEntry={!showConfirmPassword}
-              onChangeText={handleChange('confirmPassword')}
-              onBlur={handleBlur('confirmPassword')}
-              value={values.confirmPassword}
-            />
+            <View>
+              <TextInput
+                style={styles.textInput}
+                placeholderTextColor={'#000'}
+                secureTextEntry={!showConfirmPassword}
+                onChangeText={handleChange('confirmPassword')}
+                onBlur={handleBlur('confirmPassword')}
+                value={values.confirmPassword}
+              />
+              <Ionicons
+                name={showConfirmPassword ? 'eye' : 'eye-off'}
+                size={24}
+                color="#aaa"
+                onPress={toggleShowConfirmPassword}
+                style={styles.toggleShowPassword}
+              />
+            </View>
             {errors.confirmPassword && touched.confirmPassword ? (
               <Text style={styles.errorText}>* {errors.confirmPassword}</Text>
             ) : null}
@@ -309,14 +314,7 @@ const styles = StyleSheet.create({
   },
   toggleShowPassword: {
     position: 'absolute',
-    top: '63%',
     right: '5%',
-    zIndex: 1,
-  },
-  toggleShowConfirmPassword: {
-    position: 'absolute',
-    top: '87%',
-    right: '5%',
-    zIndex: 1,
+    top: '28%',
   },
 });
