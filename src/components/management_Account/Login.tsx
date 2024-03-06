@@ -35,6 +35,7 @@ export default function Login({navigation}: any) {
         if (res.status === 200) {
           const token = res.data;
           const user = JSON.stringify(token);
+          await AsyncStorage.setItem('AccessToken', token.accessToken);
           await AsyncStorage.setItem('user', user);
           ToastAndroid.showWithGravity(
             'Đăng nhập thành công ',
