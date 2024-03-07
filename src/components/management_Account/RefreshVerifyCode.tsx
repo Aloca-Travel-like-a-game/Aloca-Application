@@ -156,13 +156,14 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 20,
     color: '#FFFF',
+    fontSize:15,
   },
   contentInput: {
     flexDirection: 'row',
     marginTop: 20,
   },
   input: {
-    width: 44,
+    width: 40,
     height: 55,
     borderWidth: 1,
     borderColor: '#DCDCDC',
@@ -186,6 +187,7 @@ const styles = StyleSheet.create({
   verify: {
     color: '#40B59F',
     fontWeight: 'bold',
+    fontSize: 18,
   },
   textRefresh: {
     flexDirection: 'row',

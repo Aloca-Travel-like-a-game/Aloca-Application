@@ -15,6 +15,7 @@ import {Formik} from 'formik';
 import {useMutation} from '@tanstack/react-query';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { NewPassword_validate } from './NewPassword_Validate';
 interface NewAccount {
   password: string;
   confirmPassword: string;
@@ -75,6 +76,12 @@ export default function NewPassword({navigation}: any) {
       if (data && data.confirmPassword === data.password) {
         mutationNewLogin.mutate(data);
         console.log('data=>', data);
+      } else {
+        ToastAndroid.showWithGravity(
+          'Mật khẩu xác thực không hợp lệ',
+          ToastAndroid.LONG,
+          ToastAndroid.TOP,
+        );
       }
     } catch (error) {
       ToastAndroid.showWithGravity(
@@ -90,6 +97,7 @@ export default function NewPassword({navigation}: any) {
         password: '',
         confirmPassword: '',
       }}
+      validationSchema={NewPassword_validate}
       onSubmit={values => {
         setTimeout(() => {
           let account = {
@@ -110,47 +118,45 @@ export default function NewPassword({navigation}: any) {
           <Text style={styles.textAloca}>ALOCA</Text>
           <View style={styles.containerContent}>
             <Text style={styles.lable}>NHẬP MẬT KHẨU MỚI</Text>
-            <TextInput
-              style={styles.textInput}
-              secureTextEntry={!showPassword}
-              placeholder={
-                errors.password && touched.password
-                  ? 'Cần nhập mật khẩu'
-                  : ''
-              }
-              placeholderTextColor={'red'}
-              onChangeText={handleChange('password')}
-              onBlur={handleBlur('password')}
-              value={values.password}
-            />
-            <Ionicons
-              name={showPassword ? 'eye' : 'eye-off'}
-              size={24}
-              color="#aaa"
-              onPress={toggleShowPassword}
-              style={styles.toggleShowPassword}
-            />
+            <View>
+              <TextInput
+                style={styles.textInput}
+                secureTextEntry={!showPassword}
+                onChangeText={handleChange('password')}
+                onBlur={handleBlur('password')}
+                value={values.password}
+              />
+              <Ionicons
+                name={showPassword ? 'eye' : 'eye-off'}
+                size={24}
+                color="#aaa"
+                onPress={toggleShowPassword}
+                style={styles.toggleShowPassword}
+              />
+             {errors.password && touched.password ? (
+              <Text style={styles.errorText}>* {errors.password}</Text>
+            ) : null}
+            </View>
             <Text style={styles.lable}>XÁC NHẬN MẬT KHẨU MỚI</Text>
-            <TextInput
-              style={styles.textInput}
-              secureTextEntry={!confirmShow}
-              placeholder={
-                errors.confirmPassword && touched.confirmPassword
-                  ? 'Cần xác nhận mật khẩu'
-                  : ''
-              }
-              placeholderTextColor={'red'}
-              onChangeText={handleChange('confirmPassword')}
-              onBlur={handleBlur('confirmPassword')}
-              value={values.confirmPassword}
-            />
-            <Ionicons
-              name={confirmShow ? 'eye' : 'eye-off'}
-              size={24}
-              color="#aaa"
-              onPress={confirmShowPassword}
-              style={styles.ConfirmShowPassword}
-            />
+            <View>
+              <TextInput
+                style={styles.textInput}
+                secureTextEntry={!confirmShow}
+                onChangeText={handleChange('confirmPassword')}
+                onBlur={handleBlur('confirmPassword')}
+                value={values.confirmPassword}
+              />
+              <Ionicons
+                name={confirmShow ? 'eye' : 'eye-off'}
+                size={24}
+                color="#aaa"
+                onPress={confirmShowPassword}
+                style={styles.toggleShowPassword}
+              />
+            </View>
+            {errors.confirmPassword && touched.confirmPassword ? (
+              <Text style={styles.errorText}>* {errors.confirmPassword}</Text>
+            ) : null}
           </View>
           <TouchableOpacity
             style={styles.contentRegister}
@@ -192,7 +198,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 12,
     width: 320,
     alignSelf: 'center',
-    marginTop:20,
+    marginTop:30,
   },
   logoImage: {
     width: '60%',
@@ -228,13 +234,13 @@ const styles = StyleSheet.create({
   lable: {
     color: '#000',
     fontWeight: '500',
-    paddingTop: 5,
+    paddingTop: 16,
   },
   text: {
     color: '#000',
   },
   textLogin: {
-    color: '#0097A7',
+    color: '#2AB6AD',
     fontWeight: '500',
     textAlign: 'center',
   },
@@ -243,6 +249,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     gap: 5,
+    marginTop:15,
   },
   optionalLogin: {
     flexDirection: 'row',
@@ -301,9 +308,10 @@ const styles = StyleSheet.create({
     right: '5%',
     top: '27%',
   },
-  ConfirmShowPassword: {
-    position: 'absolute',
-    top: '75%',
-    left: '90%',
+  errorText:{
+    fontWeight: 'bold',
+    color: 'red',
+    margin: 0,
+    padding: 0,
   },
 });

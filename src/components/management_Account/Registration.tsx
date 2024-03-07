@@ -106,6 +106,7 @@ export default function Registration({navigation}: any) {
             {errors.username && touched.username ? (
               <Text style={styles.errorText}>* {errors.username}</Text>
             ) : null}
+
             <Text style={styles.lable}>MẬT KHẨU</Text>
             <View>
               <TextInput
@@ -117,12 +118,12 @@ export default function Registration({navigation}: any) {
                 value={values.password}
               />
               <Ionicons
-              name={showPassword ? 'eye' : 'eye-off'}
-              size={24}
-              color="#aaa"
-              onPress={toggleShowPassword}
-              style={styles.toggleShowPassword}
-            />
+                name={showPassword ? 'eye' : 'eye-off'}
+                size={24}
+                color="#aaa"
+                onPress={toggleShowPassword}
+                style={styles.toggleShowPassword}
+              />
             </View>
             {errors.password && touched.password ? (
               <Text style={styles.errorText}>* {errors.password}</Text>
@@ -138,12 +139,12 @@ export default function Registration({navigation}: any) {
                 value={values.confirmPassword}
               />
               <Ionicons
-                  name={showConfirmPassword ? 'eye' : 'eye-off'}
-                  size={24}
-                  color="#aaa"
-                  onPress={toggleShowConfirmPassword}
-                  style={styles.toggleShowPassword}
-                />
+                name={showConfirmPassword ? 'eye' : 'eye-off'}
+                size={24}
+                color="#aaa"
+                onPress={toggleShowConfirmPassword}
+                style={styles.toggleShowPassword}
+              />
             </View>
             {errors.confirmPassword && touched.confirmPassword ? (
               <Text style={styles.errorText}>* {errors.confirmPassword}</Text>
