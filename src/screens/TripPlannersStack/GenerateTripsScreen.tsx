@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react/react-in-jsx-scope */
 /* eslint-disable @typescript-eslint/no-shadow */
 import React, {useState, useEffect} from 'react';
@@ -7,6 +8,8 @@ import {
   Text,
   TouchableOpacity,
   FlatList,
+  StyleSheet,
+  Image,
 } from 'react-native';
 import axios from 'axios';
 import {useRoute} from '@react-navigation/native';
@@ -50,57 +53,84 @@ export const GenerateTripsScreen = () => {
   const retryRequest = () => {
     sendRequest(location, quantity, budget, areaTypes, days);
   };
-  // console.log(loading);
-  // console.log(result);
+
   const renderActivity = ({item: activity}: any) => (
     <View>
-      <Text>{`- ${activity.challenge_summary}`}</Text>
-      <Text>{`  Địa chỉ: ${activity.google_maps_address}`}</Text>
-      <Text>{`  Độ khó: ${activity.level_of_difficult}`}</Text>
+      <Text style={styles.text}>{`${activity.challenge_summary}`}</Text>
     </View>
   );
 
   const renderDay = ({item: day}: any, index: number) => (
-    <View>
-      <Text>{`Ngày: ${index} - ${day.title}`}</Text>
+    <View style={styles.dayView}>
+      <Text
+        style={{
+          ...styles.text,
+          ...styles.sdHeading,
+        }}>{`Ngày ${index} - ${day.title}`}</Text>
       <FlatList
         data={day.activities}
         keyExtractor={activity => activity.challenge_summary}
         renderItem={renderActivity}
       />
-      <Text>{`Chi phí di chuyển: ${day.transportCost}`}</Text>
-      <Text>{`Chi phí ăn uống: ${day.foodCost}`}</Text>
     </View>
   );
 
-  const renderPlan = ({ item: plan }: any, index: number) => (
-    <View>
-      <Text>{`Kế hoạch: ${index}`}</Text>
+  const renderPlan = ({item: plan}: any, index: number) => (
+    <View style={styles.planView}>
+      <Text style={styles.heading}>{`Kế hoạch ${index}`}</Text>
       <FlatList
-        style={{backgroundColor: '#2AB6AD'}}
+        style={{gap: 5}}
         data={Object.values(plan)}
         keyExtractor={(item, index) => item + index.toString()}
-        renderItem={item =>renderDay(item, item.index + 1)}
+        renderItem={item => renderDay(item, item.index + 1)}
       />
+      <TouchableOpacity style={styles.sendBtn}>
+        <Text
+          style={{
+            color: '#fff',
+            fontWeight: '500',
+          }}>
+          Chọn kế hoạch này
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 
   return (
-    <View style={{flex: 1}}>
-      {loading && <ActivityIndicator size="large" color="#0000ff" />}
-      {result && (
-        <View style={{flex: 1}}>
-          <FlatList
-            data={Object.values(result)}
-            keyExtractor={(item, index) => item + index.toString()}
-            renderItem={item => renderPlan(item, item.index + 1)}
-          />
+    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      {loading && (
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <ActivityIndicator size={100} color="#2AB6AD" />
+          <Text style={{color: '#2AB6AD', fontSize: 30, fontWeight: '900'}}>
+            Vui lòng chờ
+          </Text>
         </View>
+      )}
+      {result && (
+        <FlatList
+          style={{gap: 10}}
+          data={Object.values(result)}
+          keyExtractor={(item, index) => item + index.toString()}
+          renderItem={item => renderPlan(item, item.index + 1)}
+        />
       )}
       {!loading && !result && (
         <View>
+          <Text style={{color: '#2AB6AD', fontSize: 30, fontWeight: '900'}}>
+            Gặp sự cố rồi bạn ơi
+          </Text>
+          <Image source={require('../../Images/sorry.png')} />
           <TouchableOpacity onPress={retryRequest}>
-            <Text>Thử lại</Text>
+            <Text
+              style={{
+                color: '#2AB6AD',
+                fontSize: 30,
+                fontWeight: '900',
+                alignSelf: 'center',
+                textDecorationLine: 'underline',
+              }}>
+              Thử lại
+            </Text>
           </TouchableOpacity>
         </View>
       )}
@@ -108,9 +138,41 @@ export const GenerateTripsScreen = () => {
   );
 };
 
-// const styles = StyleSheet.create({
-//   lottie: {
-//     width: 100,
-//     height: 100,
-//   },
-// });
+const styles = StyleSheet.create({
+  planView: {
+    margin: 10,
+    marginBottom: 5,
+    borderWidth: 1,
+    borderColor: '#2AB6AD',
+    borderRadius: 10,
+    padding: 15,
+  },
+  heading: {
+    color: '#2AB6AD',
+    fontWeight: '600',
+    fontSize: 20,
+    marginBottom: 10,
+  },
+  sdHeading: {fontWeight: '600'},
+  dayView: {
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: 'gray',
+    padding: 10,
+    shadowOpacity: 3,
+    shadowColor: 'gray',
+  },
+  text: {
+    color: '#000',
+  },
+  sendBtn: {
+    backgroundColor: '#2AB6AD',
+    padding: 10,
+    borderRadius: 10,
+    width: '50%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 10,
+    alignSelf: 'center',
+  },
+});

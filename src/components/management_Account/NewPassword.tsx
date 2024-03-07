@@ -15,7 +15,7 @@ import {Formik} from 'formik';
 import {useMutation} from '@tanstack/react-query';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { NewPassword_validate } from './NewPassword_Validate';
+import { NewPassword_validate } from './NewPassword_validate';
 interface NewAccount {
   password: string;
   confirmPassword: string;
