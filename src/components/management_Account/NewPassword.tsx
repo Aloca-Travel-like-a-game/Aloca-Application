@@ -37,7 +37,7 @@ export default function NewPassword({navigation}: any) {
         const dataPass = data;
 
         const res = await axios.post(
-          `http://52.63.147.17:8080/auth/reset-password/`,
+          'http://52.63.147.17:8080/auth/reset-password/',
           {
             password: dataPass.password,
             confirmPassword: dataPass.confirmPassword,

@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
   },
   contentText: {
     alignItems: 'center',
-    marginTop: 160,
+    marginTop: 180,
   },
   textAloca: {
     fontSize: 30,
@@ -164,10 +164,10 @@ const styles = StyleSheet.create({
   },
   input: {
     width: 40,
-    height: 50,
+    height: 55,
     borderWidth: 1,
     borderColor: '#DCDCDC',
-    borderRadius: 10,
+    borderRadius: 15,
     marginHorizontal: 5,
     textAlign: 'center',
     backgroundColor: '#DCDCDC',
@@ -180,6 +180,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderRadius: 10,
     width: 250,
+    height:50,
     justifyContent: 'center',
     alignItems: 'center',
   },
