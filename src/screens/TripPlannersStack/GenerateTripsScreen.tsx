@@ -60,9 +60,9 @@ export const GenerateTripsScreen = () => {
     </View>
   );
 
-  const renderDay = ({item: day}: any) => (
+  const renderDay = ({item: day}: any, index: number) => (
     <View>
-      <Text>{`${day.title}`}</Text>
+      <Text>{`Ngày: ${index} - ${day.title}`}</Text>
       <FlatList
         data={day.activities}
         keyExtractor={activity => activity.challenge_summary}
@@ -80,7 +80,7 @@ export const GenerateTripsScreen = () => {
         style={{backgroundColor: '#2AB6AD'}}
         data={Object.values(plan)}
         keyExtractor={(item, index) => item + index.toString()}
-        renderItem={renderDay}
+        renderItem={item =>renderDay(item, item.index + 1)}
       />
     </View>
   );
