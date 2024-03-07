@@ -93,16 +93,13 @@ export default function Login({navigation}: any) {
               <Text style={styles.label}>TÊN ĐĂNG NHẬP</Text>
               <TextInput
                 style={styles.textInput}
-                placeholder={
-                  errors.username && touched.username
-                    ? 'Cần điền tên đăng nhập'
-                    : ''
-                }
-                placeholderTextColor={'red'}
                 onChangeText={handleChange('username')}
                 onBlur={handleBlur('username')}
                 value={values.username}
               />
+              {errors.username && touched.username ? (
+                <Text style={styles.errorText}>* {errors.username}</Text>
+                ) : null}
               <Text style={styles.label}>MẬT KHẨU</Text>
               <View style={{position: 'relative'}}>
                 <TextInput
@@ -112,9 +109,6 @@ export default function Login({navigation}: any) {
                   onBlur={handleBlur('password')}
                   value={values.password}
                 />
-                {errors.password && touched.password ? (
-                <Text style={styles.errorText}>* {errors.password}</Text>
-                ) : null}
                 <Ionicons
                   name={showPassword ? 'eye' : 'eye-off'}
                   size={24}
@@ -123,6 +117,9 @@ export default function Login({navigation}: any) {
                   style={styles.toggleShowPassword}
                 />
               </View>
+              {errors.password && touched.password ? (
+                <Text style={styles.errorText}>* {errors.password}</Text>
+                ) : null}
             </View>
             <TouchableOpacity
               style={styles.contentRegister}
@@ -272,7 +269,6 @@ const styles = StyleSheet.create({
   errorText: {
     fontWeight: 'bold',
     color: 'red',
-    margin: 0,
-    padding: 0,
+   marginBottom:12,
   },
 });

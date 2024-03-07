@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
   },
   contentText: {
     alignItems: 'center',
-    marginTop: 80,
+    marginTop: 180,
   },
   textAloca: {
     fontSize: 30,
@@ -156,6 +156,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 20,
     color: '#FFFF',
+    fontSize:15,
   },
   contentInput: {
     flexDirection: 'row',
@@ -163,10 +164,10 @@ const styles = StyleSheet.create({
   },
   input: {
     width: 40,
-    height: 40,
+    height: 55,
     borderWidth: 1,
     borderColor: '#DCDCDC',
-    borderRadius: 10,
+    borderRadius: 15,
     marginHorizontal: 5,
     textAlign: 'center',
     backgroundColor: '#DCDCDC',
@@ -178,13 +179,15 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 10,
-    width: 200,
+    width: 250,
+    height:50,
     justifyContent: 'center',
     alignItems: 'center',
   },
   verify: {
     color: '#40B59F',
     fontWeight: 'bold',
+    fontSize: 18,
   },
   textRefresh: {
     flexDirection: 'row',

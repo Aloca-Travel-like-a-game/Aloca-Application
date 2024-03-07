@@ -68,7 +68,7 @@ export default function ForgotPassword({navigation}: any) {
           />
           <Text style={styles.textAloca}>Xác thực mật khẩu</Text>
           <View style={styles.containerContent}>
-            <Text style={styles.lable}>Nhập email bạn đã đăng ký</Text>
+            <Text style={styles.lable}>NHẬP EMAIL BẠN ĐÃ ĐĂNG KÝ</Text>
             <TextInput
               value={values.email}
               style={styles.textInput}
@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
     marginLeft: 80,
   },
   textRegister: {
-    color: '#000',
+    color: '#FFFF',
     fontWeight: '700',
     fontSize: 18,
   },
@@ -137,8 +137,8 @@ const styles = StyleSheet.create({
     width: 320,
     alignSelf: 'center',
     borderRadius: 10,
-    backgroundColor: '#0097A7',
-    borderColor: '#0097A7',
+    backgroundColor: '#2AB6AD',
+    borderColor: '#2AB6AD',
     marginTop: 10,
   },
   textAloca: {
@@ -226,7 +226,7 @@ const styles = StyleSheet.create({
     padding: 0,
   },
   backIcon: {
-    marginLeft: 170,
+    alignSelf: 'center',
     marginTop: 15,
   },
 });
