@@ -7,6 +7,7 @@ import {
   Alert,
   Image,
   ScrollView,
+  ToastAndroid,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -82,7 +83,10 @@ export default function EditProfile({navigation}: any): getProfile[] {
           },
         );
         if (response.status === 200) {
-          Alert.alert('Success', 'Update successfully');
+          ToastAndroid.show(
+            'Cập nhật thông tin thành công ',
+            ToastAndroid.SHORT,
+          );
           setUserData(response.data);
           let newUser = JSON.parse(await AsyncStorage.getItem('user'));
           for (const [key, value] of Object.entries(data)) {
@@ -104,7 +108,10 @@ export default function EditProfile({navigation}: any): getProfile[] {
     if (key === 'fullname') {
       setNewName(value);
     } else if (key === 'phone') {
-      setNewPhone(value);
+      // setNewPhone(value);
+      if (/^\d+$/.test(value)) {
+        setNewPhone(value);
+      }
     } else if (key === 'address') {
       setNewAddress(value);
     }
@@ -112,8 +119,17 @@ export default function EditProfile({navigation}: any): getProfile[] {
   const handleSaveProfile = async () => {
     try {
       if (!newName || !newPhone || !newAddress || !selectedImage) {
-        Alert.alert('vui lòng nhập đầy đủ thông tin');
-      } else {
+        ToastAndroid.show(
+          'Vui lòng nhập đầy đủ thông tin ',
+          ToastAndroid.SHORT,
+        );
+      } else if (newPhone.length !== 10) {
+        ToastAndroid.show(
+          'Số điện thoại không hợp lệ ',
+          ToastAndroid.SHORT,
+        );
+      }
+      else {
         const response = await mutationEdit.mutate({
           fullname: newName,
           phone: newPhone,
@@ -203,6 +219,7 @@ export default function EditProfile({navigation}: any): getProfile[] {
             style={styles.textInput}
             value={newPhone}
             onChangeText={text => handleOnChange('phone', text)}
+            keyboardType="numeric"
           />
           <Text style={styles.text}>Địa chỉ </Text>
           <TextInput
@@ -225,7 +242,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#2AB6AD',
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 120,
+    gap: 100,
   },
   textInformation: {
     color: '#FFF',
