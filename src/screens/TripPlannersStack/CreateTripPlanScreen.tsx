@@ -132,11 +132,7 @@ export const TripPlanChoose: FC = (): JSX.Element => {
         Math.ceil(
           (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24),
         ) + 1;
-      if (days > 7) {
-        Alert.alert('Chúng tôi chỉ có thể tạo cho bạn kế hoạch tối đa 7 ngày');
-      } else {
-        return days;
-      }
+      return days;
     }
   };
   const DateRangePicker: React.FC = () => {
@@ -224,10 +220,7 @@ export const TripPlanChoose: FC = (): JSX.Element => {
     updateQuantity(quantity - 1);
   };
 
-  const validate = (
-    location: any,
-    budget: any,
-  ) => {
+  const validate = (location: any, budget: any) => {
     if (location === (false || undefined || null || '')) {
       return false;
     }
@@ -236,7 +229,6 @@ export const TripPlanChoose: FC = (): JSX.Element => {
     }
     return true;
   };
-
   const provinceFilter = useSearch(location);
 
   return (
@@ -386,21 +378,12 @@ export const TripPlanChoose: FC = (): JSX.Element => {
                   budget,
                   areaTypes,
                 );
-                console.log(
-                  validate(
-                    location,
-                    budget,
-                    areaTypes,
-                  ),
-                );
+                console.log(validate(location, budget, areaTypes));
 
                 if (
                   days !== undefined &&
                   days <= 7 &&
-                  validate(
-                    location,
-                    budget,
-                  )
+                  validate(location, budget)
                 ) {
                   navigation.navigate('GenerateTripsScreen', {
                     location: location,
@@ -410,7 +393,14 @@ export const TripPlanChoose: FC = (): JSX.Element => {
                     days: days,
                   });
                 } else {
-                  Alert.alert('Vui lòng điền đầy đủ thông tin!');
+                  if (days !== undefined && days > 7) {
+                    Alert.alert(
+                      'Chúng tôi chỉ có thể tạo cho bạn kế hoạch tối đa 7 ngày',
+                    );
+                  }
+                  if (validate(location, budget) === false) {
+                    Alert.alert('Vui lòng điền đầy đủ thông tin!');
+                  }
                 }
               }}>
               <Text
@@ -475,7 +465,6 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
   },
   dropdown: {
-    // maxHeight: 150,
     marginBottom: 5,
     width: 230,
     alignSelf: 'center',
