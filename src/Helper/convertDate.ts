@@ -16,18 +16,18 @@ export const convertDate = (ngayThangGMT: string): string[] => {
   ];
   const ngay: number = ngayThang.getUTCDate();
   const thang: string[] = [
-    'Tháng 1',
-    'Tháng 2',
-    'Tháng 3',
-    'Tháng 4',
-    'Tháng 5',
-    'Tháng 6',
-    'Tháng 7',
-    'Tháng 8',
-    'Tháng 9',
-    'Tháng 10',
-    'Tháng 11',
-    'Tháng 12',
+    '1',
+    '2',
+    '3',
+    '4',
+    '5',
+    '6',
+    '7',
+    '8',
+    '9',
+    '10',
+    '11',
+    '12',
   ];
   const nam: number = ngayThang.getUTCFullYear();
 
@@ -44,5 +44,5 @@ export const convertDatetoString = (date: Date) => {
   const stringDate = convertDate(
     new Date(date.getTime() + 24 * 60 * 60 * 1000).toDateString(),
   );
-  return `${stringDate[1]} ${stringDate[2]}/${stringDate[3]}`;
+  return `${stringDate[1]}/${stringDate[2]}/${stringDate[3]}`;
 };

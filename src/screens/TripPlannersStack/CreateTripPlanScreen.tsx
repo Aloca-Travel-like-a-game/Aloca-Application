@@ -224,135 +224,154 @@ export const TripPlanChoose: FC = (): JSX.Element => {
     updateQuantity(quantity - 1);
   };
 
+  const validate = (
+    location: any,
+    budget: any,
+  ) => {
+    if (location === (false || undefined || null || '')) {
+      return false;
+    }
+    if (budget === undefined) {
+      return false;
+    }
+    return true;
+  };
+
   const provinceFilter = useSearch(location);
 
   return (
     <KeyboardAvoidingView style={{flex: 1}}>
-      <TouchableWithoutFeedback
-        onPress={Keyboard.dismiss}
-        accessible={false}>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <FlatList
           contentContainerStyle={styles.container}
-          ListHeaderComponent={<>
-            <Text style={styles.header}>Lên kế hoạch cho chuyến đi của bạn</Text>
-            <View>
-              <Text style={styles.sdHeader}>Đâu sẽ là nơi bạn đến?</Text>
-              <View
-                style={{
-                  height: 40,
-                  width: 250,
-                  alignSelf: 'center',
-                  marginBottom: 5,
-                }}>
-                <TextInput
-                  placeholder="Tỉnh, thành phố bạn sẽ tới là?"
-                  placeholderTextColor={'#aaa'}
-                  style={styles.input}
-                  onChangeText={onChangeLocation}
-                  value={location}
-                  onFocus={() => {
-                    setProviceShow(true);
-                  }}
-                />
-                <TouchableOpacity
-                  style={styles.dropdownBtn}
-                  onPress={() => {
-                    setProviceShow(!proviceShow);
-                    onChangeLocation('');
-                  }}>
-                  <Ionicons
-                    name={proviceShow ? 'caret-up' : 'caret-down'}
-                    size={15}
-                    color={'#aaa'}
-                  />
-                </TouchableOpacity>
-              </View>
-              {proviceShow ? (
-                <FlatList
-                  data={provinceFilter}
-                  renderItem={({item}) => <ItemProvice title={item} />}
-                  keyExtractor={item => item}
-                  style={styles.dropdown}
-                />
-              ) : null}
-              <TextInput
-                inputMode="none"
-                placeholder={`${convertDatetoString(
-                  startDate,
-                )} - ${convertDatetoString(endDate)}`}
-                placeholderTextColor={'#000'}
-                style={{...styles.input, borderColor: '#000'}}
-                editable={false}
-              />
-              <DateRangePicker />
-            </View>
-            <View>
-              <Text style={styles.sdHeader}>Kế hoạch lên cho bao nhiêu người?</Text>
+          ListHeaderComponent={
+            <>
+              <Text style={styles.header}>
+                Lên kế hoạch cho chuyến đi của bạn
+              </Text>
               <View>
-                <TextInput
-                  value={quantity.toString() + ' người'}
-                  editable={false}
-                  placeholderTextColor={'#aaa'}
-                  style={styles.input}
-                />
+                <Text style={styles.sdHeader}>Đâu sẽ là nơi bạn đến?</Text>
                 <View
                   style={{
-                    flexDirection: 'row',
                     height: 40,
-                    alignItems: 'center',
-                    position: 'absolute',
-                    right: '10%',
-                  }}>
-                  <TouchableOpacity onPress={decreaseQuantity}>
-                    <Ionicons name="remove-circle" size={30} color={'#aaa'} />
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={increaseQuantity}>
-                    <Ionicons name="add-circle" size={30} color={'#aaa'} />
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </View>
-            <View>
-              <Text style={styles.sdHeader}>Kinh phí của bạn là bao nhiêu?</Text>
-              <View
-                style={{
-                  height: 40,
-                  width: 250,
-                  alignSelf: 'center',
-                  marginBottom: 5,
-                }}>
-                <TouchableOpacity
-                  onPress={() => {
-                    setShowBudget(!showBudget);
+                    width: 250,
+                    alignSelf: 'center',
+                    marginBottom: 5,
                   }}>
                   <TextInput
-                    placeholder="Chọn mức kinh phí của bạn?"
+                    placeholder="Tỉnh, thành phố bạn sẽ tới là?"
                     placeholderTextColor={'#aaa'}
                     style={styles.input}
                     onChangeText={onChangeLocation}
-                    value={budget}
-                    editable={false}
+                    value={location}
+                    onFocus={() => {
+                      setProviceShow(true);
+                    }}
                   />
-                  <View style={styles.dropdownBtn}>
+                  <TouchableOpacity
+                    style={styles.dropdownBtn}
+                    onPress={() => {
+                      setProviceShow(!proviceShow);
+                      onChangeLocation('');
+                    }}>
                     <Ionicons
-                      name={showBudget ? 'caret-up' : 'caret-down'}
+                      name={proviceShow ? 'caret-up' : 'caret-down'}
                       size={15}
                       color={'#aaa'}
                     />
-                  </View>
-                </TouchableOpacity>
-              </View>
-              {showBudget ? (
-                <FlatList
-                  data={budgetList}
-                  renderItem={({item}) => <ItemBudget title={item} />}
-                  keyExtractor={item => item}
-                  style={styles.dropdown}
+                  </TouchableOpacity>
+                </View>
+                {proviceShow ? (
+                  <FlatList
+                    data={provinceFilter}
+                    renderItem={({item}) => <ItemProvice title={item} />}
+                    keyExtractor={item => item}
+                    style={styles.dropdown}
+                  />
+                ) : null}
+                <TextInput
+                  inputMode="none"
+                  placeholder={`${convertDatetoString(
+                    startDate,
+                  )} - ${convertDatetoString(endDate)}`}
+                  placeholderTextColor={'#000'}
+                  style={{...styles.input, borderColor: '#000'}}
+                  editable={false}
                 />
-              ) : null}
-            </View>
-            <Text style={styles.sdHeader}>Kiểu địa điểm bạn muốn đến</Text>
-          </>}
+                <DateRangePicker />
+              </View>
+              <View>
+                <Text style={styles.sdHeader}>
+                  Kế hoạch lên cho bao nhiêu người?
+                </Text>
+                <View>
+                  <TextInput
+                    value={quantity.toString() + ' người'}
+                    editable={false}
+                    placeholderTextColor={'#aaa'}
+                    style={styles.input}
+                  />
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      height: 40,
+                      alignItems: 'center',
+                      position: 'absolute',
+                      right: '10%',
+                    }}>
+                    <TouchableOpacity onPress={decreaseQuantity}>
+                      <Ionicons name="remove-circle" size={30} color={'#aaa'} />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={increaseQuantity}>
+                      <Ionicons name="add-circle" size={30} color={'#aaa'} />
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </View>
+              <View>
+                <Text style={styles.sdHeader}>
+                  Kinh phí của bạn là bao nhiêu?
+                </Text>
+                <View
+                  style={{
+                    height: 40,
+                    width: 250,
+                    alignSelf: 'center',
+                    marginBottom: 5,
+                  }}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setShowBudget(!showBudget);
+                    }}>
+                    <TextInput
+                      placeholder="Chọn mức kinh phí của bạn?"
+                      placeholderTextColor={'#aaa'}
+                      style={styles.input}
+                      onChangeText={onChangeLocation}
+                      value={budget}
+                      editable={false}
+                    />
+                    <View style={styles.dropdownBtn}>
+                      <Ionicons
+                        name={showBudget ? 'caret-up' : 'caret-down'}
+                        size={15}
+                        color={'#aaa'}
+                      />
+                    </View>
+                  </TouchableOpacity>
+                </View>
+                {showBudget ? (
+                  <FlatList
+                    data={budgetList}
+                    renderItem={({item}) => <ItemBudget title={item} />}
+                    keyExtractor={item => item}
+                    style={styles.dropdown}
+                  />
+                ) : null}
+              </View>
+              <Text style={styles.sdHeader}>Kiểu địa điểm bạn muốn đến</Text>
+            </>
+          }
           ListFooterComponent={
             <TouchableOpacity
               style={styles.sendBtn}
@@ -367,7 +386,22 @@ export const TripPlanChoose: FC = (): JSX.Element => {
                   budget,
                   areaTypes,
                 );
-                if (days !== undefined && days <= 7) {
+                console.log(
+                  validate(
+                    location,
+                    budget,
+                    areaTypes,
+                  ),
+                );
+
+                if (
+                  days !== undefined &&
+                  days <= 7 &&
+                  validate(
+                    location,
+                    budget,
+                  )
+                ) {
                   navigation.navigate('GenerateTripsScreen', {
                     location: location,
                     quantity: quantity,
@@ -375,6 +409,8 @@ export const TripPlanChoose: FC = (): JSX.Element => {
                     areaTypes: areaTypes,
                     days: days,
                   });
+                } else {
+                  Alert.alert('Vui lòng điền đầy đủ thông tin!');
                 }
               }}>
               <Text

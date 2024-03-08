@@ -21,7 +21,12 @@ export const ChatScreen: FC = (): JSX.Element => {
   const APIurl = 'http://52.63.147.17:8080/chat ';
   const [token, setToken] = useState();
   const [data, setData] = useState([
-    {type: 'bot', text: 'Tôi có thể giúp gì cho bạn?', error: false},
+    {
+      type: 'bot',
+      text: 'Xin chào, tôi là Aloca, trợ lý du lịch của bạn. Tôi có thể giúp bạn lên kế hoạch cho chuyến đi, giới thiệu điểm đến, giới thiệu khách sạn hoặc trả lời bất kỳ câu hỏi nào liên quan đến du lịch.',
+      error: false,
+    },
+    {type: 'bot', text: 'Bạn muốn làm gì?', error: false},
   ]);
   const [idChat, setIdChat] = useState(null);
   const [textInput, setTextInput] = useState('');
