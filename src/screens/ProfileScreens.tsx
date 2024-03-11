@@ -52,7 +52,7 @@ export default function ProfileScreens({navigation}: any) {
           />
           <Text style={styles.textEditprofile}>Yêu thích</Text>
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={ ()=> navigation.navigate('Notification')}>
           <Ionicons name="notifications-outline" size={24} color="black" style={styles.icon} />
           <Text style={styles.textEditprofile}>Thông báo</Text>
         </TouchableOpacity>
