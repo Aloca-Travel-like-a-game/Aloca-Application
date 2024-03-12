@@ -81,7 +81,7 @@ export default function Login({navigation}: any) {
       }}>
       {({errors, touched, handleChange, handleBlur, handleSubmit, values}) => (
         <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 700 : 0}
+          behavior={Platform.OS === 'ios' ? 'height' : 'padding'}
           style={styles.container}>
           <View>
             <Image
@@ -137,7 +137,7 @@ export default function Login({navigation}: any) {
               onPress={() => navigation.navigate('ForgotPassword')}>
               <Text style={styles.textforgotPass}>Quên mật khẩu?</Text>
             </TouchableOpacity>
-            <View style={styles.optionalLogin}>
+            {/* <View style={styles.optionalLogin}>
               <TouchableOpacity style={styles.loginWithOtherBtn}>
                 <Ionicons name="logo-google" size={25} color={'#EB4335'} />
                 <Text style={styles.textGoogle}>Google</Text>
@@ -146,7 +146,7 @@ export default function Login({navigation}: any) {
                 <Ionicons name="logo-facebook" size={25} color={'#1877F2'} />
                 <Text style={styles.textFacebook}>Facebook</Text>
               </TouchableOpacity>
-            </View>
+            </View> */}
           </View>
         </KeyboardAvoidingView>
       )}

@@ -19,7 +19,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const ChatScreen: FC = (): JSX.Element => {
   const APIurl = 'http://52.63.147.17:8080/chat ';
-  const [token, setToken] = useState();
+  const [token, setToken] = useState<any>();
   const [data, setData] = useState([
     {
       type: 'bot',

@@ -378,7 +378,6 @@ export const TripPlanChoose: FC = (): JSX.Element => {
                   budget,
                   areaTypes,
                 );
-                console.log(validate(location, budget, areaTypes));
 
                 if (
                   days !== undefined &&
@@ -391,6 +390,8 @@ export const TripPlanChoose: FC = (): JSX.Element => {
                     budget: budget,
                     areaTypes: areaTypes,
                     days: days,
+                    startDate: startDate,
+                    endDate: endDate,
                   });
                 } else {
                   if (days !== undefined && days > 7) {

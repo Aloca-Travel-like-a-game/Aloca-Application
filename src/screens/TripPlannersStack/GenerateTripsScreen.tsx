@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react/react-in-jsx-scope */
 /* eslint-disable @typescript-eslint/no-shadow */
@@ -10,15 +11,30 @@ import {
   FlatList,
   StyleSheet,
   Image,
+  Modal,
+  ImageBackground,
+  TextInput,
+  Pressable,
+  Dimensions,
+  Platform,
+  Alert,
 } from 'react-native';
 import axios from 'axios';
 import {useRoute} from '@react-navigation/native';
+import {KeyboardAvoidingView} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const GenerateTripsScreen = () => {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<any>(null);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [planName, onChangePlanName] = useState('');
+  const [planConfirm, setPlanConfirm] = useState<any>();
+  const [token, setToken] = useState<any>();
   const route = useRoute();
-  const {location, quantity, budget, areaTypes, days}: any = route.params;
+
+  const {location, quantity, budget, areaTypes, days, startDate, endDate}: any =
+    route.params;
   const APIurl = 'http://52.63.147.17:8080/trip-plan/';
 
   const sendRequest = async (
@@ -49,9 +65,31 @@ export const GenerateTripsScreen = () => {
   useEffect(() => {
     sendRequest(location, quantity, budget, areaTypes, days);
   }, [location, quantity, budget, areaTypes, days]);
-
+  useEffect(() => {
+    AsyncStorage.getItem('AccessToken').then((result: any) => setToken(result));
+  });
   const retryRequest = () => {
     sendRequest(location, quantity, budget, areaTypes, days);
+  };
+
+  const PickUpPlan = async (item: any) => {
+    console.log(item);
+    const res = await axios.post(
+      'http://52.63.147.17:8080/trip-plan/save-trip',
+      {
+        jsonTrip: item.planConfirm,
+        location: 'Da Nang',
+        startDate: startDate,
+        endDate: endDate,
+        numberOfDay: item.planName,
+      },
+      {
+        headers: {
+          Authorization: 'Bearer ' + token,
+        },
+      },
+    );
+    console.log(res.data.message);
   };
 
   const renderActivity = ({item: activity}: any) => (
@@ -59,7 +97,6 @@ export const GenerateTripsScreen = () => {
       <Text style={styles.text}>{`${activity.challenge_summary}`}</Text>
     </View>
   );
-
   const renderDay = ({item: day}: any, index: number) => (
     <View style={styles.dayView}>
       <Text
@@ -77,14 +114,21 @@ export const GenerateTripsScreen = () => {
 
   const renderPlan = ({item: plan}: any, index: number) => (
     <View style={styles.planView}>
-      <Text style={styles.heading}>{`Kế hoạch ${index}`}</Text>
+      <Text style={styles.heading}>{`Kế hoạch ${index} - ${location}`}</Text>
       <FlatList
         style={{gap: 5}}
         data={Object.values(plan)}
         keyExtractor={(item, index) => item + index.toString()}
         renderItem={item => renderDay(item, item.index + 1)}
       />
-      <TouchableOpacity style={styles.sendBtn}>
+      <TouchableOpacity
+        style={styles.sendBtn}
+        onPress={() => {
+          setModalVisible(true);
+          if (plan !== undefined) {
+            setPlanConfirm(Object.values(plan));
+          }
+        }}>
         <Text
           style={{
             color: '#fff',
@@ -97,43 +141,131 @@ export const GenerateTripsScreen = () => {
   );
 
   return (
-    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-      {loading && (
-        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-          <ActivityIndicator size={100} color="#2AB6AD" />
-          <Text style={{color: '#2AB6AD', fontSize: 30, fontWeight: '900'}}>
-            Vui lòng chờ
-          </Text>
-        </View>
-      )}
-      {result && (
-        <FlatList
-          style={{gap: 10}}
-          data={Object.values(result)}
-          keyExtractor={(item, index) => item + index.toString()}
-          renderItem={item => renderPlan(item, item.index + 1)}
-        />
-      )}
-      {!loading && !result && (
-        <View>
-          <Text style={{color: '#2AB6AD', fontSize: 30, fontWeight: '900'}}>
-            Gặp sự cố rồi bạn ơi
-          </Text>
-          <Image source={require('../../Images/sorry.png')} />
-          <TouchableOpacity onPress={retryRequest}>
-            <Text
-              style={{
-                color: '#2AB6AD',
-                fontSize: 30,
-                fontWeight: '900',
-                alignSelf: 'center',
-                textDecorationLine: 'underline',
-              }}>
-              Thử lại
+    // <TouchableWithoutFeedback>
+    <View
+      style={{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '100%',
+      }}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'height' : 'padding'}
+        style={{flex: 1, justifyContent: 'center', alignItems: 'center', width: '100%'}}>
+        {loading && (
+          <View
+            style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+            <ActivityIndicator size={100} color="#2AB6AD" />
+            <Text style={{color: '#2AB6AD', fontSize: 30, fontWeight: '900'}}>
+              Vui lòng chờ
             </Text>
-          </TouchableOpacity>
-        </View>
-      )}
+          </View>
+        )}
+        {!loading && result && (
+          <FlatList
+            ListHeaderComponent={
+              <Modal
+                style={{backgroundColor: 'black', width: '100%'}}
+                animationType="fade"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {
+                  setModalVisible(!modalVisible);
+                }}>
+                <Pressable
+                  onPress={() => setModalVisible(!modalVisible)}
+                  style={{
+                    flex: 1,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: 'black',
+                    opacity: 0.4,
+                  }}
+                />
+                <View style={styles.nameForTripForm}>
+                  <Text style={styles.heading}>Đặt tên cho kế hoạch</Text>
+                  <TextInput
+                    onChangeText={onChangePlanName}
+                    style={styles.input}
+                  />
+                  <View
+                    style={{
+                      alignSelf: 'flex-end',
+                      width: '50%',
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                    }}>
+                    <TouchableOpacity
+                      onPress={() => setModalVisible(!modalVisible)}>
+                      <Text
+                        style={{
+                          ...styles.btn,
+                          ...styles.sdHeading,
+                          color: '#fff',
+                        }}>
+                        Hủy
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() => {
+                        if (
+                          planName === '' ||
+                          planName === null ||
+                          planName.trim() === ''
+                        ) {
+                          Alert.alert('Vui lòng nhập tên kế hoạch');
+                        } else {
+                          PickUpPlan({planName, planConfirm});
+                          onChangePlanName('');
+                          setPlanConfirm(null);
+                          setModalVisible(!modalVisible);
+                        }
+                      }}>
+                      <Text
+                        style={{
+                          ...styles.btn,
+                          ...styles.sdHeading,
+                          color: '#fff',
+                        }}>
+                        Xác nhận
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </Modal>
+            }
+            style={{zIndex: 2, gap: 10}}
+            data={Object.values(result)}
+            keyExtractor={(item, index) => item + index.toString()}
+            renderItem={item => renderPlan(item, item.index + 1)}
+          />
+        )}
+        {!loading && !result && (
+          <ImageBackground
+            style={{
+              width: '100%',
+              flex: 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+            source={require('../../Images/ErrBackGround.png')}>
+            <Text style={{color: '#2AB6AD', fontSize: 35, fontWeight: '900'}}>
+              Gặp sự cố rồi bạn ơi!
+            </Text>
+            <Image
+              style={{
+                width: 200,
+                height: 220,
+                alignSelf: 'center',
+              }}
+              source={require('../../Images/Sorry.png')}
+            />
+            <TouchableOpacity onPress={retryRequest}>
+              <Text style={styles.retryBtn}>Thử lại</Text>
+            </TouchableOpacity>
+          </ImageBackground>
+        )}
+      </KeyboardAvoidingView>
     </View>
   );
 };
@@ -174,5 +306,52 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 10,
     alignSelf: 'center',
+  },
+  nameForTripForm: {
+    position: 'absolute',
+    backgroundColor: '#fff',
+    padding: 20,
+    borderRadius: 10,
+    borderColor: '#2AB6AD',
+    borderWidth: 1,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+    opacity: 1,
+    left: Dimensions.get('window').width / 2 - 145,
+    top: Dimensions.get('window').height / 2 - 100,
+  },
+  input: {
+    height: 40,
+    width: 250,
+    borderWidth: 1,
+    borderColor: '#aaa',
+    borderRadius: 10,
+    marginBottom: 5,
+    paddingLeft: 15,
+    alignSelf: 'center',
+    color: '#000',
+  },
+  btn: {
+    backgroundColor: '#2AB6AD',
+    padding: 10,
+    borderRadius: 10,
+  },
+  retryBtn: {
+    color: '#2AB6AD',
+    fontSize: 30,
+    fontWeight: '900',
+    alignSelf: 'center',
+    backgroundColor: '#fff',
+    padding: 10,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#2AB6AD',
+    marginTop: 10,
   },
 });
