@@ -1,15 +1,25 @@
-import {View, TextInput, StyleSheet, Image, Text, FlatList, TouchableOpacity, Linking} from 'react-native';
+/* eslint-disable react-native/no-inline-styles */
+import {
+  View,
+  TextInput,
+  StyleSheet,
+  Image,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  Linking,
+} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {SliderBox} from 'react-native-image-slider-box';
+// import {SliderBox} from 'react-native-image-slider-box';
 import Video from 'react-native-video';
 import React from 'react';
-import { useQuery } from '@tanstack/react-query';
+import {useQuery} from '@tanstack/react-query';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-export default function HomeScreens( {navigation}: any) {
-  const {data: dataUser } = useQuery({
+export default function HomeScreens({navigation}: any) {
+  const {data: dataUser} = useQuery({
     queryKey: ['profile'],
     queryFn: async () => {
-      const tokenst : any = await AsyncStorage.getItem('user');
+      const tokenst: any = await AsyncStorage.getItem('user');
       const datauser = JSON.parse(tokenst);
       return datauser;
     },
@@ -18,22 +28,22 @@ export default function HomeScreens( {navigation}: any) {
     {
       id: 1,
       name: require('../videos/shortvideo.mp4'),
-      youtubeLink:'https://youtube.com/shorts/UklwTkNkr8c?si=LLpw6xPVOiIffMhR',
+      youtubeLink: 'https://youtube.com/shorts/UklwTkNkr8c?si=LLpw6xPVOiIffMhR',
     },
     {
       id: 2,
       name: require('../videos/shortvideotravel1.mp4'),
-      youtubeLink:'https://youtube.com/shorts/UklwTkNkr8c?si=1tS0sOXrWGhiey30',
+      youtubeLink: 'https://youtube.com/shorts/UklwTkNkr8c?si=1tS0sOXrWGhiey30',
     },
     {
       id: 3,
       name: require('../videos/shortvideotravel2.mp4'),
-      youtubeLink:'https://youtube.com/shorts/Zfaavxyy4Gs?si=KJyCywt4SuZQvZMF',
+      youtubeLink: 'https://youtube.com/shorts/Zfaavxyy4Gs?si=KJyCywt4SuZQvZMF',
     },
     {
       id: 4,
       name: require('../videos/shortvideotravel3.mp4'),
-      youtubeLink:'https://youtube.com/shorts/BlWVo5CB6RU?si=XHaP3gdkX1IAcEC4',
+      youtubeLink: 'https://youtube.com/shorts/BlWVo5CB6RU?si=XHaP3gdkX1IAcEC4',
     },
   ];
 
@@ -60,15 +70,19 @@ export default function HomeScreens( {navigation}: any) {
           />
           <Ionicons name="search" size={24} color="black" style={styles.icon} />
         </View>
-        <TouchableOpacity style={styles.iconnotifications} onPress={()=>navigation.navigate('Notification')} >
+        <TouchableOpacity
+          style={styles.iconnotifications}
+          onPress={() => navigation.navigate('Notification')}>
           <Ionicons name="notifications-outline" size={42} color="black" />
         </TouchableOpacity>
         <View>
           {/* <Image source={require('../Images/Genz.png')} style={styles.image} /> */}
-          {dataUser?.data.image !== '' ? <Image style={styles.image} source={{uri: dataUser?.data.image}} /> : null}
+          {dataUser?.data.image !== '' ? (
+            <Image style={styles.image} source={{uri: dataUser?.data.image}} />
+          ) : null}
         </View>
       </View>
-      <View style={styles.sliderContainer}>
+      {/* <View style={styles.sliderContainer}>
         <SliderBox
           style={styles.sliderImage}
           images={images}
@@ -78,10 +92,10 @@ export default function HomeScreens( {navigation}: any) {
           dotColor="#FFEE58"
           inactiveDotColor="#90A4AE"
         />
-      </View>
+      </View> */}
       <View style={styles.titileVideo}>
         <Text style={styles.textVideo}>Video nổi bật</Text>
-        <TouchableOpacity onPress={()=>navigation.navigate('VideoTravel')}>
+        <TouchableOpacity onPress={() => navigation.navigate('VideoTravel')}>
           <Text style={styles.textmore}>Xem thêm</Text>
         </TouchableOpacity>
       </View>
@@ -89,8 +103,14 @@ export default function HomeScreens( {navigation}: any) {
         <FlatList
           data={data}
           renderItem={({item}) => (
-            <TouchableOpacity onPress={()=>Linking.openURL(item.youtubeLink)}>
-            <Video source={item.name} muted style={styles.videoPlayer} resizeMode="contain"  repeat={true}/>
+            <TouchableOpacity onPress={() => Linking.openURL(item.youtubeLink)}>
+              <Video
+                source={item.name}
+                muted
+                style={styles.videoPlayer}
+                resizeMode="contain"
+                repeat={true}
+              />
             </TouchableOpacity>
           )}
           keyExtractor={item => item.id.toString()}
@@ -103,10 +123,11 @@ export default function HomeScreens( {navigation}: any) {
       </View>
       <View style={styles.imagehomeScreen}>
         <FlatList
+          style={{gap: 10}}
           data={imageshomescreen}
           renderItem={({item}) => (
             <View>
-              <Image source={item} style={styles.imageScreen}/>
+              <Image source={item} style={styles.imageScreen} />
             </View>
           )}
           keyExtractor={(item, index) => index.toString()}
@@ -164,7 +185,6 @@ const styles = StyleSheet.create({
   },
   sliderContainer: {
     marginTop: 10,
-    flex: 0.35,
   },
   sliderImage: {
     width: 350,
@@ -189,44 +209,39 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   contetVideo: {
-    flex: 0.35,
     marginTop: 15,
   },
   videoPlayer: {
     width: 100,
-    height:168,
-    borderRadius:10,
+    height: 168,
+    borderRadius: 10,
   },
   titilimage: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 14,
   },
-  imagehomeScreen:{
-    flex:0.35,
+  imagehomeScreen: {
     marginTop: 14,
   },
-  imageScreen:{
-    marginLeft: 10,
-    width:217,
-    height:168,
+  imageScreen: {
+    width: 217,
+    height: 168,
   },
-  titilebestTravel:{
+  titilebestTravel: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 14,
   },
-  textTravel:{
+  textTravel: {
     color: '#000',
     fontSize: 18,
     fontWeight: 'bold',
   },
-  imageranking:{
-    width:60,
-    height:60,
-    borderRadius:50,
-    marginBottom:10,
+  imageranking: {
+    width: 60,
+    height: 60,
+    borderRadius: 50,
+    marginBottom: 10,
   },
 });
-
-
