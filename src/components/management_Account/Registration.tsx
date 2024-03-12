@@ -7,6 +7,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   Alert,
+  ScrollView,
 } from 'react-native';
 import React, {useState} from 'react';
 import {TouchableOpacity, ToastAndroid} from 'react-native';
@@ -37,7 +38,10 @@ export default function Registration({navigation}: any) {
         .post('http://52.63.147.17:8080/auth/register', data)
         .then(res => {
           if (res.status === 200) {
-            ToastAndroid.show('Đăng ký tài khoản thành công', ToastAndroid.LONG);
+            ToastAndroid.show(
+              'Đăng ký tài khoản thành công',
+              ToastAndroid.LONG,
+            );
             navigation.navigate('VerifyAccount');
           } else {
             Alert.alert('Thông tin không hợp lệ');
@@ -77,107 +81,109 @@ export default function Registration({navigation}: any) {
       }}>
       {({errors, touched, handleChange, handleBlur, handleSubmit, values}) => (
         <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 500 : 0}
+        behavior={Platform.OS === 'ios' ? 'height' : 'padding'}
           style={styles.container}>
-          <Image
-            source={require('../../Images/Icon.png')}
-            style={styles.logoImage}
-          />
-          <Text style={styles.textAloca}>ALOCA</Text>
-          <View style={styles.containerContent}>
-            <Text style={styles.lable}>EMAIL</Text>
-            <TextInput
-              style={styles.textInput}
-              onChangeText={handleChange('email')}
-              onBlur={handleBlur('email')}
-              value={values.email}
+          <ScrollView>
+            <Image
+              source={require('../../Images/Icon.png')}
+              style={styles.logoImage}
             />
-            {errors.email && touched.email ? (
-              <Text style={styles.errorText}>* {errors.email}</Text>
-            ) : null}
-            <Text style={styles.lable}>TÊN ĐĂNG NHẬP</Text>
-            <TextInput
-              style={styles.textInput}
-              placeholderTextColor={'#000'}
-              onChangeText={handleChange('username')}
-              onBlur={handleBlur('username')}
-              value={values.username}
-            />
-            {errors.username && touched.username ? (
-              <Text style={styles.errorText}>* {errors.username}</Text>
-            ) : null}
-
-            <Text style={styles.lable}>MẬT KHẨU</Text>
-            <View>
+            <Text style={styles.textAloca}>ALOCA</Text>
+            <View style={styles.containerContent}>
+              <Text style={styles.lable}>EMAIL</Text>
               <TextInput
                 style={styles.textInput}
-                placeholderTextColor={'red'}
-                secureTextEntry={!showPassword}
-                onChangeText={handleChange('password')}
-                onBlur={handleBlur('password')}
-                value={values.password}
+                onChangeText={handleChange('email')}
+                onBlur={handleBlur('email')}
+                value={values.email}
               />
-              <Ionicons
-                name={showPassword ? 'eye' : 'eye-off'}
-                size={24}
-                color="#aaa"
-                onPress={toggleShowPassword}
-                style={styles.toggleShowPassword}
-              />
-            </View>
-            {errors.password && touched.password ? (
-              <Text style={styles.errorText}>* {errors.password}</Text>
-            ) : null}
-            <Text style={styles.lable}>XÁC NHẬN MẬT KHẨU</Text>
-            <View>
+              {errors.email && touched.email ? (
+                <Text style={styles.errorText}>* {errors.email}</Text>
+              ) : null}
+              <Text style={styles.lable}>TÊN ĐĂNG NHẬP</Text>
               <TextInput
                 style={styles.textInput}
                 placeholderTextColor={'#000'}
-                secureTextEntry={!showConfirmPassword}
-                onChangeText={handleChange('confirmPassword')}
-                onBlur={handleBlur('confirmPassword')}
-                value={values.confirmPassword}
+                onChangeText={handleChange('username')}
+                onBlur={handleBlur('username')}
+                value={values.username}
               />
-              <Ionicons
-                name={showConfirmPassword ? 'eye' : 'eye-off'}
-                size={24}
-                color="#aaa"
-                onPress={toggleShowConfirmPassword}
-                style={styles.toggleShowPassword}
-              />
+              {errors.username && touched.username ? (
+                <Text style={styles.errorText}>* {errors.username}</Text>
+              ) : null}
+
+              <Text style={styles.lable}>MẬT KHẨU</Text>
+              <View>
+                <TextInput
+                  style={styles.textInput}
+                  placeholderTextColor={'red'}
+                  secureTextEntry={!showPassword}
+                  onChangeText={handleChange('password')}
+                  onBlur={handleBlur('password')}
+                  value={values.password}
+                />
+                <Ionicons
+                  name={showPassword ? 'eye' : 'eye-off'}
+                  size={24}
+                  color="#aaa"
+                  onPress={toggleShowPassword}
+                  style={styles.toggleShowPassword}
+                />
+              </View>
+              {errors.password && touched.password ? (
+                <Text style={styles.errorText}>* {errors.password}</Text>
+              ) : null}
+              <Text style={styles.lable}>XÁC NHẬN MẬT KHẨU</Text>
+              <View>
+                <TextInput
+                  style={styles.textInput}
+                  placeholderTextColor={'#000'}
+                  secureTextEntry={!showConfirmPassword}
+                  onChangeText={handleChange('confirmPassword')}
+                  onBlur={handleBlur('confirmPassword')}
+                  value={values.confirmPassword}
+                />
+                <Ionicons
+                  name={showConfirmPassword ? 'eye' : 'eye-off'}
+                  size={24}
+                  color="#aaa"
+                  onPress={toggleShowConfirmPassword}
+                  style={styles.toggleShowPassword}
+                />
+              </View>
+              {errors.confirmPassword && touched.confirmPassword ? (
+                <Text style={styles.errorText}>* {errors.confirmPassword}</Text>
+              ) : null}
             </View>
-            {errors.confirmPassword && touched.confirmPassword ? (
-              <Text style={styles.errorText}>* {errors.confirmPassword}</Text>
-            ) : null}
-          </View>
-          <TouchableOpacity
-            style={styles.contentRegister}
-            onPress={handleSubmit}>
-            <Text style={styles.textRegister}>Đăng ký</Text>
-          </TouchableOpacity>
-          <Text style={styles.textOption}>Hoặc</Text>
-          <View style={styles.optionalLogin}>
-            <TouchableOpacity style={styles.LoginFacebook}>
-              <Image
-                source={require('../../Images/logoface.png')}
-                style={styles.logoFacebook}
-              />
-              <Text style={styles.textFacebook}>Facebook</Text>
+            <TouchableOpacity
+              style={styles.contentRegister}
+              onPress={handleSubmit}>
+              <Text style={styles.textRegister}>Đăng ký</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.registrationGoogle}>
-              <Image
-                source={require('../../Images/logogoogle.png')}
-                style={styles.logoGoogle}
-              />
-              <Text style={styles.textGoogle}>Google </Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.contentLogin}>
-            <Text style={styles.text}>Đã có tài khoản,</Text>
-            <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-              <Text style={styles.textLogin}>đăng nhập</Text>
-            </TouchableOpacity>
-          </View>
+            <Text style={styles.textOption}>Hoặc</Text>
+            <View style={styles.optionalLogin}>
+              <TouchableOpacity style={styles.LoginFacebook}>
+                <Image
+                  source={require('../../Images/logoface.png')}
+                  style={styles.logoFacebook}
+                />
+                <Text style={styles.textFacebook}>Facebook</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.registrationGoogle}>
+                <Image
+                  source={require('../../Images/logogoogle.png')}
+                  style={styles.logoGoogle}
+                />
+                <Text style={styles.textGoogle}>Google </Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.contentLogin}>
+              <Text style={styles.text}>Đã có tài khoản,</Text>
+              <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+                <Text style={styles.textLogin}>đăng nhập</Text>
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
         </KeyboardAvoidingView>
       )}
     </Formik>

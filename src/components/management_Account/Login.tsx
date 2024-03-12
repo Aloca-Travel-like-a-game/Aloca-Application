@@ -81,7 +81,7 @@ export default function Login({navigation}: any) {
       }}>
       {({errors, touched, handleChange, handleBlur, handleSubmit, values}) => (
         <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 700 : 0}
+          behavior={Platform.OS === 'ios' ? 'height' : 'padding'}
           style={styles.container}>
           <View>
             <Image

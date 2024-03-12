@@ -23,6 +23,7 @@ import NewPassword from '../components/management_Account/NewPassword';
 import {GenerateTripsScreen} from '../screens/TripPlannersStack/GenerateTripsScreen';
 import {useState} from 'react';
 import Notification from '../components/management_Account/Notification';
+import VideoTravel from '../components/shortVideo/VideoTravel';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -181,6 +182,7 @@ export default function Navigation() {
         <Stack.Screen name="Homestack" component={Homestack} />
         <Stack.Screen name="Editprofile" component={EditProfile} />
         <Stack.Screen name="Notification" component={Notification} />
+        <Stack.Screen name="VideoTravel" component={VideoTravel} />
       </Stack.Navigator>
     </NavigationContainer>
   );
