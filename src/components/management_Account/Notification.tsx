@@ -104,4 +104,8 @@ const styles = StyleSheet.create({
     backgroundColor:'#FFFFFF',
     padding:5,
   },
+  image:{
+    width:50,
+    height:50,
+  },
 });

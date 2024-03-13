@@ -1,4 +1,4 @@
-import {View, TextInput, StyleSheet, Image, Text, FlatList, TouchableOpacity, Linking} from 'react-native';
+import {View, TextInput, StyleSheet, Image, Text, FlatList, TouchableOpacity, Linking, ScrollView} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {SliderBox} from 'react-native-image-slider-box';
 import Video from 'react-native-video';
@@ -6,7 +6,7 @@ import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 export default function HomeScreens( {navigation}: any) {
-  const {data: dataUser } = useQuery({
+      const {data: dataUser } = useQuery({
     queryKey: ['profile'],
     queryFn: async () => {
       const tokenst : any = await AsyncStorage.getItem('user');
@@ -50,7 +50,9 @@ export default function HomeScreens( {navigation}: any) {
     require('../Images/silder.png'),
   ];
   return (
-    <View style={styles.containerContent}>
+    <ScrollView 
+    showsVerticalScrollIndicator={false}
+    style={styles.containerContent}>
       <View style={styles.contentHeader}>
         <View style={styles.searchContent}>
           <TextInput
@@ -65,7 +67,8 @@ export default function HomeScreens( {navigation}: any) {
         </TouchableOpacity>
         <View>
           {/* <Image source={require('../Images/Genz.png')} style={styles.image} /> */}
-          {dataUser?.data.image !== '' ? <Image style={styles.image} source={{uri: dataUser?.data.image}} /> : null}
+          {/* <Image style={styles.image} source={{uri: dataUser?.data.image}} /> */}
+          {dataUser?.data.image !== '' ? <Image style={styles.imageRanking} source={{uri: dataUser?.data.image}} /> : null}
         </View>
       </View>
       <View style={styles.sliderContainer}>
@@ -117,10 +120,10 @@ export default function HomeScreens( {navigation}: any) {
         <Text style={styles.textTravel}>Bảng xếp hạng"Vua du lịch"</Text>
         <Text style={styles.textmore}>Xem thêm</Text>
       </View>
-      {/* <View>
-        <Image source={require('../Images/imagehomepage.png')} style={styles.imageranking}/>
-      </View> */}
-    </View>
+      <View>
+        {dataUser?.data.image !== '' ? <Image style={styles.imageRanking} source={{uri: dataUser?.data.image}} /> : null}
+      </View>
+    </ScrollView>
   );
 }
 const styles = StyleSheet.create({
@@ -137,7 +140,7 @@ const styles = StyleSheet.create({
   },
   containerContent: {
     flex: 1,
-    marginHorizontal: 20,
+    marginHorizontal: 16,
     marginTop: 20,
   },
   icon: {
@@ -162,9 +165,14 @@ const styles = StyleSheet.create({
     height: 45,
     borderRadius: 50,
   },
+  imageRanking:{
+    width:60,
+    height:60,
+    borderRadius: 50,
+    marginBottom:10,
+  },
   sliderContainer: {
     marginTop: 10,
-    flex: 0.35,
   },
   sliderImage: {
     width: 350,
@@ -189,7 +197,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   contetVideo: {
-    flex: 0.35,
     marginTop: 15,
   },
   videoPlayer: {
@@ -203,13 +210,12 @@ const styles = StyleSheet.create({
     marginTop: 14,
   },
   imagehomeScreen:{
-    flex:0.35,
     marginTop: 14,
   },
   imageScreen:{
-    marginLeft: 10,
+    margin: 3,
     width:217,
-    height:168,
+    height:162,
   },
   titilebestTravel:{
     flexDirection: 'row',

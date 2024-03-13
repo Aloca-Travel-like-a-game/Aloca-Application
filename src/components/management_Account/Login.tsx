@@ -9,6 +9,7 @@ import {
   Platform,
   ToastAndroid,
   TouchableOpacity,
+  ScrollView,
 } from 'react-native';
 import {Formik} from 'formik';
 import {Login_validate} from './Login_validate';
@@ -83,7 +84,7 @@ export default function Login({navigation}: any) {
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'height' : 'padding'}
           style={styles.container}>
-          <View>
+          <ScrollView>
             <Image
               source={require('../../Images/Icon.png')}
               style={styles.logoImage}
@@ -137,7 +138,7 @@ export default function Login({navigation}: any) {
               onPress={() => navigation.navigate('ForgotPassword')}>
               <Text style={styles.textforgotPass}>Quên mật khẩu?</Text>
             </TouchableOpacity>
-            <View style={styles.optionalLogin}>
+            {/* <View style={styles.optionalLogin}>
               <TouchableOpacity style={styles.loginWithOtherBtn}>
                 <Ionicons name="logo-google" size={25} color={'#EB4335'} />
                 <Text style={styles.textGoogle}>Google</Text>
@@ -146,8 +147,8 @@ export default function Login({navigation}: any) {
                 <Ionicons name="logo-facebook" size={25} color={'#1877F2'} />
                 <Text style={styles.textFacebook}>Facebook</Text>
               </TouchableOpacity>
-            </View>
-          </View>
+            </View> */}
+          </ScrollView>
         </KeyboardAvoidingView>
       )}
     </Formik>
