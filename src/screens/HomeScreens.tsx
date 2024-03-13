@@ -63,12 +63,12 @@ export default function HomeScreens( {navigation}: any) {
           <Ionicons name="search" size={24} color="black" style={styles.icon} />
         </View>
         <TouchableOpacity style={styles.iconnotifications} onPress={()=>navigation.navigate('Notification')} >
-          <Ionicons name="notifications-outline" size={42} color="black" />
+          <Ionicons name="notifications-outline" size={40} color="black" />
         </TouchableOpacity>
         <View>
           {/* <Image source={require('../Images/Genz.png')} style={styles.image} /> */}
           {/* <Image style={styles.image} source={{uri: dataUser?.data.image}} /> */}
-          {dataUser?.data.image !== '' ? <Image style={styles.imageRanking} source={{uri: dataUser?.data.image}} /> : null}
+          {dataUser?.data.image !== '' ? <Image style={styles.image} source={{uri: dataUser?.data.image}} /> : null}
         </View>
       </View>
       <View style={styles.sliderContainer}>
@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
   },
   icon: {
     position: 'absolute',
-    top: '26%',
+    top: '22  %',
     left: '3%',
   },
   searchContent: {
@@ -166,7 +166,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
   },
   imageRanking:{
-    width:60,
+    width:60  ,
     height:60,
     borderRadius: 50,
     marginBottom:10,
