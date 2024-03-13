@@ -24,6 +24,7 @@ import {GenerateTripsScreen} from '../screens/TripPlannersStack/GenerateTripsScr
 import {useState} from 'react';
 import Notification from '../components/management_Account/Notification';
 import VideoTravel from '../components/shortVideo/VideoTravel';
+import RankingScreen from '../screens/RankingScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -108,7 +109,7 @@ const TabArr = [
     type: Ionicons,
     activeIcon: 'podium',
     unActiveIcon: 'podium-outline',
-    component: HomeScreens,
+    component: RankingScreen,
   },
   {
     route: 'Tài khoản',

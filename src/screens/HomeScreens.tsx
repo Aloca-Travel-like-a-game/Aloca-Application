@@ -64,6 +64,7 @@ export default function HomeScreens( {navigation}: any) {
         </View>
         <TouchableOpacity style={styles.iconnotifications} onPress={()=>navigation.navigate('Notification')} >
           <Ionicons name="notifications-outline" size={40} color="black" />
+          <Text style={styles.numbernotification}>10</Text>
         </TouchableOpacity>
         <View>
           {/* <Image source={require('../Images/Genz.png')} style={styles.image} /> */}
@@ -233,6 +234,13 @@ const styles = StyleSheet.create({
     borderRadius:50,
     marginBottom:10,
   },
+  numbernotification:{
+    color:'#FFFFFF',
+    position:'absolute',
+    backgroundColor:'#2AB6AD',
+    marginTop:19,
+    borderRadius:10,
+  }
 });
 
 
