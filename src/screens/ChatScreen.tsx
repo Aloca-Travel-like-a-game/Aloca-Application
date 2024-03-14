@@ -8,8 +8,7 @@ import {
   KeyboardAvoidingView,
   TouchableOpacity,
   FlatList,
-  Animated,
-  Easing,
+  ActivityIndicator,
 } from 'react-native';
 
 import Feather from 'react-native-vector-icons/Feather';
@@ -33,7 +32,6 @@ export const ChatScreen: FC = (): JSX.Element => {
   const [reloadQuest, setReloadQuest] = useState(textInput);
   const [reload, setReload] = useState(false);
   const [isAnalyzing, setAnalyzing] = useState(false);
-  const rotateValue = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     AsyncStorage.getItem('AccessToken').then(result => setToken(result));
@@ -124,26 +122,6 @@ export const ChatScreen: FC = (): JSX.Element => {
     }
   };
 
-  const startRotation = () => {
-    Animated.loop(
-      Animated.timing(rotateValue, {
-        toValue: 1,
-        duration: 2000,
-        easing: Easing.linear,
-        useNativeDriver: true,
-      }),
-    ).start();
-  };
-
-  const stopRotation = () => {
-    rotateValue.stopAnimation();
-  };
-
-  const rotate = rotateValue.interpolate({
-    inputRange: [0, 1],
-    outputRange: ['0deg', '360deg'],
-  });
-
   const renderLoad = (item: any) => {
     return (
       <View>
@@ -200,18 +178,15 @@ export const ChatScreen: FC = (): JSX.Element => {
             style={styles.sendBtn}
             onPress={() => {
               handleSend();
-              isAnalyzing ? startRotation : stopRotation;
             }}
             disabled={isAnalyzing || textInput === '' ? true : false}>
-            <Animated.View style={{transform: [{rotate: rotate}]}}>
-              <View>
-                <Feather
-                  name={isAnalyzing ? 'loader' : 'send'}
-                  size={24}
-                  color={'#2AB6AD'}
-                />
-              </View>
-            </Animated.View>
+            <View>
+              {isAnalyzing ? (
+                <ActivityIndicator size={24} color="#2AB6AD" />
+              ) : (
+                <Feather name="send" size={24} color={'#2AB6AD'} />
+              )}
+            </View>
           </TouchableOpacity>
         </View>
       </View>

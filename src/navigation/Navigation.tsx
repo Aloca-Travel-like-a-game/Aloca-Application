@@ -23,12 +23,14 @@ import NewPassword from '../components/management_Account/NewPassword';
 import {GenerateTripsScreen} from '../screens/TripPlannersStack/GenerateTripsScreen';
 import {useState} from 'react';
 import Notification from '../components/management_Account/Notification';
+import {DetailTripScreen} from '../screens/TripPlannersStack/DetailTripScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 const TripPlanStack = () => {
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Screen name="DetailTripScreen" component={DetailTripScreen} />
       <Stack.Screen name="AddNewTrip" component={TripPlanScreen} />
       <Stack.Screen name="TripPlanChoose" component={TripPlanChoose} />
       <Stack.Screen
