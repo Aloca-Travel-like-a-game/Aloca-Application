@@ -2,6 +2,7 @@ import React, {useEffect} from 'react';
 import Navigation from './src/navigation/Navigation';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import {PermissionsAndroid} from 'react-native';
+
 const queryClient = new QueryClient();
 export default function App() {
   useEffect(() => {

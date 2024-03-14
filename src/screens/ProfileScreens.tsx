@@ -57,9 +57,9 @@ export default function ProfileScreens({navigation}: any) {
           />
           <Text style={styles.textEditprofile}>Thông báo</Text>
         </TouchableOpacity>
-        <TouchableOpacity>
-          <AntDesign name="tago" size={24} color="black" style={styles.icon} />
-          <Text style={styles.textEditprofile}>Ưu đãi</Text>
+        <TouchableOpacity onPress={()=>navigation.navigate('Trợ lý')}>
+          <Ionicons name="airplane-outline" size={24} color="black" style={styles.icon}/>
+          <Text style={styles.textEditprofile}>Kế hoạch</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.contentAloca}>
@@ -72,7 +72,9 @@ export default function ProfileScreens({navigation}: any) {
           <Text style={styles.textAloca}>
             bạn cần đặt tua du lịch đúng không ?
           </Text>
-          <Text style={styles.textbenefit}>Lợi ích</Text>
+          <TouchableOpacity>
+            <Text style={styles.textbenefit}>Lợi ích</Text>
+          </TouchableOpacity>
         </View>
         <View>
           <Image style={styles.image1} source={require('../Images/Genz.png')} />

@@ -9,6 +9,7 @@ import {
   Platform,
   ToastAndroid,
   TouchableOpacity,
+  ScrollView,
 } from 'react-native';
 import {Formik} from 'formik';
 import {Login_validate} from './Login_validate';
@@ -83,7 +84,7 @@ export default function Login({navigation}: any) {
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'height' : 'padding'}
           style={styles.container}>
-          <View>
+          <ScrollView>
             <Image
               source={require('../../Images/Icon.png')}
               style={styles.logoImage}
@@ -147,7 +148,7 @@ export default function Login({navigation}: any) {
                 <Text style={styles.textFacebook}>Facebook</Text>
               </TouchableOpacity>
             </View> */}
-          </View>
+          </ScrollView>
         </KeyboardAvoidingView>
       )}
     </Formik>
@@ -207,10 +208,10 @@ const styles = StyleSheet.create({
   },
   textAloca: {
     color: '#000',
-    fontSize: 39,
-    fontWeight: '500',
+    fontSize: 35,
+    fontWeight: '600',
     textAlign: 'center',
-    marginTop: 30,
+    marginTop: 10,
     marginBottom: 30,
   },
   label: {

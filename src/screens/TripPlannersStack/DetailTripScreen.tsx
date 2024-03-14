@@ -17,18 +17,9 @@ import * as Animatable from 'react-native-animatable';
 import {datatest} from './datatest';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import LinearGradient from 'react-native-linear-gradient';
-import {Camera, useCameraDevice} from 'react-native-vision-camera';
 
 export const DetailTripScreen: FC = (): JSX.Element => {
   const [selectDay, setselectDay] = useState<string[]>([]);
-
-  const device = useCameraDevice('front', {
-    physicalDevices: [
-      'ultra-wide-angle-camera',
-      'wide-angle-camera',
-      'telephoto-camera',
-    ],
-  });
 
   const handleSelectChange = (item: string) => {
     const isselectDay = selectDay.includes(item);
@@ -161,15 +152,6 @@ export const DetailTripScreen: FC = (): JSX.Element => {
         }
         renderItem={(item: {index: number}) => renderDay(item, item.index + 1)}
       />
-      <Camera
-        style={StyleSheet.absoluteFill}
-        device={device}
-        photo={true}
-        isActive={true}>
-        <TouchableOpacity>
-          <Text>Thêm ảnh</Text>
-        </TouchableOpacity>
-      </Camera>
     </View>
   );
 };
