@@ -55,11 +55,10 @@ export default function Notification({navigation}: any) {
     </View>
   );
 }
-
 const styles = StyleSheet.create({
   contenContainer:{
     flex:1,
-    backgroundColor: '#D9D9D9',
+    backgroundColor: '#FFFFFF',
   },
   containerHeader: {
     flexDirection: 'row',
@@ -84,7 +83,13 @@ const styles = StyleSheet.create({
     marginBottom:15,
   },
   container:{
-    marginTop:20,
+    // marginTop:15,
+    elevation: 3,
+    backgroundColor:'#FFFFFF',
+    justifyContent:'center',
+    marginHorizontal:18,
+    borderRadius:10,
+    margin:10,
   },
   textItem:{
     color:'#000000',
@@ -96,17 +101,11 @@ const styles = StyleSheet.create({
     fontSize:15,
   },
   containerFlatList:{
-    backgroundColor:'#D9D9D9',
+    backgroundColor:'#FFFFFF',
+    padding:5,
   },
   image:{
-    borderRadius:50,
-  },
-  textTitile:{
-    color:'#000000',
-    fontSize:20,
-  },
-  contentfavourite:{
-    flex:0.3,
-    marginHorizontal:22,
+    width:50,
+    height:50,
   },
 });
