@@ -43,7 +43,8 @@ export default function RankingScreen( {navigation}: any) {
 const styles = StyleSheet.create({
   containerContent: {
     flex: 1,
-    backgroundColor:'#455A64',
+    backgroundColor:'#FFFFFF',
+    paddingTop:10,
   },
   contentHeader: {
     flexDirection: 'row',

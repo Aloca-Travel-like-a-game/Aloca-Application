@@ -237,9 +237,13 @@ const styles = StyleSheet.create({
   numbernotification:{
     color:'#FFFFFF',
     position:'absolute',
-    backgroundColor:'#2AB6AD',
-    marginTop:19,
-    borderRadius:10,
+    backgroundColor:'#FF5858',
+    borderRadius:50,
+    margin:10,
+    width:20,
+    height:20,
+    marginTop:20,
+    right:10,
   }
 });
 

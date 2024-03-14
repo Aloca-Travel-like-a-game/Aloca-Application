@@ -208,10 +208,10 @@ const styles = StyleSheet.create({
   },
   textAloca: {
     color: '#000',
-    fontSize: 39,
-    fontWeight: '500',
+    fontSize: 35,
+    fontWeight: '600',
     textAlign: 'center',
-    marginTop: 30,
+    marginTop: 10,
     marginBottom: 30,
   },
   label: {

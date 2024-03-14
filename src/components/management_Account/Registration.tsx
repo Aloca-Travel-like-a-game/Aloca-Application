@@ -83,7 +83,7 @@ export default function Registration({navigation}: any) {
         <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'height' : 'padding'}
           style={styles.container}>
-          <ScrollView>
+          <ScrollView style={styles.content}>
             <Image
               source={require('../../Images/Icon.png')}
               style={styles.logoImage}
@@ -160,23 +160,6 @@ export default function Registration({navigation}: any) {
               onPress={handleSubmit}>
               <Text style={styles.textRegister}>Đăng ký</Text>
             </TouchableOpacity>
-            <Text style={styles.textOption}>Hoặc</Text>
-            <View style={styles.optionalLogin}>
-              <TouchableOpacity style={styles.LoginFacebook}>
-                <Image
-                  source={require('../../Images/logoface.png')}
-                  style={styles.logoFacebook}
-                />
-                <Text style={styles.textFacebook}>Facebook</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.registrationGoogle}>
-                <Image
-                  source={require('../../Images/logogoogle.png')}
-                  style={styles.logoGoogle}
-                />
-                <Text style={styles.textGoogle}>Google </Text>
-              </TouchableOpacity>
-            </View>
             <View style={styles.contentLogin}>
               <Text style={styles.text}>Đã có tài khoản,</Text>
               <TouchableOpacity onPress={() => navigation.navigate('Login')}>
@@ -194,6 +177,9 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
   },
+  content:{
+  paddingTop:50,
+  },
   textInput: {
     borderWidth: 1,
     borderColor: '#ffffff',
@@ -210,8 +196,8 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   logoImage: {
-    width: '40%',
-    height: '20%',
+    width: 135,
+    height: 135,
     borderRadius: 12,
     alignSelf: 'center',
   },
@@ -238,8 +224,9 @@ const styles = StyleSheet.create({
   textAloca: {
     color: '#000',
     fontSize: 35,
-    fontWeight: '500',
+    fontWeight: '600',
     textAlign: 'center',
+    marginTop:10,
   },
   lable: {
     color: '#3E4958',

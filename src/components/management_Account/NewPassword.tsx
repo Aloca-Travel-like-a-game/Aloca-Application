@@ -7,6 +7,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   ToastAndroid,
+  ScrollView,
 } from 'react-native';
 import React, {useState} from 'react';
 import {TouchableOpacity} from 'react-native';
@@ -109,8 +110,9 @@ export default function NewPassword({navigation}: any) {
       }}>
       {({errors, touched, handleChange, handleBlur, handleSubmit, values}) => (
         <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 500 : 0}
+          behavior={Platform.OS === 'ios' ? 'height' : 'padding'}
           style={styles.container}>
+            <ScrollView style={styles.content}>
           <Image
             source={require('../../Images/Icon.png')}
             style={styles.logoImage}
@@ -174,6 +176,7 @@ export default function NewPassword({navigation}: any) {
             onPress={() => navigation.navigate('ForgotPassword')}>
             <Text style={styles.textLogin}>Đăng nhập</Text>
           </TouchableOpacity>
+          </ScrollView>
         </KeyboardAvoidingView>
       )}
     </Formik>
@@ -183,6 +186,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
+  },
+  content:{
+    paddingTop:50,
   },
   textInput: {
     borderWidth: 1,
@@ -201,10 +207,10 @@ const styles = StyleSheet.create({
     marginTop:30,
   },
   logoImage: {
-    width: '60%',
-    height: '26%',
+    width: 250,
+    height: 250,
     borderRadius: 12,
-    marginLeft: 80,
+    alignSelf:'center',
   },
   textRegister: {
     color: '#ffff',
@@ -227,7 +233,7 @@ const styles = StyleSheet.create({
   textAloca: {
     color: '#000',
     fontSize: 35,
-    fontWeight: '500',
+    fontWeight: '600',
     textAlign: 'center',
     marginTop:15,
   },
