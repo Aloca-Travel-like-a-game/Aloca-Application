@@ -38,6 +38,7 @@ export const ChatScreen: FC = (): JSX.Element => {
   });
 
   const sendRequest = (prompt: any) => {
+    console.log(token);
     const res = axios.post(
       APIurl,
       {
@@ -147,7 +148,7 @@ export const ChatScreen: FC = (): JSX.Element => {
     );
   };
 
-  const flatList = useRef(null);
+  const flatList = useRef<FlatList | null>(null);
   return (
     <KeyboardAvoidingView
       style={styles.container}
@@ -162,7 +163,9 @@ export const ChatScreen: FC = (): JSX.Element => {
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{justifyContent: 'flex-end'}}
           onContentSizeChange={() => {
-            flatList.current.scrollToEnd();
+            if (flatList.current !== null) {
+              flatList.current.scrollToEnd();
+            }
           }}
         />
         <View style={styles.textInputPlace}>

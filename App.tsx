@@ -15,7 +15,7 @@ export default function App() {
       buttonNegative: 'Hủy',
       buttonPositive: 'Cho phép',
     });
-  });
+  },[]);
   return (
     <QueryClientProvider client={queryClient}>
       <Navigation />

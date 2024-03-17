@@ -10,7 +10,6 @@ import {
   ScrollView,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {SliderBox} from 'react-native-image-slider-box';
 import Video from 'react-native-video';
 import React from 'react';
 import {useQuery} from '@tanstack/react-query';
@@ -52,13 +51,7 @@ export default function HomeScreens({navigation}: any) {
     require('../Images/imagehomepage.png'),
     require('../Images/imagehomepage.png'),
   ];
-  const images = [
-    require('../Images/silder.png'),
-    require('../Images/silder.png'),
-    require('../Images/silder.png'),
-    require('../Images/silder.png'),
-    require('../Images/silder.png'),
-  ];
+
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
@@ -85,17 +78,6 @@ export default function HomeScreens({navigation}: any) {
             <Image style={styles.image} source={{uri: dataUser?.data.image}} />
           ) : null}
         </View>
-      </View>
-      <View style={styles.sliderContainer}>
-        <SliderBox
-          style={styles.sliderImage}
-          images={images}
-          autoplay
-          circleLoop
-          autoplayInterval={10000}
-          dotColor="#FFEE58"
-          inactiveDotColor="#90A4AE"
-        />
       </View>
       <View style={styles.titileVideo}>
         <Text style={styles.textVideo}>Video nổi bật</Text>
@@ -149,6 +131,11 @@ export default function HomeScreens({navigation}: any) {
           />
         ) : null}
       </View>
+      <TouchableOpacity
+          style={styles.iconnotifications}
+          onPress={() => navigation.navigate('CameraScreen')}>
+          <Ionicons name="camera" size={40} color="black" />
+        </TouchableOpacity>
     </ScrollView>
   );
 }

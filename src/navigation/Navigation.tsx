@@ -1,4 +1,3 @@
-/* eslint-disable react/react-in-jsx-scope */
 /* eslint-disable react-native/no-inline-styles */
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -26,19 +25,22 @@ import Notification from '../components/management_Account/Notification';
 import {DetailTripScreen} from '../screens/TripPlannersStack/DetailTripScreen';
 import VideoTravel from '../components/shortVideo/VideoTravel';
 import RankingScreen from '../screens/RankingScreen';
+import React from 'react';
+import CameraScreen from '../screens/Camera';
+
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
-const TripPlanStack = () => {
+const TripPlanStack = ():React.JSX.Element => {
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
-      <Stack.Screen name="DetailTripScreen" component={DetailTripScreen} />
       <Stack.Screen name="AddNewTrip" component={TripPlanScreen} />
       <Stack.Screen name="TripPlanChoose" component={TripPlanChoose} />
       <Stack.Screen
         name="GenerateTripsScreen"
         component={GenerateTripsScreen}
       />
+      <Stack.Screen name="DetailTripScreen" component={DetailTripScreen} />
     </Stack.Navigator>
   );
 };
@@ -47,7 +49,7 @@ const renderScene = SceneMap({
   first: ChatScreen,
   second: TripPlanStack,
 });
-const renderAssistanceTabBar = (props): any => (
+const renderAssistanceTabBar = (props: any) => (
   <TabBar
     {...props}
     indicatorStyle={{backgroundColor: '#2AB6AD'}}
@@ -125,9 +127,9 @@ const TabArr = [
 const Homestack = () => {
   return (
     <Tab.Navigator
-      screenOptions={({route}) => ({
+      screenOptions={({route}: any) => ({
         // eslint-disable-next-line react/no-unstable-nested-components
-        tabBarIcon: ({focused, color, size}) => {
+        tabBarIcon: ({focused, color, size}: any) => {
           let iconName: string = '';
           if (route.name === 'Trang chủ') {
             iconName = focused ? 'home' : 'home-outline';
@@ -151,7 +153,9 @@ const Homestack = () => {
           backgroundColor: '#D0FFF9',
           height: 50,
         },
+        animationEnabled: true,
         tabBarHideOnKeyboard: true,
+        tabBarItemStyle: {borderTopLeftRadius: 10,borderTopRightRadius: 10, bottom: 10, height: 60, paddingTop: 10},
       })}>
       {TabArr.map((item, index) => {
         return (
@@ -172,9 +176,7 @@ export default function Navigation() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        // initialRouteName="Homestack"
         screenOptions={{headerShown: false}}>
-        {/* <Stack.Screen name="RotatingElement" component={RotatingElement} /> */}
         <Stack.Screen name="LandingPage" component={LandingPage} />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Registration" component={Registration} />
@@ -186,6 +188,7 @@ export default function Navigation() {
         <Stack.Screen name="Editprofile" component={EditProfile} />
         <Stack.Screen name="Notification" component={Notification} />
         <Stack.Screen name="VideoTravel" component={VideoTravel} />
+        <Stack.Screen name="CameraScreen" component={CameraScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

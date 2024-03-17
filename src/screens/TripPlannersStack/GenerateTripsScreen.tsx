@@ -1,6 +1,4 @@
-/* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable react-native/no-inline-styles */
-/* eslint-disable react/react-in-jsx-scope */
 /* eslint-disable @typescript-eslint/no-shadow */
 import React, {useState, useEffect} from 'react';
 import {
@@ -32,7 +30,7 @@ export const GenerateTripsScreen = () => {
   const [planConfirm, setPlanConfirm] = useState<any>();
   const [token, setToken] = useState<any>();
   const route = useRoute();
-  const navigation = useNavigation();
+  const navigation = useNavigation<any>();
 
   const {location, quantity, budget, areaTypes, days, startDate, endDate}: any =
     route.params;
@@ -75,27 +73,41 @@ export const GenerateTripsScreen = () => {
 
   const PickUpPlan = async (item: any) => {
     console.log(item);
-    const res = await axios.post(
-      'http://52.63.147.17:8080/trip-plan/save-trip',
-      {
-        jsonTrip: item.planConfirm,
-        location: 'Da Nang',
-        startDate: startDate,
-        endDate: endDate,
-        numberOfDay: item.planName,
-      },
-      {
-        headers: {
-          Authorization: 'Bearer ' + token,
+    try {
+      setLoading(true);
+      const res = await axios.post(
+        'http://52.63.147.17:8080/trip-plan/save-trip',
+        {
+          jsonTrip: item.planConfirm,
+          location: location,
+          startDate: startDate,
+          endDate: endDate,
+          nameTrip: item.planName,
         },
-      },
-    );
-    console.log(res.data.message);
+        {
+          headers: {
+            Authorization: 'Bearer ' + token,
+          },
+        },
+      );
+      navigation.navigate('DetailTripScreen', {
+        idTrip: res.data.tripId,
+      });
+    } catch (error) {
+      console.error('Lỗi:', error);
+      setResult(null);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const renderActivity = ({item: activity}: any) => (
     <View>
-      <Text style={styles.text}>{`${activity.challenge_summary}`}</Text>
+      <Text
+        style={{
+          ...styles.text,
+          marginLeft: 5,
+        }}>{`- ${activity.challenge_summary}`}</Text>
     </View>
   );
   const renderDay = ({item: day}: any, index: number) => (
@@ -107,7 +119,7 @@ export const GenerateTripsScreen = () => {
         }}>{`Ngày ${index} - ${day.title}`}</Text>
       <FlatList
         data={day.activities}
-        keyExtractor={activity => activity.challenge_summary}
+        keyExtractor={(activity:any) => activity.challenge_summary}
         renderItem={renderActivity}
       />
     </View>
@@ -119,8 +131,8 @@ export const GenerateTripsScreen = () => {
       <FlatList
         style={{gap: 5}}
         data={Object.values(plan)}
-        keyExtractor={(item, index) => item + index.toString()}
-        renderItem={item => renderDay(item, item.index + 1)}
+        keyExtractor={(item:any, index:any) => item + index.toString()}
+        renderItem={(item:any) => renderDay(item, item.index + 1)}
       />
       <TouchableOpacity
         style={styles.sendBtn}
@@ -215,7 +227,7 @@ export const GenerateTripsScreen = () => {
                       </Text>
                     </TouchableOpacity>
                     <TouchableOpacity
-                      onPress={() => {
+                      onPress={async () => {
                         if (
                           planName === '' ||
                           planName === null ||
@@ -227,7 +239,6 @@ export const GenerateTripsScreen = () => {
                           onChangePlanName('');
                           setPlanConfirm(null);
                           setModalVisible(!modalVisible);
-                          navigation.navigate('DetailTripScreen');
                         }
                       }}>
                       <Text
@@ -243,10 +254,10 @@ export const GenerateTripsScreen = () => {
                 </View>
               </Modal>
             }
-            style={{zIndex: 2, gap: 10}}
+            style={{zIndex: 2, gap: 10, width: '100%'}}
             data={Object.values(result)}
-            keyExtractor={(item, index) => item + index.toString()}
-            renderItem={item => renderPlan(item, item.index + 1)}
+            keyExtractor={(item:any, index:any) => item + index.toString()}
+            renderItem={(item:any) => renderPlan(item, item.index + 1)}
           />
         )}
         {!loading && !result && (

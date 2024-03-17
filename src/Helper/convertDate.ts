@@ -39,10 +39,17 @@ export const convertDate = (ngayThangGMT: string): string[] => {
   ];
 };
 
-
 export const convertDatetoString = (date: Date) => {
   const stringDate = convertDate(
     new Date(date.getTime() + 24 * 60 * 60 * 1000).toDateString(),
+  );
+  return `${stringDate[1]}/${stringDate[2]}/${stringDate[3]}`;
+};
+
+export const convertDatetoString2 = (date: string) => {
+  const dateConvert = new Date(date);
+  const stringDate = convertDate(
+    new Date(dateConvert.getTime() + 24 * 60 * 60 * 1000).toDateString(),
   );
   return `${stringDate[1]}/${stringDate[2]}/${stringDate[3]}`;
 };

@@ -53,7 +53,7 @@ export const TripPlanChoose: FC = (): JSX.Element => {
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [quantity, setQuantity] = useState(1);
-  const [budget, setBudget] = useState();
+  const [budget, setBudget] = useState<any>();
   const [areaTypes, setAreaTypes] = useState<string[]>([]);
 
   const useSearch = (string: string) => {
@@ -135,7 +135,7 @@ export const TripPlanChoose: FC = (): JSX.Element => {
       return days;
     }
   };
-  const DateRangePicker: React.FC = () => {
+  const DateRangePicker = () => {
     const handleDateChange = (selectedDate: Date) => {
       if (isChoosingStartDate) {
         if (
@@ -198,7 +198,7 @@ export const TripPlanChoose: FC = (): JSX.Element => {
           locale="vi_Vietnamese"
           open={showPicker}
           date={isChoosingStartDate ? startDate : endDate}
-          onConfirm={date => {
+          onConfirm={(date:any) => {
             setShowPicker(false);
             handleDateChange(date);
           }}
@@ -224,7 +224,7 @@ export const TripPlanChoose: FC = (): JSX.Element => {
     if (location === (false || undefined || null || '')) {
       return false;
     }
-    if (budget === undefined) {
+    if (budget === (false || undefined || null || '')) {
       return false;
     }
     return true;
@@ -276,8 +276,8 @@ export const TripPlanChoose: FC = (): JSX.Element => {
                 {proviceShow ? (
                   <FlatList
                     data={provinceFilter}
-                    renderItem={({item}) => <ItemProvice title={item} />}
-                    keyExtractor={item => item}
+                    renderItem={({item}:any) => <ItemProvice title={item} />}
+                    keyExtractor={(item:any) => item}
                     style={styles.dropdown}
                   />
                 ) : null}
@@ -355,8 +355,8 @@ export const TripPlanChoose: FC = (): JSX.Element => {
                 {showBudget ? (
                   <FlatList
                     data={budgetList}
-                    renderItem={({item}) => <ItemBudget title={item} />}
-                    keyExtractor={item => item}
+                    renderItem={({item}:any) => <ItemBudget title={item} />}
+                    keyExtractor={(item:any) => item}
                     style={styles.dropdown}
                   />
                 ) : null}
@@ -365,58 +365,85 @@ export const TripPlanChoose: FC = (): JSX.Element => {
             </>
           }
           ListFooterComponent={
-            <TouchableOpacity
-              style={styles.sendBtn}
-              onPress={() => {
-                const days = handleCalculateDateRange(startDate, endDate);
-                console.log(
-                  location,
-                  startDate,
-                  endDate,
-                  days,
-                  quantity,
-                  budget,
-                  areaTypes,
-                );
-
-                if (
-                  days !== undefined &&
-                  days <= 7 &&
-                  validate(location, budget)
-                ) {
-                  navigation.navigate('GenerateTripsScreen', {
-                    location: location,
-                    quantity: quantity,
-                    budget: budget,
-                    areaTypes: areaTypes,
-                    days: days,
-                    startDate: startDate,
-                    endDate: endDate,
-                  });
-                } else {
-                  if (days !== undefined && days > 7) {
-                    Alert.alert(
-                      'Chúng tôi chỉ có thể tạo cho bạn kế hoạch tối đa 7 ngày',
-                    );
-                  }
-                  if (validate(location, budget) === false) {
-                    Alert.alert('Vui lòng điền đầy đủ thông tin!');
-                  }
-                }
-              }}>
-              <Text
+            <View
+              style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
+              <TouchableOpacity
                 style={{
-                  fontSize: 20,
-                  color: '#fff',
-                  fontWeight: '700',
+                  ...styles.sendBtn,
+                  backgroundColor: '#fff',
+                  borderColor: '#2AB6AD',
+                  borderWidth: 1,
+                }}
+                onPress={() => {
+                  onChangeLocation('');
+                  setStartDate(new Date());
+                  setEndDate(new Date());
+                  setQuantity(1);
+                  setBudget('');
+                  setAreaTypes([]);
                 }}>
-                TIẾP
-              </Text>
-            </TouchableOpacity>
+                <Text
+                  style={{
+                    fontSize: 20,
+                    color: '#2AB6AD',
+                    fontWeight: '700',
+                  }}>
+                  ĐẶT LẠI
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.sendBtn}
+                onPress={() => {
+                  const days = handleCalculateDateRange(startDate, endDate);
+                  console.log(
+                    location,
+                    startDate,
+                    endDate,
+                    days,
+                    quantity,
+                    budget,
+                    areaTypes,
+                  );
+
+                  if (
+                    days !== undefined &&
+                    days <= 7 &&
+                    validate(location, budget)
+                  ) {
+                    navigation.navigate('GenerateTripsScreen', {
+                      location: location,
+                      quantity: quantity,
+                      budget: budget,
+                      areaTypes: areaTypes,
+                      days: days,
+                      startDate: startDate,
+                      endDate: endDate,
+                    });
+                  } else {
+                    if (days !== undefined && days > 7) {
+                      Alert.alert(
+                        'Chúng tôi chỉ có thể tạo cho bạn kế hoạch tối đa 7 ngày',
+                      );
+                    }
+                    if (validate(location, budget) === false) {
+                      Alert.alert('Vui lòng điền đầy đủ thông tin!');
+                    }
+                  }
+                }}>
+                <Text
+                  style={{
+                    fontSize: 20,
+                    color: '#fff',
+                    fontWeight: '700',
+                  }}>
+                  TIẾP
+                </Text>
+              </TouchableOpacity>
+            </View>
           }
           data={AreaTypes}
-          renderItem={({item}) => <ItemAreaType title={item} />}
-          keyExtractor={item => item}
+          renderItem={({item}:any) => <ItemAreaType title={item} />}
+          keyExtractor={(item:any) => item}
           style={styles.areaTypes}
           numColumns={2}
         />
@@ -502,7 +529,7 @@ export const styles = StyleSheet.create({
     backgroundColor: '#2AB6AD',
     padding: 15,
     borderRadius: 20,
-    width: '50%',
+    width: '40%',
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 10,

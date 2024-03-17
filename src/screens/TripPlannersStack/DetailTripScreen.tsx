@@ -1,6 +1,7 @@
-/* eslint-disable react/react-in-jsx-scope */
+/* eslint-disable @typescript-eslint/no-shadow */
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
-import {FC, useState} from 'react';
+import React,{ FC, useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -14,12 +15,48 @@ import {
 } from 'react-native';
 
 import * as Animatable from 'react-native-animatable';
-import {datatest} from './datatest';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import LinearGradient from 'react-native-linear-gradient';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useNavigation, useRoute} from '@react-navigation/native';
+import {convertDatetoString2} from '../../Helper/convertDate';
+import {JSX} from 'react/jsx-runtime';
 
 export const DetailTripScreen: FC = (): JSX.Element => {
+  const navigation = useNavigation<any>();
+  const [token, setToken] = useState<string>();
+  const [result, setResult] = useState<any>(null);
   const [selectDay, setselectDay] = useState<string[]>([]);
+  const route = useRoute();
+  const {idTrip}: any = route.params;
+
+  useEffect(() => {
+    AsyncStorage.getItem('AccessToken').then((tokenSave: any) =>
+      setToken(tokenSave),
+    );
+  }, [token]);
+
+  useEffect(() => {
+    if (token !== undefined) {
+      console.log('ab', token);
+      const senRequest = async () => {
+        try {
+          const APIurl = `http://52.63.147.17:8080/trip-plan/get-trip/${idTrip}`;
+          const res = await axios.get(APIurl, {
+            headers: {
+              Authorization: 'Bearer ' + token,
+            },
+          });
+          setResult(res.data.tripDatas);
+          console.log(res.data.tripDatas);
+        } catch {
+          (e: any) => console.log(e);
+        }
+      };
+      senRequest();
+    }
+  }, [token]);
 
   const handleSelectChange = (item: string) => {
     const isselectDay = selectDay.includes(item);
@@ -33,10 +70,9 @@ export const DetailTripScreen: FC = (): JSX.Element => {
   };
 
   const renderActivity = ({item: activity}: any) => (
-    <View style={{flexDirection: 'row', marginVertical: 5}}>
+    <View style={{flexDirection: 'row', marginVertical: 5, marginLeft: 5}}>
       <View style={{flex: 2}}>
-        <Text style={styles.text}>{`${activity.challenge_summary}`}</Text>
-
+        <Text style={styles.text}>{`${activity.challengeSummary}`}</Text>
         <ScrollView
           style={{marginLeft: 10}}
           horizontal
@@ -53,7 +89,7 @@ export const DetailTripScreen: FC = (): JSX.Element => {
               ...styles.text,
               fontWeight: '200',
             }}>
-            {`${activity.google_maps_address}`}
+            {activity.location}
           </Animatable.Text>
         </ScrollView>
         <Text
@@ -61,11 +97,17 @@ export const DetailTripScreen: FC = (): JSX.Element => {
             ...styles.text,
             fontWeight: '200',
             alignSelf: 'flex-end',
-          }}>{`${activity.level_of_difficult}`}</Text>
+          }}>
+          Điểm nhận được: {activity.points}
+        </Text>
       </View>
       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
         <TouchableOpacity>
-          <Text style={{...styles.text, ...styles.btn}}>Thêm ảnh</Text>
+          <Text
+            style={{...styles.text, ...styles.btn}}
+            onPress={() => navigation.navigate('CameraScreen')}>
+            Thêm ảnh
+          </Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -77,32 +119,48 @@ export const DetailTripScreen: FC = (): JSX.Element => {
           width: '100%',
           flexDirection: 'row',
           justifyContent: 'space-between',
-          alignItems: 'center',
+          alignItems: 'flex-start',
         }}
         onPress={() => {
           handleSelectChange(index.toString());
         }}>
-        <Text
+        <View style={{maxWidth: '70%'}}>
+          <Text
+            style={{
+              ...styles.text,
+              ...styles.sdHeading,
+              fontSize: 16,
+            }}>
+            {day.title}
+          </Text>
+        </View>
+        <View
           style={{
-            ...styles.text,
-            ...styles.sdHeading,
-            maxWidth: '90%',
-          }}>{`${day.title}`}</Text>
-        <Ionicons
-          name={
-            selectDay.includes(index.toString()) ? 'caret-up' : 'caret-down'
-          }
-          size={20}
-          color={'#aaa'}
-        />
+            width: '30%',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}>
+          <Text
+            style={{
+              ...styles.text,
+            }}>
+            {convertDatetoString2(day.date)}
+          </Text>
+          <Ionicons
+            name={
+              selectDay.includes(index.toString()) ? 'caret-up' : 'caret-down'
+            }
+            size={20}
+            color={'#aaa'}
+          />
+        </View>
       </TouchableOpacity>
 
       {selectDay.includes(index.toString()) && (
         <FlatList
-          data={day.activities}
-          keyExtractor={(activity: {challenge_summary: any}) =>
-            activity.challenge_summary
-          }
+          data={day.challenges}
+          keyExtractor={(item, index) => item + index.toString()}
           renderItem={renderActivity}
         />
       )}
@@ -138,15 +196,18 @@ export const DetailTripScreen: FC = (): JSX.Element => {
                 paddingHorizontal: 20,
                 paddingBottom: 20,
               }}>
-              <Text style={styles.heading}>Đà Nẵng</Text>
+              <Text style={styles.heading}>{result?.location}</Text>
               <Text style={{...styles.heading, fontWeight: '200'}}>
-                15/1/2024 - 18/1/2024
+                {result &&
+                  `${convertDatetoString2(
+                    result?.startDate,
+                  )} - ${convertDatetoString2(result?.endDate)}`}
               </Text>
             </LinearGradient>
           </ImageBackground>
         }
         style={{margin: 0, paddingHorizontal: 15, gap: 5}}
-        data={Object.values(datatest)}
+        data={result?.dataTripDays}
         keyExtractor={(item: any, index: {toString: () => any}) =>
           item + index.toString()
         }
