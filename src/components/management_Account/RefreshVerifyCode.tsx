@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import Toast from 'react-native-toast-message';
 export default function RefreshVerifyCode({navigation}: any) {
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const firstInput = useRef();
@@ -38,23 +39,26 @@ export default function RefreshVerifyCode({navigation}: any) {
         })
         .then(response => {
           console.log('Verification successful:', response.data);
-          ToastAndroid.show(
-            'Xác thực thành công! ',
-            ToastAndroid.SHORT,
-          );
+          Toast.show({
+            type: 'success',
+            text1: 'Thành công',
+            text2: 'Xác thực thành công 👋',
+          });
           navigation.navigate('NewPassword');
         })
         .catch(error => {
           if (error.response && error.response.status === 401) {
-            ToastAndroid.show(
-              'Mã OTP không chính xác! ',
-              ToastAndroid.SHORT,
-            );
+            Toast.show({
+              type:'error',
+              text1:'Thất bại',
+              text2:'Mã OTP không chính xác',
+          });
           } else {
-            ToastAndroid.show(
-              'Xác thực không thành công! ',
-              ToastAndroid.SHORT,
-            );
+            Toast.show({
+              type:'error',
+              text1:'Thất bại',
+              text2:'Xác thực không thành công',
+          });
           }
         });
     } catch (err) {
@@ -128,10 +132,6 @@ export default function RefreshVerifyCode({navigation}: any) {
           onPress={handleVerification}>
           <Text style={styles.verify}>Xác Thực</Text>
         </TouchableOpacity>
-        <View style={styles.textRefresh}>
-          <Text style={styles.codeOTP}>Chưa nhận được mã OTP,</Text>
-          <Text style={styles.sendCode}>gửi lại</Text>
-        </View>
       </View>
     </ImageBackground>
   );
@@ -183,6 +183,7 @@ const styles = StyleSheet.create({
     height:50,
     justifyContent: 'center',
     alignItems: 'center',
+    marginBottom:10,
   },
   verify: {
     color: '#40B59F',

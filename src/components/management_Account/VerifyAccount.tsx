@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import Toast from 'react-native-toast-message';
 
 export default function VerifyAccount({navigation}: any) {
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
@@ -34,14 +35,26 @@ export default function VerifyAccount({navigation}: any) {
         })
         .then(response => {
           console.log('Verification successful:', response.data);
-          Alert.alert('Xác thực thành công!');
+          Toast.show({
+            type: 'success',
+            text1: 'Thành công',
+            text2: 'Xác thực thành công',
+          });
           navigation.navigate('Login');
         })
         .catch(error => {
           if (error.response && error.response.status === 401) {
-            Alert.alert('Lỗi', 'Mã OTP không chính xác');
+            Toast.show({
+              type: 'error',
+              text1: 'Thất bại',
+              text2: 'Mã OTP không chính xác',
+            });
           } else {
-            Alert.alert('Lỗi', 'Xác thực không thành công');
+            Toast.show({
+              type: 'error',
+              text1: 'Thất bại',
+              text2: 'Xác thực không thành công',
+            });
           }
           console.error('Verification failed:', error);
         });
@@ -115,10 +128,10 @@ export default function VerifyAccount({navigation}: any) {
           onPress={handleVerification}>
           <Text style={styles.verify}>Xác Thực</Text>
         </TouchableOpacity>
-        <View style={styles.textRefresh}>
+        {/* <View style={styles.textRefresh}>
           <Text style={styles.codeOTP}>Chưa nhận được mã OTP,</Text>
           <Text style={styles.sendCode}>gửi lại</Text>
-        </View>
+        </View> */}
       </View>
     </ImageBackground>
   );

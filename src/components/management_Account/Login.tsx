@@ -7,7 +7,6 @@ import {
   Image,
   KeyboardAvoidingView,
   Platform,
-  ToastAndroid,
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
@@ -17,6 +16,7 @@ import {useMutation} from '@tanstack/react-query';
 import axios from 'axios';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Toast from 'react-native-toast-message';
 interface Account {
   username: string;
   password: string;
@@ -39,24 +39,26 @@ export default function Login({navigation}: any) {
           const user = JSON.stringify(token);
           await AsyncStorage.setItem('AccessToken', token.accessToken);
           await AsyncStorage.setItem('user', user);
-          ToastAndroid.showWithGravity(
-            'Đăng nhập thành công ',
-            ToastAndroid.LONG,
-            ToastAndroid.TOP,
-          );
+          Toast.show({
+            type: 'success',
+            text1: 'Thành công',
+            text2: 'Đăng nhập thành công 👋',
+          });
           navigation.navigate('Homestack');
         }
       } catch (error: any) {
         if (error.response && error.response.status === 404) {
-          ToastAndroid.show(
-            'Sai tên đăng nhập hoặc mật khẩu ',
-            ToastAndroid.SHORT,
-          );
+          Toast.show({
+            type: 'error',
+            text1: 'Thất bại',
+            text2: 'Sai tên đăng nhập hoặc mật khẩu!!',
+          });
         } else {
-          ToastAndroid.show(
-            'Thông tin đăng nhập không chính xác',
-            ToastAndroid.SHORT,
-          );
+          Toast.show({
+            type: 'error',
+            text1: 'Thất bại',
+            text2: 'Không thành công!!',
+          });
         }
       }
     },
@@ -102,7 +104,7 @@ export default function Login({navigation}: any) {
                 <Text style={styles.errorText}>* {errors.username}</Text>
                 ) : null}
               <Text style={styles.label}>MẬT KHẨU</Text>
-              <View style={{position: 'relative'}}>
+              <View style={styles.content}>
                 <TextInput
                   secureTextEntry={!showPassword}
                   style={styles.textInput}
@@ -271,5 +273,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: 'red',
    marginBottom:12,
+  },
+  content:{
+    position:'relative',
   },
 });

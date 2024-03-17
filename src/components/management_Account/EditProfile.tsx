@@ -16,6 +16,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {string} from 'yup';
+import Toast from 'react-native-toast-message';
 interface getProfile {
   fullname: string;
   email: string;
@@ -83,10 +84,11 @@ export default function EditProfile({navigation}: any): getProfile[] {
           },
         );
         if (response.status === 200) {
-          ToastAndroid.show(
-            'Cập nhật thông tin thành công ',
-            ToastAndroid.SHORT,
-          );
+          Toast.show({
+            type: 'success',
+            text1: 'Thành công',
+            text2: 'Cập nhật thông tin thành công 👋',
+          });
           setUserData(response.data);
           let newUser = JSON.parse(await AsyncStorage.getItem('user'));
           for (const [key, value] of Object.entries(data)) {
@@ -96,7 +98,11 @@ export default function EditProfile({navigation}: any): getProfile[] {
           queryClient.invalidateQueries({queryKey: ['profile']});
           navigation.navigate('Tài khoản');
         } else {
-          Alert.alert('Invalid information!');
+          Toast.show({
+            type: 'error',
+            text1: 'Thất bại',
+            text2: 'Cập nhật thông tin không thành công 👋',
+          });
         }
         return response.data;
       } catch (error) {
@@ -119,15 +125,17 @@ export default function EditProfile({navigation}: any): getProfile[] {
   const handleSaveProfile = async () => {
     try {
       if (!newName || !newPhone || !newAddress || !selectedImage) {
-        ToastAndroid.show(
-          'Vui lòng nhập đầy đủ thông tin ',
-          ToastAndroid.SHORT,
-        );
+        Toast.show({
+            type: 'error',
+            text1: 'Thất bại',
+            text2: 'Vui lòng nhập đầy đủ thông tin',
+          });
       } else if (newPhone.length !== 10) {
-        ToastAndroid.show(
-          'Số điện thoại không hợp lệ ',
-          ToastAndroid.SHORT,
-        );
+        Toast.show({
+          type: 'error',
+          text1: 'Thất bại',
+          text2: 'Số điện thoại không hợp lệ ',
+        });
       }
       else {
         const response = await mutationEdit.mutate({

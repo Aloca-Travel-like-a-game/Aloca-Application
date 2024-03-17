@@ -17,6 +17,7 @@ import {useMutation} from '@tanstack/react-query';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NewPassword_validate } from './NewPassword_validate';
+import Toast from 'react-native-toast-message';
 interface NewAccount {
   password: string;
   confirmPassword: string;
@@ -48,26 +49,26 @@ export default function NewPassword({navigation}: any) {
         if (res.status === 200) {
           const dataNew = res.data.data;
           console.log('dataNew--', dataNew);
-          ToastAndroid.showWithGravity(
-            'Cập nhật mật khẩu thành công',
-            ToastAndroid.LONG,
-            ToastAndroid.TOP,
-          );
+         Toast.show({
+          type:'success',
+          text1:'Thành công',
+          text2:'Cập nhật mật khẩu thành công',
+         });
           navigation.navigate('Login');
         }
       } catch (error: any) {
         if (error.response && error.response.status === 404) {
-          ToastAndroid.showWithGravity(
-            'Vui lòng nhập thông tin chính xác',
-            ToastAndroid.LONG,
-            ToastAndroid.TOP,
-          );
+          Toast.show({
+            type:'error',
+            text1:'Thất bại',
+            text2:'Cần nhập chính xác thông tin',
+           });
         } else {
-          ToastAndroid.showWithGravity(
-            'xác thực không thành công',
-            ToastAndroid.LONG,
-            ToastAndroid.TOP,
-          );
+          Toast.show({
+            type:'error',
+            text1:'Thất bại',
+            text2:'Cập nhật mật khẩu không thành công',
+           });
         }
       }
     },
@@ -78,11 +79,11 @@ export default function NewPassword({navigation}: any) {
         mutationNewLogin.mutate(data);
         console.log('data=>', data);
       } else {
-        ToastAndroid.showWithGravity(
-          'Mật khẩu xác thực không hợp lệ',
-          ToastAndroid.LONG,
-          ToastAndroid.TOP,
-        );
+        Toast.show({
+          type:'error',
+          text1:'Thất bại',
+          text2:'Mật khẩu xác thực không hợp lệ',
+         });
       }
     } catch (error) {
       ToastAndroid.showWithGravity(

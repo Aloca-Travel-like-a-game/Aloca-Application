@@ -25,7 +25,6 @@ import {useState} from 'react';
 import Notification from '../components/management_Account/Notification';
 import VideoTravel from '../components/shortVideo/VideoTravel';
 import RankingScreen from '../screens/RankingScreen';
-
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 const TripPlanStack = () => {
@@ -45,7 +44,7 @@ const renderScene = SceneMap({
   first: ChatScreen,
   second: TripPlanStack,
 });
-const renderAssistanceTabBar = (props): any => (
+const renderAssistanceTabBar = (props: any) => (
   <TabBar
     {...props}
     indicatorStyle={{backgroundColor: '#2AB6AD'}}
@@ -181,7 +180,7 @@ export default function Navigation() {
         <Stack.Screen name="RefreshVerifyCode" component={RefreshVerifyCode} />
         <Stack.Screen name="NewPassword" component={NewPassword} />
         <Stack.Screen name="Homestack" component={Homestack} />
-        <Stack.Screen name="Editprofile" component={EditProfile} />
+        <Stack.Screen name="Editprofile" component ={EditProfile} />
         <Stack.Screen name="Notification" component={Notification} />
         <Stack.Screen name="VideoTravel" component={VideoTravel} />
       </Stack.Navigator>
