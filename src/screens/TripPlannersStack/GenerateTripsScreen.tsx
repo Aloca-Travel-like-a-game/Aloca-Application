@@ -21,6 +21,7 @@ import axios from 'axios';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {KeyboardAvoidingView} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 export const GenerateTripsScreen = () => {
   const [loading, setLoading] = useState(false);
@@ -119,7 +120,7 @@ export const GenerateTripsScreen = () => {
         }}>{`Ngày ${index} - ${day.title}`}</Text>
       <FlatList
         data={day.activities}
-        keyExtractor={(activity:any) => activity.challenge_summary}
+        keyExtractor={(activity: any) => activity.challenge_summary}
         renderItem={renderActivity}
       />
     </View>
@@ -131,8 +132,8 @@ export const GenerateTripsScreen = () => {
       <FlatList
         style={{gap: 5}}
         data={Object.values(plan)}
-        keyExtractor={(item:any, index:any) => item + index.toString()}
-        renderItem={(item:any) => renderDay(item, item.index + 1)}
+        keyExtractor={(item: any, index: any) => item + index.toString()}
+        renderItem={(item: any) => renderDay(item, item.index + 1)}
       />
       <TouchableOpacity
         style={styles.sendBtn}
@@ -164,6 +165,22 @@ export const GenerateTripsScreen = () => {
         alignItems: 'center',
         width: '100%',
       }}>
+      {!loading && (
+        <TouchableOpacity
+          style={{
+            position: 'absolute',
+            zIndex: 1,
+            backgroundColor: '#2AB6AD',
+            padding: 10,
+            top: 10,
+            left: 10,
+            borderTopRightRadius: 50,
+            borderBottomRightRadius: 50,
+          }}
+          onPress={() => navigation.goBack()}>
+          <Ionicons name="arrow-back" size={20} color="#fff" />
+        </TouchableOpacity>
+      )}
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'height' : 'padding'}
         style={{
@@ -256,8 +273,8 @@ export const GenerateTripsScreen = () => {
             }
             style={{zIndex: 2, gap: 10, width: '100%'}}
             data={Object.values(result)}
-            keyExtractor={(item:any, index:any) => item + index.toString()}
-            renderItem={(item:any) => renderPlan(item, item.index + 1)}
+            keyExtractor={(item: any, index: any) => item + index.toString()}
+            renderItem={(item: any) => renderPlan(item, item.index + 1)}
           />
         )}
         {!loading && !result && (
@@ -304,6 +321,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     fontSize: 20,
     marginBottom: 10,
+    alignSelf: 'center',
   },
   sdHeading: {fontWeight: '600'},
   dayView: {

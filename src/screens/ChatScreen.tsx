@@ -215,7 +215,7 @@ const styles = StyleSheet.create({
   },
   textInput: {
     position: 'absolute',
-    bottom: 0,
+    bottom: 10,
     maxHeight: 70,
     height: 'auto',
     width: '100%',
@@ -234,6 +234,7 @@ const styles = StyleSheet.create({
     right: 0,
     justifyContent: 'center',
     alignItems: 'center',
+    bottom: 10,
   },
   textChat: {
     color: '#000',

@@ -1,4 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
+import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
@@ -25,13 +26,12 @@ import Notification from '../components/management_Account/Notification';
 import {DetailTripScreen} from '../screens/TripPlannersStack/DetailTripScreen';
 import VideoTravel from '../components/shortVideo/VideoTravel';
 import RankingScreen from '../screens/RankingScreen';
-import React from 'react';
 import CameraScreen from '../screens/Camera';
-
+import { MapScreen } from '../screens/MapsScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
-const TripPlanStack = ():React.JSX.Element => {
+const TripPlanStack = (): React.JSX.Element => {
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
       <Stack.Screen name="AddNewTrip" component={TripPlanScreen} />
@@ -41,6 +41,7 @@ const TripPlanStack = ():React.JSX.Element => {
         component={GenerateTripsScreen}
       />
       <Stack.Screen name="DetailTripScreen" component={DetailTripScreen} />
+      <Stack.Screen name="CameraScreen" component={CameraScreen} />
     </Stack.Navigator>
   );
 };
@@ -155,7 +156,13 @@ const Homestack = () => {
         },
         animationEnabled: true,
         tabBarHideOnKeyboard: true,
-        tabBarItemStyle: {borderTopLeftRadius: 10,borderTopRightRadius: 10, bottom: 10, height: 60, paddingTop: 10},
+        tabBarItemStyle: {
+          borderTopLeftRadius: 10,
+          borderTopRightRadius: 10,
+          bottom: 10,
+          height: 60,
+          paddingTop: 10,
+        },
       })}>
       {TabArr.map((item, index) => {
         return (
@@ -175,8 +182,7 @@ const Homestack = () => {
 export default function Navigation() {
   return (
     <NavigationContainer>
-      <Stack.Navigator
-        screenOptions={{headerShown: false}}>
+      <Stack.Navigator screenOptions={{headerShown: false}}>
         <Stack.Screen name="LandingPage" component={LandingPage} />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Registration" component={Registration} />
@@ -188,7 +194,7 @@ export default function Navigation() {
         <Stack.Screen name="Editprofile" component={EditProfile} />
         <Stack.Screen name="Notification" component={Notification} />
         <Stack.Screen name="VideoTravel" component={VideoTravel} />
-        <Stack.Screen name="CameraScreen" component={CameraScreen} />
+        <Stack.Screen name="MapScreen" component={MapScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

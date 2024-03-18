@@ -131,11 +131,6 @@ export default function HomeScreens({navigation}: any) {
           />
         ) : null}
       </View>
-      <TouchableOpacity
-          style={styles.iconnotifications}
-          onPress={() => navigation.navigate('CameraScreen')}>
-          <Ionicons name="camera" size={40} color="black" />
-        </TouchableOpacity>
     </ScrollView>
   );
 }

@@ -19,11 +19,12 @@ import {
   TakePhotoOptions,
   CameraPosition,
 } from 'react-native-vision-camera';
-import {useFocusEffect} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import React from 'react';
 
 const CameraScreen = () => {
+  const navigation = useNavigation();
   const [camereaSide, setCamereaSide] = useState<CameraPosition>('back');
   const device = useCameraDevice(camereaSide, {
     physicalDevices: ['ultra-wide-angle-camera'],
@@ -69,11 +70,12 @@ const CameraScreen = () => {
 
   const onTakePicturePressed = async () => {
     setIsTakingPhoto(true);
-    const photo = await camera.current?.takePhoto({
-      flash,
-      enableShutterSound: true,
-    });
-    setPhoto(photo);
+    setPhoto(
+      await camera.current?.takePhoto({
+        flash,
+        enableShutterSound: true,
+      }),
+    );
     setIsTakingPhoto(false);
   };
 
@@ -114,7 +116,7 @@ const CameraScreen = () => {
             name="arrow-back-sharp"
             size={25}
             color="white"
-            style={{position: 'absolute', top: 50, left: 30}}
+            style={{position: 'absolute', top: 30, left: 30}}
           />
           <View
             style={{
@@ -132,11 +134,18 @@ const CameraScreen = () => {
 
       {!photo && (
         <>
+          <Ionicons
+            onPress={() => navigation.goBack()}
+            name="arrow-back-sharp"
+            size={25}
+            color="white"
+            style={{position: 'absolute', top: 30, left: 30}}
+          />
           <View
             style={{
               position: 'absolute',
-              right: 10,
-              top: 50,
+              right: 20,
+              top: 20,
               padding: 10,
               borderRadius: 5,
               backgroundColor: 'rgba(0, 0, 0, 0.40)',

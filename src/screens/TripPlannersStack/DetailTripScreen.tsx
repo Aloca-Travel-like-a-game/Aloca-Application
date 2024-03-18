@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-shadow */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
-import React,{ FC, useEffect, useState} from 'react';
+import React, {FC, useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -181,8 +181,32 @@ export const DetailTripScreen: FC = (): JSX.Element => {
             }}
             resizeMode="cover"
             source={require('../../Images/location.png')}>
-            <TouchableOpacity style={{...styles.btn, flexDirection: 'row'}}>
-              <Text>Xem bản đồ</Text>
+            <TouchableOpacity
+              style={{
+                position: 'absolute',
+                zIndex: 1,
+                backgroundColor: '#2AB6AD',
+                padding: 10,
+                top: 15,
+                borderTopRightRadius: 50,
+                borderBottomRightRadius: 50,
+              }}
+              onPress={() => navigation.navigate('AddNewTrip')}>
+              <Ionicons name="arrow-back" size={20} color="#fff" />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                ...styles.btn,
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'center',
+                gap: 5,
+                width: '50%',
+                alignSelf: 'center',
+                marginBottom: '13%',
+              }}
+              onPress={() => navigation.navigate('MapScreen')}>
+              <Text style={{...styles.text, color: '#fff'}}>Xem bản đồ</Text>
               <Ionicons name="map" size={20} color="#fff" />
             </TouchableOpacity>
             <LinearGradient
