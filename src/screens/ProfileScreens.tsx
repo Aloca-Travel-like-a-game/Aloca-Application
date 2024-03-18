@@ -6,24 +6,20 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useQuery} from '@tanstack/react-query';
 export default function ProfileScreens({navigation}: any) {
-  const {data} = useQuery({
-    queryKey: ['profile'],
-    queryFn: async () => {
-      const tokenst : any = await AsyncStorage.getItem('user');
-      const datauser = JSON.parse(tokenst);
-      return datauser;
-    },
+  const [data, setData] = useState<any>();
+  useEffect(() => {
+    AsyncStorage.getItem('user').then((datauser: any) =>
+      setData(JSON.parse(datauser).data),
+    );
   });
   const handleEditprofile = () => {
     navigation.navigate('Editprofile');
   };
-  // console.log(data?.data?.fullname);
   const handleLogout = async () => {
     await AsyncStorage.removeItem('user');
     const user = await AsyncStorage.getItem('user');
@@ -36,8 +32,8 @@ export default function ProfileScreens({navigation}: any) {
       showsVerticalScrollIndicator={false}
       style={styles.containerContent}>
       <View style={styles.editProfile}>
-        {data?.data.image !== '' ? <Image style={styles.image} source={{uri: data?.data.image}} /> : null}
-        <Text style={styles.textfullname}>{data?.data?.fullname}</Text>
+        {data?.image !== null && data?.image !== undefined ? <Image style={styles.image} source={{uri: data.image}} /> : null}
+        <Text style={styles.textfullname}>{data?.fullname}</Text>
         <TouchableOpacity onPress={handleEditprofile}>
           <AntDesign name="form" size={28} color="black" />
         </TouchableOpacity>
@@ -52,8 +48,13 @@ export default function ProfileScreens({navigation}: any) {
           />
           <Text style={styles.textEditprofile}>Yêu thích</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={ ()=> navigation.navigate('Notification')}>
-          <Ionicons name="notifications-outline" size={24} color="black" style={styles.icon} />
+        <TouchableOpacity onPress={() => navigation.navigate('Notification')}>
+          <Ionicons
+            name="notifications-outline"
+            size={24}
+            color="black"
+            style={styles.icon}
+          />
           <Text style={styles.textEditprofile}>Thông báo</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={()=>navigation.navigate('Trợ lý')}>
@@ -81,7 +82,7 @@ export default function ProfileScreens({navigation}: any) {
       </View>
       <View style={styles.contentManage}>
         <TouchableOpacity style={styles.contenttext}>
-          <AntDesign name="enviromento" size={24} color="black" />
+         <AntDesign name="enviromento" size={24} color="black" />
           <Text style={styles.text}>Quản lý địa chỉ của tôi</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.contenttext}>
@@ -183,8 +184,8 @@ const styles = StyleSheet.create({
     padding: 8,
     width: 80,
     borderRadius: 10,
-    textAlign:'center',
-    marginTop:10,
+    textAlign: 'center',
+    marginTop: 10,
   },
   contentManage: {
     backgroundColor: '#FFFFFF',
@@ -218,7 +219,7 @@ const styles = StyleSheet.create({
     width: 80,
     borderRadius: 10,
     textAlign: 'center',
-    marginTop:10,
+    marginTop: 10,
   },
   contentEvaluate: {
     flexDirection: 'row',
@@ -230,7 +231,7 @@ const styles = StyleSheet.create({
     // borderColor: '#87CEFA',
     justifyContent: 'space-around',
     alignItems: 'center',
-    padding:20,
+    padding: 20,
   },
   textevaluateAloca: {
     color: '#000',
@@ -241,7 +242,7 @@ const styles = StyleSheet.create({
     color: '#000',
     fontWeight: 'bold',
     borderBottomWidth: 1,
-    padding:5,
+    padding: 5,
   },
   icon: {
     textAlign: 'center',

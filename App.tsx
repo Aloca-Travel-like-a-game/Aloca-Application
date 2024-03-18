@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import Navigation from './src/navigation/Navigation';
 import { LogBox, StyleSheet } from 'react-native';
 import Toast, { BaseToast, ErrorToast } from 'react-native-toast-message';
@@ -30,7 +30,20 @@ const toastConfig = {
     />
   ),
   };
+import {PermissionsAndroid} from 'react-native';
+
 export default function App() {
+  useEffect(() => {
+    PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.CAMERA, {
+      title: 'Cho phép truy cập máy ảnh',
+      message:
+        'Cool Photo App needs access to your camera ' +
+        'so you can take awesome pictures.',
+      buttonNeutral: 'Để sau',
+      buttonNegative: 'Hủy',
+      buttonPositive: 'Cho phép',
+    });
+  });
   return (
     <QueryClientProvider client={queryClient}>
       <Navigation />

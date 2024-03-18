@@ -4,10 +4,8 @@ import {
   TouchableOpacity,
   StyleSheet,
   TextInput,
-  Alert,
   Image,
   ScrollView,
-  ToastAndroid,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -115,9 +113,8 @@ export default function EditProfile({navigation}: any): getProfile[] {
       setNewName(value);
     } else if (key === 'phone') {
       // setNewPhone(value);
-      if (/^\d+$/.test(value)) {
         setNewPhone(value);
-      }
+ 
     } else if (key === 'address') {
       setNewAddress(value);
     }

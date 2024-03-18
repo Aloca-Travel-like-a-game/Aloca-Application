@@ -2,33 +2,42 @@ import {View, Text, StyleSheet, TouchableOpacity, FlatList} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {Image} from 'react-native-animatable';
 import axios from 'axios';
-
-export default function RankingScreen({navigation}: any) {
+export default function RankingScreen() {
   const [data, setData] = useState<any>([]);
   const [selectedButton, setSelectedButton] = useState<string>('Theo Điểm');
-  const handleButtonPress = (buttonName: string) => {
+  const handleButtonPress = async (buttonName: string) => {
     setSelectedButton(buttonName);
+    switch (buttonName) {
+      case 'Theo Tuần':
+        await getWeeklyData();
+        break;
+      case 'Theo Tháng':
+        await getMonthlyData();
+        break;
+      case 'Theo Điểm':
+        await getHighestData();
+        break;
+      default:
+        break;
+    }
   };
   const getWeeklyData = async () => {
     const response = await axios.get(
       'http://52.63.147.17:8080/rankings/weekly',
     );
     setData(response.data);
-    // console.log('week', response.data);
   };
   const getMonthlyData = async () => {
     const response = await axios.get(
       'http://52.63.147.17:8080/rankings/monthly',
     );
     setData(response.data);
-    // console.log('month',response.data);
   };
   const getHighestData = async () => {
     const response = await axios.get(
       'http://52.63.147.17:8080/rankings/rankingUserHighest',
     );
     setData(response.data);
-    // console.log('high',response.data);
   };
   useEffect(() => {
     getHighestData();
@@ -45,9 +54,36 @@ export default function RankingScreen({navigation}: any) {
           Chào mừng bạn đến với cuộc {'\n'} đua của Aloca
         </Text>
       </View>
+      {/* <Image
+        source={require('../Images/ImageProfile.png')}
+        style={styles.imgeRank}
+      /> */}
+      <Image
+        source={require('../Images/topRanking.png')}
+        style={styles.imgeRankTop}
+      />
+      {/* <Image
+        source={require('../Images/ImageProfile.png')}
+        style={styles.imgeRank2}
+      /> */}
+      <Image
+        source={require('../Images/top3ranking.png')}
+        style={styles.imgeRankTop2}
+      />
+      {/* <Image
+        source={require('../Images/ImageProfile.png')}
+        style={styles.imgeRank3}
+      /> */}
+      <Image
+        source={require('../Images/top2ranking.png')}
+        style={styles.imgeRankTop3}
+      />
       <View style={styles.option}>
         <TouchableOpacity
-          style={[styles.contentbuttonTitle, selectedButton === 'Theo Tuần' && styles.selectedButton]}
+          style={[
+            styles.contentbuttonTitle,
+            selectedButton === 'Theo Tuần' && styles.selectedButton,
+          ]}
           onPress={() => {
             handleButtonPress('Theo Tuần');
             getWeeklyData();
@@ -55,7 +91,10 @@ export default function RankingScreen({navigation}: any) {
           <Text style={styles.buttonTitle}>Theo Tuần </Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.contentbuttonTitle, selectedButton === 'Theo Tháng' && styles.selectedButton]}
+          style={[
+            styles.contentbuttonTitle,
+            selectedButton === 'Theo Tháng' && styles.selectedButton,
+          ]}
           onPress={() => {
             handleButtonPress('Theo Tháng');
             getMonthlyData();
@@ -63,7 +102,10 @@ export default function RankingScreen({navigation}: any) {
           <Text style={styles.buttonTitle}>Theo Tháng </Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.contentbuttonTitle, selectedButton === 'Theo Điểm' && styles.selectedButton]}
+          style={[
+            styles.contentbuttonTitle,
+            selectedButton === 'Theo Điểm' && styles.selectedButton,
+          ]}
           onPress={() => {
             handleButtonPress('Theo Điểm');
             getHighestData();
@@ -72,28 +114,24 @@ export default function RankingScreen({navigation}: any) {
         </TouchableOpacity>
       </View>
       <View style={styles.contentRanking}>
-        {data && data.dataRankingUserHighest && (
-          <FlatList
-            data={data.dataRankingUserHighest}
-            renderItem={({item}) => {
-              return (
-                <View style={styles.ShowdataRanking}>
-                  <Image source={{uri: item.image}} style={styles.imageStyle} />
-                  <View style={styles.textContainer}>
-                    <Text style={styles.textname}>{item.fullname}</Text>
-                    <Text style={styles.textexperience}>{item.experience} điểm</Text>
-                  </View>
+        <FlatList
+          data={data.dataRanks}
+          renderItem={({item}) => {
+            return (
+              <View style={styles.ShowdataRanking}>
+                <Image source={{uri: item.image}} style={styles.imageStyle} />
+                <View style={styles.textContainer}>
+                  <Text style={styles.textname}>{item?.fullname}</Text>
+                  <Text style={styles.textexperience}>
+                    {item.experience} điểm
+                  </Text>
                 </View>
-              );
-            }}
-          />
-        )}
+              </View>
+            );
+          }}
+          keyExtractor={(item, index) => index.toString()}
+        />
       </View>
-      <TouchableOpacity
-        style={styles.textContent}
-        onPress={() => navigation.navigate('Trang chủ')}>
-        <Text style={styles.textcontinue}>TIẾP TỤC </Text>
-      </TouchableOpacity>
     </View>
   );
 }
@@ -132,7 +170,7 @@ const styles = StyleSheet.create({
   backgroundRanking: {
     alignSelf: 'center',
     width: 352,
-    height:200,
+    height: 200,
   },
   contentRanking: {
     marginHorizontal: 15,
@@ -168,7 +206,7 @@ const styles = StyleSheet.create({
   textname: {
     color: '#FFFFFF',
     fontSize: 14,
-    width:100,
+    width: 100,
   },
   imageStyle: {
     width: 50,
@@ -179,7 +217,7 @@ const styles = StyleSheet.create({
   },
   ShowdataRanking: {
     flexDirection: 'row',
-    justifyContent:'space-around',
+    justifyContent: 'space-around',
     alignItems: 'center',
     marginVertical: 5,
   },
@@ -192,7 +230,49 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    marginTop:10,
+    marginTop: 10,
+  },
+  imgeRank: {
+    position: 'absolute',
+    width: 80,
+    height: 75,
+    marginTop: 130,
+    alignSelf: 'center',
+  },
+  imgeRankTop: {
+    position: 'absolute',
+    width: 70,
+    height: 40,
+    marginTop: 170,
+    alignSelf: 'center',
+  },
+  imgeRank2: {
+    position: 'absolute',
+    width: 60,
+    height: 55,
+    marginTop: 150,
+    left: 70,
+  },
+  imgeRankTop2: {
+    position: 'absolute',
+    width: 60,
+    height: 30,
+    marginTop: 179,
+    left: 70,
+  },
+  imgeRank3: {
+    position: 'absolute',
+    width: 60,
+    height: 55,
+    marginTop: 150,
+    left: 250,
+  },
+  imgeRankTop3: {
+    position: 'absolute',
+    width: 60,
+    height: 35,
+    marginTop: 175,
+    left: 250,
   },
   buttonTitle: {
     color: '#FFFFFF',
@@ -202,14 +282,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 10,
     borderRadius: 10,
-    backgroundColor:'#455A64',
-    borderColor:'#455A64',
+    backgroundColor: '#455A64',
+    borderColor: '#455A64',
   },
   selectedButton: {
     backgroundColor: '#2AB6AD',
-    borderColor:'#2AB6AD',
+    borderColor: '#2AB6AD',
   },
-  headerRanking:{
+  headerRanking: {
     // marginTop:10,
-  }
+  },
 });

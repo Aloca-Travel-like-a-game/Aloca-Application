@@ -12,10 +12,12 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {SliderBox} from 'react-native-image-slider-box';
 import Video from 'react-native-video';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {useQuery} from '@tanstack/react-query';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 export default function HomeScreens({navigation}: any) {
+  const [rankingData, setRankingData] = useState<any>([]);
   const {data: dataUser} = useQuery({
     queryKey: ['profile'],
     queryFn: async () => {
@@ -24,6 +26,15 @@ export default function HomeScreens({navigation}: any) {
       return datauser;
     },
   });
+  const getHighestData = async () => {
+    const response = await axios.get(
+      'http://52.63.147.17:8080/rankings/rankingUserHighest',
+    );
+    setRankingData(response.data);
+  };
+  useEffect(() => {
+    getHighestData();
+  }, []);
   const data = [
     {
       id: 1,
@@ -94,8 +105,8 @@ export default function HomeScreens({navigation}: any) {
           autoplay
           circleLoop
           autoplayInterval={10000}
-          dotColor="#FFEE58"
-          inactiveDotColor="#90A4AE"
+          dotColor="#ffffff"
+          inactiveDotColor="#2AB6AD"
         />
       </View>
       <View style={styles.titileVideo}>
@@ -140,15 +151,22 @@ export default function HomeScreens({navigation}: any) {
       </View>
       <View style={styles.titilebestTravel}>
         <Text style={styles.textTravel}>Bảng xếp hạng"Vua du lịch"</Text>
-        <Text style={styles.textmore}>Xem thêm</Text>
+        <TouchableOpacity onPress={() => navigation.navigate('Xếp hạng')}>
+          <Text style={styles.textmore}>Xem thêm</Text>
+        </TouchableOpacity>
       </View>
       <View style={styles.viewRanking}>
-        {dataUser?.data.image !== '' ? (
-          <Image
-            style={styles.imageRanking}
-            source={{uri: dataUser?.data.image}}
-          />
-        ) : null}
+        <FlatList
+          data={rankingData.dataRanks}
+          renderItem={({item}) => {
+            return (
+              <View>
+                <Image source={{uri: item.image}} style={styles.imageRanking} />
+              </View>
+            );
+          }}
+          horizontal
+        />
       </View>
     </ScrollView>
   );
@@ -273,5 +291,6 @@ const styles = StyleSheet.create({
   },
   viewRanking: {
     marginBottom: 20,
+    marginTop: 8,
   },
 });

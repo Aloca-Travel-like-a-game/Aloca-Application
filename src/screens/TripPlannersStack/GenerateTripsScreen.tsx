@@ -20,7 +20,7 @@ import {
   Alert,
 } from 'react-native';
 import axios from 'axios';
-import {useRoute} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {KeyboardAvoidingView} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -32,6 +32,7 @@ export const GenerateTripsScreen = () => {
   const [planConfirm, setPlanConfirm] = useState<any>();
   const [token, setToken] = useState<any>();
   const route = useRoute();
+  const navigation = useNavigation();
 
   const {location, quantity, budget, areaTypes, days, startDate, endDate}: any =
     route.params;
@@ -129,13 +130,15 @@ export const GenerateTripsScreen = () => {
             setPlanConfirm(Object.values(plan));
           }
         }}>
-        <Text
-          style={{
-            color: '#fff',
-            fontWeight: '500',
-          }}>
-          Chọn kế hoạch này
-        </Text>
+        <View>
+          <Text
+            style={{
+              color: '#fff',
+              fontWeight: '500',
+            }}>
+            Chọn kế hoạch này
+          </Text>
+        </View>
       </TouchableOpacity>
     </View>
   );
@@ -151,7 +154,12 @@ export const GenerateTripsScreen = () => {
       }}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'height' : 'padding'}
-        style={{flex: 1, justifyContent: 'center', alignItems: 'center', width: '100%'}}>
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+          width: '100%',
+        }}>
         {loading && (
           <View
             style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
@@ -219,6 +227,7 @@ export const GenerateTripsScreen = () => {
                           onChangePlanName('');
                           setPlanConfirm(null);
                           setModalVisible(!modalVisible);
+                          navigation.navigate('DetailTripScreen');
                         }
                       }}>
                       <Text
