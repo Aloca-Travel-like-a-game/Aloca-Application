@@ -6,7 +6,6 @@ import {
   Image,
   KeyboardAvoidingView,
   Platform,
-  ToastAndroid,
   ScrollView,
 } from 'react-native';
 import React from 'react';
@@ -16,6 +15,7 @@ import {useMutation} from '@tanstack/react-query';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {validateSchema} from './ForgotPassword_Validate';
+import Toast from 'react-native-toast-message';
 interface Account {
   email: string;
 }
@@ -30,17 +30,19 @@ export default function ForgotPassword({navigation}: any) {
         if (res.status === 200) {
           const emailResetPassword = email.email;
           await AsyncStorage.setItem('emailResetPassword', emailResetPassword);
-          ToastAndroid.show(
-            'mã xác thực đã được gửi đến email của bạn ',
-            ToastAndroid.SHORT,
-          );
+          Toast.show({
+            type: 'success',
+            text1: 'Thành công',
+            text2: 'Mã xác thực đã được gửi đến Email của bạn 👋',
+          });
           navigation.navigate('RefreshVerifyCode');
         }
       } catch (error) {
-        ToastAndroid.show(
-          'gửi mã không thành công ',
-          ToastAndroid.SHORT,
-        );
+        Toast.show({
+          type: 'success',
+          text1:'Thất bại',
+          text2:'Gửi mã thất bại',
+        });
       }
     },
   });
@@ -103,7 +105,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-   
   },
   content:{
     paddingTop:50,

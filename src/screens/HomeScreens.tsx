@@ -101,7 +101,7 @@ export default function HomeScreens({navigation}: any) {
         </View>
       </View>
       <View style={styles.sliderContainer}>
-        <Swiper style={styles.wrapper} showsButtons={true} autoplay>
+        <Swiper style={styles.wrapper} showsButtons={false} autoplay>
           <View style={styles.slide1}>
             <Image
               source={require('../Images/silder.png')}
@@ -173,7 +173,7 @@ export default function HomeScreens({navigation}: any) {
           data={rankingData.dataRanks}
           renderItem={({item}) => {
             return (
-              <View>
+              <View style={styles.TopRanking}>
                 <Image source={{uri: item.image}} style={styles.imageRanking} />
               </View>
             );
@@ -198,7 +198,7 @@ const styles = StyleSheet.create({
   },
   containerContent: {
     flex: 1,
-    marginHorizontal: 16,
+    marginHorizontal: 12,
     paddingTop: 25,
   },
   icon: {
@@ -293,6 +293,7 @@ const styles = StyleSheet.create({
   },
   imageSlider: {
     height: 200,
+    width:'100%',
     borderRadius: 10,
   },
   numbernotification: {
@@ -310,7 +311,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     marginTop: 8,
   },
-  // test slider----------
   wrapper: {
     height: 200,
     gap: 8,
@@ -342,4 +342,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
   },
+  TopRanking:{
+    gap:10,
+  }
 });

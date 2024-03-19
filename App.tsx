@@ -1,10 +1,29 @@
 import React, {useEffect} from 'react';
 import Navigation from './src/navigation/Navigation';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
-import {PermissionsAndroid} from 'react-native';
+import {PermissionsAndroid, StyleSheet } from 'react-native';
+import Toast, { BaseToast, ErrorToast } from 'react-native-toast-message';
 // import Geolocation from '@react-native-community/geolocation';
-
 const queryClient = new QueryClient();
+const toastConfig = {
+  success: (props: any) => (
+    <BaseToast
+      {...props}
+      style={styles.sucessnotice}
+      contentContainerStyle={styles.contentsucess}
+      text1Style={styles.sucessText}
+      text2Style={styles.sucessText2}
+    />
+  ),
+  error: (props: any) => (
+    <ErrorToast
+      {...props}
+      text1Style={styles.failText}
+      text2Style={styles.failText2}
+      style={styles.failNotice}
+    />
+  ),
+  };
 export default function App() {
   useEffect(() => {
     const requestLocationPermission = async () => {
@@ -43,6 +62,31 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <Navigation />
+      <Toast config={toastConfig} />
     </QueryClientProvider>
   );
 }
+const styles = StyleSheet.create({
+  sucessnotice:{
+    borderLeftColor: '#2AB6AD',
+  },
+  contentsucess:{
+    paddingHorizontal: 15,
+  },
+  sucessText:{
+    fontSize: 20,
+    fontWeight: '600',
+  },
+  sucessText2:{
+    fontSize:13,
+  },
+  failText:{
+    fontSize: 20,
+  },
+  failText2:{
+    fontSize:13,
+  },
+  failNotice:{
+    borderLeftColor: 'red',
+  },
+});

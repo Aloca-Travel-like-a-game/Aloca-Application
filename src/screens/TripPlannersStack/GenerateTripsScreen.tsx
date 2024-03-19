@@ -15,13 +15,13 @@ import {
   Pressable,
   Dimensions,
   Platform,
-  Alert,
 } from 'react-native';
 import axios from 'axios';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {KeyboardAvoidingView} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import Toast from 'react-native-toast-message';
 
 export const GenerateTripsScreen = () => {
   const [loading, setLoading] = useState(false);
@@ -253,7 +253,11 @@ export const GenerateTripsScreen = () => {
                           planName === null ||
                           planName.trim() === ''
                         ) {
-                          Alert.alert('Vui lòng nhập tên kế hoạch');
+                          Toast.show({
+                            type: 'error',
+                            text1: 'Thất bại',
+                            text2: 'Vui lòng nhập tên kế hoạch',
+                          });
                         } else {
                           PickUpPlan({planName, planConfirm});
                           onChangePlanName('');
