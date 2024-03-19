@@ -24,7 +24,7 @@ export default function ProfileScreens({navigation}: any) {
     await AsyncStorage.removeItem('user');
     const user = await AsyncStorage.getItem('user');
     if (user === null) {
-      navigation.navigate('LandingPage');
+      navigation.navigate('Login');
     }
   };
   return (

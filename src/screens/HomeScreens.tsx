@@ -8,6 +8,8 @@ import {
   TouchableOpacity,
   Linking,
   ScrollView,
+  BackHandler,
+  Alert,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Video from 'react-native-video';
@@ -28,12 +30,32 @@ export default function HomeScreens({navigation}: any) {
       return datauser;
     },
   });
+
   const getHighestData = async () => {
     const response = await axios.get(
       'http://52.63.147.17:8080/rankings/rankingUserHighest',
     );
     setRankingData(response.data);
   };
+  useEffect(() => {
+    const backAction = () => {
+      Alert.alert('Chờ đã', 'Bạn chắc chắn muốn thoát chứ?', [
+        {
+          text: 'Không',
+          onPress: () => null,
+          style: 'cancel',
+        },
+        {text: 'Có', onPress: () => BackHandler.exitApp()},
+      ]);
+      return true;
+    };
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
+
+    return () => backHandler.remove();
+  }, []);
   useEffect(() => {
     getHighestData();
   }, []);
@@ -198,7 +220,7 @@ const styles = StyleSheet.create({
   },
   containerContent: {
     flex: 1,
-    marginHorizontal: 16,
+    paddingHorizontal: 16,
     paddingTop: 25,
   },
   icon: {

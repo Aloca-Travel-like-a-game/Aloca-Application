@@ -33,8 +33,16 @@ export const GenerateTripsScreen = () => {
   const route = useRoute();
   const navigation = useNavigation<any>();
 
-  const {location, quantity, budget, areaTypes, days, startDate, endDate}: any =
-    route.params;
+  const {
+    location,
+    quantity,
+    budget,
+    areaTypes,
+    userLocation,
+    days,
+    startDate,
+    endDate,
+  }: any = route.params;
   const APIurl = 'http://52.63.147.17:8080/trip-plan/';
 
   const sendRequest = async (
@@ -42,6 +50,7 @@ export const GenerateTripsScreen = () => {
     numPeople: number,
     bud: any,
     interests: any,
+    userLocation: any,
     numDay: number | undefined,
   ) => {
     try {
@@ -51,10 +60,11 @@ export const GenerateTripsScreen = () => {
         numberOfPeople: numPeople,
         budget: bud,
         interest: interests,
-        userLocation: 'Đà Nẵng',
+        userLocation: userLocation,
         numberOfDay: numDay,
       });
       setResult(res.data.data);
+      console.log(res.data.data);
     } catch (error) {
       console.error('Lỗi:', error);
       setResult(null);
@@ -63,13 +73,13 @@ export const GenerateTripsScreen = () => {
     }
   };
   useEffect(() => {
-    sendRequest(location, quantity, budget, areaTypes, days);
-  }, [location, quantity, budget, areaTypes, days]);
+    sendRequest(location, quantity, budget, areaTypes, userLocation, days);
+  }, [location, quantity, budget, areaTypes, userLocation, days]);
   useEffect(() => {
     AsyncStorage.getItem('AccessToken').then((result: any) => setToken(result));
   });
   const retryRequest = () => {
-    sendRequest(location, quantity, budget, areaTypes, days);
+    sendRequest(location, quantity, budget, areaTypes, userLocation, days);
   };
 
   const PickUpPlan = async (item: any) => {
@@ -230,7 +240,8 @@ export const GenerateTripsScreen = () => {
                       alignSelf: 'flex-end',
                       width: '50%',
                       flexDirection: 'row',
-                      justifyContent: 'space-between',
+                      justifyContent: 'flex-end',
+                      gap: 10,
                     }}>
                     <TouchableOpacity
                       onPress={() => setModalVisible(!modalVisible)}>
