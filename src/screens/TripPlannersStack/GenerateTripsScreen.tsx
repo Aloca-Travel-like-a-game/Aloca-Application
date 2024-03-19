@@ -238,7 +238,10 @@ export const GenerateTripsScreen = () => {
                         style={{
                           ...styles.btn,
                           ...styles.sdHeading,
-                          color: '#fff',
+                          color: '#2AB6AD',
+                          borderColor: '#2AB6AD',
+                          backgroundColor: '#fff',
+                          borderWidth: 1,
                         }}>
                         Hủy
                       </Text>

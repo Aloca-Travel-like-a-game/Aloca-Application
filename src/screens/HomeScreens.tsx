@@ -11,10 +11,15 @@ import {
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Video from 'react-native-video';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {useQuery} from '@tanstack/react-query';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import Swiper from 'react-native-swiper';
+// import  RemoteImage from 'react-native-banner-carousel';
+// import BannerCarousel from 'react-native-banner-carousel';
 export default function HomeScreens({navigation}: any) {
+  const [rankingData, setRankingData] = useState<any>([]);
   const {data: dataUser} = useQuery({
     queryKey: ['profile'],
     queryFn: async () => {
@@ -23,6 +28,15 @@ export default function HomeScreens({navigation}: any) {
       return datauser;
     },
   });
+  const getHighestData = async () => {
+    const response = await axios.get(
+      'http://52.63.147.17:8080/rankings/rankingUserHighest',
+    );
+    setRankingData(response.data);
+  };
+  useEffect(() => {
+    getHighestData();
+  }, []);
   const data = [
     {
       id: 1,
@@ -45,13 +59,22 @@ export default function HomeScreens({navigation}: any) {
       youtubeLink: 'https://youtube.com/shorts/BlWVo5CB6RU?si=XHaP3gdkX1IAcEC4',
     },
   ];
-
   const imageshomescreen = [
     require('../Images/imagehomepage.png'),
     require('../Images/imagehomepage.png'),
     require('../Images/imagehomepage.png'),
+    require('../Images/imagehomepage.png'),
+    require('../Images/imagehomepage.png'),
+    require('../Images/imagehomepage.png'),
+    require('../Images/imagehomepage.png'),
   ];
-
+  // const images = [
+  //   require('../Images/silder.png'),
+  //   require('../Images/silder.png'),
+  //   require('../Images/silder.png'),
+  //   require('../Images/silder.png'),
+  //   require('../Images/silder.png'),
+  // ];
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
@@ -72,12 +95,32 @@ export default function HomeScreens({navigation}: any) {
           <Text style={styles.numbernotification}>10</Text>
         </TouchableOpacity>
         <View>
-          {/* <Image source={require('../Images/Genz.png')} style={styles.image} /> */}
-          {/* <Image style={styles.image} source={{uri: dataUser?.data.image}} /> */}
-          {dataUser?.data.image !== '' ? (
+          {dataUser?.data.image ? (
             <Image style={styles.image} source={{uri: dataUser?.data.image}} />
           ) : null}
         </View>
+      </View>
+      <View style={styles.sliderContainer}>
+        <Swiper style={styles.wrapper} showsButtons={true} autoplay>
+          <View style={styles.slide1}>
+            <Image
+              source={require('../Images/silder.png')}
+              style={styles.imageSlider}
+            />
+          </View>
+          <View style={styles.slide2}>
+            <Image
+              source={require('../Images/silder.png')}
+              style={styles.imageSlider}
+            />
+          </View>
+          <View style={styles.slide3}>
+            <Image
+              source={require('../Images/silder.png')}
+              style={styles.imageSlider}
+            />
+          </View>
+        </Swiper>
       </View>
       <View style={styles.titileVideo}>
         <Text style={styles.textVideo}>Video nổi bật</Text>
@@ -121,15 +164,22 @@ export default function HomeScreens({navigation}: any) {
       </View>
       <View style={styles.titilebestTravel}>
         <Text style={styles.textTravel}>Bảng xếp hạng"Vua du lịch"</Text>
-        <Text style={styles.textmore}>Xem thêm</Text>
+        <TouchableOpacity onPress={() => navigation.navigate('Xếp hạng')}>
+          <Text style={styles.textmore}>Xem thêm</Text>
+        </TouchableOpacity>
       </View>
-      <View>
-        {dataUser?.data.image !== '' ? (
-          <Image
-            style={styles.imageRanking}
-            source={{uri: dataUser?.data.image}}
-          />
-        ) : null}
+      <View style={styles.viewRanking}>
+        <FlatList
+          data={rankingData.dataRanks}
+          renderItem={({item}) => {
+            return (
+              <View>
+                <Image source={{uri: item.image}} style={styles.imageRanking} />
+              </View>
+            );
+          }}
+          horizontal
+        />
       </View>
     </ScrollView>
   );
@@ -149,11 +199,11 @@ const styles = StyleSheet.create({
   containerContent: {
     flex: 1,
     marginHorizontal: 16,
-    marginTop: 20,
+    paddingTop: 25,
   },
   icon: {
     position: 'absolute',
-    top: '22  %',
+    top: '22%',
     left: '3%',
   },
   searchContent: {
@@ -241,6 +291,10 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     marginBottom: 10,
   },
+  imageSlider: {
+    height: 200,
+    borderRadius: 10,
+  },
   numbernotification: {
     color: '#FFFFFF',
     position: 'absolute',
@@ -251,5 +305,41 @@ const styles = StyleSheet.create({
     height: 20,
     marginTop: 20,
     right: 10,
+  },
+  viewRanking: {
+    marginBottom: 20,
+    marginTop: 8,
+  },
+  // test slider----------
+  wrapper: {
+    height: 200,
+    gap: 8,
+  },
+  slide1: {
+    height: 200,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#9DD6EB',
+    borderRadius: 10,
+  },
+  slide2: {
+    height: 200,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#97CAE5',
+    borderRadius: 10,
+  },
+  slide3: {
+    height: 200,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#92BBD9',
+    borderRadius: 10,
+  },
+  text: {
+    color: '#fff',
+    fontSize: 30,
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
 });

@@ -55,7 +55,7 @@ export const TripPlanScreen: FC = (): JSX.Element => {
         },
       });
       console.log(res.data.message);
-      // sendRequest(tokenAccess);
+      sendRequest(tokenAccess);
     } catch (e) {
       console.log(e);
     }
