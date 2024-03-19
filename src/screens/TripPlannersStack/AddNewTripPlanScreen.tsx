@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {FC, useEffect, useRef, useState} from 'react';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import * as Animatable from 'react-native-animatable';
 import {
   View,
@@ -10,6 +10,9 @@ import {
   Text,
   FlatList,
   ScrollView,
+  Dimensions,
+  Modal,
+  Pressable,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
@@ -19,18 +22,15 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 export const TripPlanScreen: FC = (): JSX.Element => {
   const [token, setToken] = useState<string>();
   const [result, setResult] = useState<any>(null);
+  const [itemDelete, setItemDelete] = useState<any>(null);
+  const [modalVisible, setModalVisible] = useState(false);
   useEffect(() => {
     AsyncStorage.getItem('AccessToken').then((tokenSave: any) =>
       setToken(tokenSave),
     );
-  }, [token]);
-  useEffect(() => {
-    if (token && token !== undefined) {
-      senRequest(token);
-    }
-  }, [result, token]);
+  }, []);
 
-  const senRequest = async (tokenAccess: string) => {
+  const sendRequest = async (tokenAccess: string) => {
     try {
       const APIurl = 'http://52.63.147.17:8080/trip-plan/get-trip';
       const res = await axios.get(APIurl, {
@@ -39,14 +39,40 @@ export const TripPlanScreen: FC = (): JSX.Element => {
         },
       });
       setResult(res.data.dataTrip);
-    } catch {
-      (e: any) => console.log(e);
+      // console.log(res.data.dataTrip);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const deleteRequest = async (tokenAccess: string, id: string) => {
+    try {
+      console.log(tokenAccess);
+      const APIurl = 'http://52.63.147.17:8080/trip-plan/' + id;
+      const res = await axios.delete(APIurl, {
+        headers: {
+          Authorization: 'Bearer ' + tokenAccess,
+        },
+      });
+      console.log(res.data.message);
+      // sendRequest(tokenAccess);
+    } catch (e) {
+      console.log(e);
     }
   };
 
   const navigation = useNavigation<any>();
-  const flatList = useRef<FlatList | null>(null);
 
+  useFocusEffect(
+    React.useCallback(() => {
+      // Call your API or any function to refresh data here
+      if (token && token !== undefined) {
+        sendRequest(token);
+      }
+    }, [token]),
+  );
+
+  const flatList = useRef<FlatList | null>(null);
   return (
     <View style={styles.container}>
       <View style={styles.addNewTrip}>
@@ -74,7 +100,7 @@ export const TripPlanScreen: FC = (): JSX.Element => {
           <TouchableOpacity
             onPress={() => {
               if (token !== undefined) {
-                senRequest(token);
+                sendRequest(token);
               }
             }}>
             <Text
@@ -91,11 +117,86 @@ export const TripPlanScreen: FC = (): JSX.Element => {
         </View>
       )}
       <FlatList
+        ListHeaderComponent={
+          <Modal
+            style={{zIndex: 2, backgroundColor: 'black', width: '100%'}}
+            animationType="fade"
+            transparent={true}
+            visible={modalVisible}
+            onRequestClose={() => {
+              setModalVisible(!modalVisible);
+            }}>
+            <Pressable
+              onPress={() => setModalVisible(!modalVisible)}
+              style={{
+                flex: 1,
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: 'black',
+                opacity: 0.4,
+              }}
+            />
+            <View style={styles.confirmDelete}>
+              <Text
+                style={{
+                  width: '100%',
+                  color: '#2AB6AD',
+                  fontWeight: '600',
+                  fontSize: 19.9,
+                  marginBottom: 10,
+                  alignSelf: 'center',
+                  textAlign: 'center',
+                }}>
+                {`Bạn có chắc muốn xóa kế hoạch ${itemDelete?.nameTrip}`}
+              </Text>
+              <View
+                style={{
+                  alignSelf: 'flex-end',
+                  width: '50%',
+                  flexDirection: 'row',
+                  justifyContent: 'flex-end',
+                  gap: 10,
+                }}>
+                <TouchableOpacity
+                  onPress={() => setModalVisible(!modalVisible)}>
+                  <Text
+                    style={{
+                      ...styles.btn,
+                      fontWeight: '600',
+                      color: '#2AB6AD',
+                      borderColor: '#2AB6AD',
+                      backgroundColor: '#fff',
+                      borderWidth: 1,
+                    }}>
+                    Hủy
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    if (token !== undefined) {
+                      deleteRequest(token, itemDelete._id);
+                      sendRequest(token);
+                    }
+                    setModalVisible(!modalVisible);
+                  }}>
+                  <Text
+                    style={{
+                      ...styles.btn,
+                      fontWeight: '600',
+                      color: '#fff',
+                    }}>
+                    Xác nhận
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal>
+        }
         ref={flatList}
         style={{flex: 1, marginBottom: 15}}
         data={result}
         renderItem={({item}: any) => (
-          <View>
+          <View style={{display: item.status === 'active' ? 'flex' : 'none'}}>
             <TouchableOpacity
               style={styles.trip}
               onPress={() => {
@@ -110,6 +211,7 @@ export const TripPlanScreen: FC = (): JSX.Element => {
                 style={{
                   flexDirection: 'row',
                   justifyContent: 'space-between',
+                  alignItems: 'center',
                   width: '60%',
                   gap: 10,
                 }}>
@@ -117,6 +219,7 @@ export const TripPlanScreen: FC = (): JSX.Element => {
                   style={{
                     flexDirection: 'row',
                     justifyContent: 'space-between',
+                    alignItems: 'center',
                     gap: 15,
                     flex: 1,
                   }}>
@@ -151,14 +254,23 @@ export const TripPlanScreen: FC = (): JSX.Element => {
                     )} - ${convertDatetoString2(item.endDate).slice(0, -5)}`}
                   </Text>
                 </View>
-                <TouchableOpacity>
-                  <Ionicons name="trash" size={20} color="#EB4335" />
+                <TouchableOpacity
+                  onPress={() => {
+                    setModalVisible(true);
+                    console.log(modalVisible);
+                    setItemDelete(item);
+                  }}>
+                  <Ionicons name="trash" size={20} color="#2AB6AD" />
                 </TouchableOpacity>
               </View>
             </TouchableOpacity>
           </View>
         )}
         inverted
+        contentContainerStyle={{
+          flexGrow: 1,
+          justifyContent: 'flex-end',
+        }}
         keyExtractor={(item: any, index: any) =>
           item.nameTrip + index.toString()
         }
@@ -205,5 +317,30 @@ const styles = StyleSheet.create({
   },
   text: {
     color: '#000',
+  },
+  confirmDelete: {
+    position: 'absolute',
+    backgroundColor: '#fff',
+    padding: 20,
+    borderRadius: 10,
+    borderColor: '#2AB6AD',
+    borderWidth: 1,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+    opacity: 1,
+    left: Dimensions.get('window').width / 2 - 145,
+    right: Dimensions.get('window').width / 2 - 145,
+    top: Dimensions.get('window').height / 2 - 80,
+  },
+  btn: {
+    backgroundColor: '#2AB6AD',
+    padding: 10,
+    borderRadius: 10,
   },
 });

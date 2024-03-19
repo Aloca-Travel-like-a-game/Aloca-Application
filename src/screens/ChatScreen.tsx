@@ -161,7 +161,10 @@ export const ChatScreen: FC = (): JSX.Element => {
           renderItem={({item}) => renderLoad(item)}
           keyExtractor={(item, index) => index.toString()}
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{justifyContent: 'flex-end'}}
+          contentContainerStyle={{
+            flexGrow: 1,
+            justifyContent: 'flex-end',
+          }}
           onContentSizeChange={() => {
             if (flatList.current !== null) {
               flatList.current.scrollToEnd();

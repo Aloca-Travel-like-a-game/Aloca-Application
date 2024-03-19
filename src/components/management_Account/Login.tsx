@@ -100,7 +100,7 @@ export default function Login({navigation}: any) {
               />
               {errors.username && touched.username ? (
                 <Text style={styles.errorText}>* {errors.username}</Text>
-                ) : null}
+              ) : null}
               <Text style={styles.label}>MẬT KHẨU</Text>
               <View style={{position: 'relative'}}>
                 <TextInput
@@ -120,7 +120,7 @@ export default function Login({navigation}: any) {
               </View>
               {errors.password && touched.password ? (
                 <Text style={styles.errorText}>* {errors.password}</Text>
-                ) : null}
+              ) : null}
             </View>
             <TouchableOpacity
               style={styles.contentRegister}
@@ -270,6 +270,6 @@ const styles = StyleSheet.create({
   errorText: {
     fontWeight: 'bold',
     color: 'red',
-   marginBottom:12,
+    marginBottom: 12,
   },
 });

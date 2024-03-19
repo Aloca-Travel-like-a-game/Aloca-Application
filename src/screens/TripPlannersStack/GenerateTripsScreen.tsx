@@ -92,7 +92,7 @@ export const GenerateTripsScreen = () => {
         },
       );
       navigation.navigate('DetailTripScreen', {
-        idTrip: res.data.tripId,
+        idTrip: res?.data.tripId,
       });
     } catch (error) {
       console.error('Lỗi:', error);
