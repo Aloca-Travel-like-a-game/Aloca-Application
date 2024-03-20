@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {FC, useEffect, useRef, useState} from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -17,7 +17,7 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const ChatScreen: FC = (): JSX.Element => {
-  const APIurl = 'http://52.63.147.17:8080/chat ';
+  const APIurl = 'http://www.aloca.dns-dynamic.net:8080/chat ';
   const [token, setToken] = useState<any>();
   const [data, setData] = useState([
     {
@@ -25,7 +25,7 @@ export const ChatScreen: FC = (): JSX.Element => {
       text: 'Xin chào, tôi là Aloca, trợ lý du lịch của bạn. Tôi có thể giúp bạn lên kế hoạch cho chuyến đi, giới thiệu điểm đến, giới thiệu khách sạn hoặc trả lời bất kỳ câu hỏi nào liên quan đến du lịch.',
       error: false,
     },
-    {type: 'bot', text: 'Bạn muốn làm gì?', error: false},
+    { type: 'bot', text: 'Bạn muốn làm gì?', error: false },
   ]);
   const [idChat, setIdChat] = useState(null);
   const [textInput, setTextInput] = useState('');
@@ -60,7 +60,7 @@ export const ChatScreen: FC = (): JSX.Element => {
     if (response.data.message === 'Send message successfully') {
       setAnalyzing(false);
       const text = response.data.data.ChatResponse;
-      setData([...data, {type: 'bot', text: text, error: false}]);
+      setData([...data, { type: 'bot', text: text, error: false }]);
       setIdChat(response?.data.data.chatAi._id);
     } else if (
       response.data.message ===
@@ -68,13 +68,13 @@ export const ChatScreen: FC = (): JSX.Element => {
     ) {
       setAnalyzing(false);
       const text = response.data.message;
-      setData([...data, {type: 'bot', text: text, error: true}]);
+      setData([...data, { type: 'bot', text: text, error: true }]);
       setIdChat(response?.data.chatAi._id);
       setReload(true);
     } else {
       setAnalyzing(false);
       const text = response.data.message;
-      setData([...data, {type: 'bot', text: text, error: false}]);
+      setData([...data, { type: 'bot', text: text, error: false }]);
       setIdChat(response?.data.chatAi._id);
     }
   };
@@ -85,7 +85,7 @@ export const ChatScreen: FC = (): JSX.Element => {
     setData(
       textInput === ''
         ? data
-        : [...data, {type: 'user', text: textInput, error: false}],
+        : [...data, { type: 'user', text: textInput, error: false }],
     );
     setTextInput('');
     const response = await sendRequest(prompt);
@@ -95,8 +95,8 @@ export const ChatScreen: FC = (): JSX.Element => {
       setData(data.filter(item => item.error !== true));
       setData([
         ...data,
-        {type: 'user', text: textInput, error: false},
-        {type: 'bot', text: text, error: false},
+        { type: 'user', text: textInput, error: false },
+        { type: 'bot', text: text, error: false },
       ]);
       setIdChat(response?.data.data.chatAi._id);
     } else if (
@@ -107,8 +107,8 @@ export const ChatScreen: FC = (): JSX.Element => {
       const text = response.data.message;
       setData([
         ...data,
-        {type: 'user', text: textInput, error: false},
-        {type: 'bot', text: text, error: true},
+        { type: 'user', text: textInput, error: false },
+        { type: 'bot', text: text, error: true },
       ]);
       setIdChat(response?.data.chatAi._id);
       setReload(true);
@@ -117,8 +117,8 @@ export const ChatScreen: FC = (): JSX.Element => {
       const text = response.data.message;
       setData([
         ...data,
-        {type: 'user', text: textInput, error: false},
-        {type: 'bot', text: text, error: false},
+        { type: 'user', text: textInput, error: false },
+        { type: 'bot', text: text, error: false },
       ]);
     }
   };
@@ -129,14 +129,14 @@ export const ChatScreen: FC = (): JSX.Element => {
         <Text
           style={
             item.type === 'user'
-              ? {...styles.textChat, ...styles.userContent}
+              ? { ...styles.textChat, ...styles.userContent }
               : styles.textChat
           }>
           {item.text}
         </Text>
         {item.error && (
           <TouchableOpacity
-            style={{display: reload ? 'flex' : 'none'}}
+            style={{ display: reload ? 'flex' : 'none' }}
             onPress={() => {
               reloadSend(reloadQuest);
               setReload(!reload);
@@ -152,16 +152,16 @@ export const ChatScreen: FC = (): JSX.Element => {
   return (
     <KeyboardAvoidingView
       style={styles.container}
-      contentContainerStyle={{flex: 1}}>
-      <View style={{flex: 1}}>
+      contentContainerStyle={{ flex: 1 }}>
+      <View style={{ flex: 1 }}>
         <FlatList
           ref={flatList}
           style={styles.chatContent}
           data={data}
-          renderItem={({item}) => renderLoad(item)}
+          renderItem={({ item }) => renderLoad(item)}
           keyExtractor={(item, index) => index.toString()}
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{justifyContent: 'flex-end'}}
+          contentContainerStyle={{ justifyContent: 'flex-end' }}
           onContentSizeChange={() => {
             if (flatList.current !== null) {
               flatList.current.scrollToEnd();

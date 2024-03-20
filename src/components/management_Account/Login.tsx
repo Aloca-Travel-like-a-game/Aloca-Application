@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -11,9 +11,9 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
-import {Formik} from 'formik';
-import {Login_validate} from './Login_validate';
-import {useMutation} from '@tanstack/react-query';
+import { Formik } from 'formik';
+import { Login_validate } from './Login_validate';
+import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -21,7 +21,7 @@ interface Account {
   username: string;
   password: string;
 }
-export default function Login({navigation}: any) {
+export default function Login({ navigation }: any) {
   const [showPassword, setShowPassword] = useState(false);
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
@@ -29,9 +29,16 @@ export default function Login({navigation}: any) {
   const mutationLogin = useMutation({
     mutationFn: async (data: Account) => {
       try {
+        console.log(data);
+        
+        let fcmToken = await AsyncStorage.getItem("fcm_token");
+
         const res = await axios.post(
-          'http://52.63.147.17:8080/auth/login',
-          data,
+          'http://www.aloca.dns-dynamic.net:8080/auth/login',
+          {
+            data,
+            fcmToken
+          }
         );
         if (res.status === 200) {
           const token = res.data;
@@ -80,7 +87,7 @@ export default function Login({navigation}: any) {
           handleLogin(account);
         }, 100);
       }}>
-      {({errors, touched, handleChange, handleBlur, handleSubmit, values}) => (
+      {({ errors, touched, handleChange, handleBlur, handleSubmit, values }) => (
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'height' : 'padding'}
           style={styles.container}>
@@ -100,9 +107,9 @@ export default function Login({navigation}: any) {
               />
               {errors.username && touched.username ? (
                 <Text style={styles.errorText}>* {errors.username}</Text>
-                ) : null}
+              ) : null}
               <Text style={styles.label}>MẬT KHẨU</Text>
-              <View style={{position: 'relative'}}>
+              <View style={{ position: 'relative' }}>
                 <TextInput
                   secureTextEntry={!showPassword}
                   style={styles.textInput}
@@ -120,7 +127,7 @@ export default function Login({navigation}: any) {
               </View>
               {errors.password && touched.password ? (
                 <Text style={styles.errorText}>* {errors.password}</Text>
-                ) : null}
+              ) : null}
             </View>
             <TouchableOpacity
               style={styles.contentRegister}
@@ -270,6 +277,6 @@ const styles = StyleSheet.create({
   errorText: {
     fontWeight: 'bold',
     color: 'red',
-   marginBottom:12,
+    marginBottom: 12,
   },
 });

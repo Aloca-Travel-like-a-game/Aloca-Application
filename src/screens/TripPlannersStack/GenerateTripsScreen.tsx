@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable @typescript-eslint/no-shadow */
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   ActivityIndicator,
   View,
@@ -18,8 +18,8 @@ import {
   Alert,
 } from 'react-native';
 import axios from 'axios';
-import {useNavigation, useRoute} from '@react-navigation/native';
-import {KeyboardAvoidingView} from 'react-native';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { KeyboardAvoidingView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
@@ -33,9 +33,9 @@ export const GenerateTripsScreen = () => {
   const route = useRoute();
   const navigation = useNavigation<any>();
 
-  const {location, quantity, budget, areaTypes, days, startDate, endDate}: any =
+  const { location, quantity, budget, areaTypes, days, startDate, endDate }: any =
     route.params;
-  const APIurl = 'http://52.63.147.17:8080/trip-plan/';
+  const APIurl = 'http://www.aloca.dns-dynamic.net:8080/trip-plan/';
 
   const sendRequest = async (
     loca: any,
@@ -77,7 +77,7 @@ export const GenerateTripsScreen = () => {
     try {
       setLoading(true);
       const res = await axios.post(
-        'http://52.63.147.17:8080/trip-plan/save-trip',
+        'http://www.aloca.dns-dynamic.net:8080/trip-plan/save-trip',
         {
           jsonTrip: item.planConfirm,
           location: location,
@@ -102,7 +102,7 @@ export const GenerateTripsScreen = () => {
     }
   };
 
-  const renderActivity = ({item: activity}: any) => (
+  const renderActivity = ({ item: activity }: any) => (
     <View>
       <Text
         style={{
@@ -111,7 +111,7 @@ export const GenerateTripsScreen = () => {
         }}>{`- ${activity.challenge_summary}`}</Text>
     </View>
   );
-  const renderDay = ({item: day}: any, index: number) => (
+  const renderDay = ({ item: day }: any, index: number) => (
     <View style={styles.dayView}>
       <Text
         style={{
@@ -126,11 +126,11 @@ export const GenerateTripsScreen = () => {
     </View>
   );
 
-  const renderPlan = ({item: plan}: any, index: number) => (
+  const renderPlan = ({ item: plan }: any, index: number) => (
     <View style={styles.planView}>
       <Text style={styles.heading}>{`Kế hoạch ${index} - ${location}`}</Text>
       <FlatList
-        style={{gap: 5}}
+        style={{ gap: 5 }}
         data={Object.values(plan)}
         keyExtractor={(item: any, index: any) => item + index.toString()}
         renderItem={(item: any) => renderDay(item, item.index + 1)}
@@ -191,9 +191,9 @@ export const GenerateTripsScreen = () => {
         }}>
         {loading && (
           <View
-            style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+            style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
             <ActivityIndicator size={100} color="#2AB6AD" />
-            <Text style={{color: '#2AB6AD', fontSize: 30, fontWeight: '900'}}>
+            <Text style={{ color: '#2AB6AD', fontSize: 30, fontWeight: '900' }}>
               Vui lòng chờ
             </Text>
           </View>
@@ -202,7 +202,7 @@ export const GenerateTripsScreen = () => {
           <FlatList
             ListHeaderComponent={
               <Modal
-                style={{backgroundColor: 'black', width: '100%'}}
+                style={{ backgroundColor: 'black', width: '100%' }}
                 animationType="fade"
                 transparent={true}
                 visible={modalVisible}
@@ -252,7 +252,7 @@ export const GenerateTripsScreen = () => {
                         ) {
                           Alert.alert('Vui lòng nhập tên kế hoạch');
                         } else {
-                          PickUpPlan({planName, planConfirm});
+                          PickUpPlan({ planName, planConfirm });
                           onChangePlanName('');
                           setPlanConfirm(null);
                           setModalVisible(!modalVisible);
@@ -271,7 +271,7 @@ export const GenerateTripsScreen = () => {
                 </View>
               </Modal>
             }
-            style={{zIndex: 2, gap: 10, width: '100%'}}
+            style={{ zIndex: 2, gap: 10, width: '100%' }}
             data={Object.values(result)}
             keyExtractor={(item: any, index: any) => item + index.toString()}
             renderItem={(item: any) => renderPlan(item, item.index + 1)}
@@ -286,7 +286,7 @@ export const GenerateTripsScreen = () => {
               alignItems: 'center',
             }}
             source={require('../../Images/ErrBackGround.png')}>
-            <Text style={{color: '#2AB6AD', fontSize: 35, fontWeight: '900'}}>
+            <Text style={{ color: '#2AB6AD', fontSize: 35, fontWeight: '900' }}>
               Gặp sự cố rồi bạn ơi!
             </Text>
             <Image
@@ -323,7 +323,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     alignSelf: 'center',
   },
-  sdHeading: {fontWeight: '600'},
+  sdHeading: { fontWeight: '600' },
   dayView: {
     borderRadius: 10,
     borderWidth: 1,

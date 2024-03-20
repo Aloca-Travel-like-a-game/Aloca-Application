@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {FC, useEffect, useRef, useState} from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import * as Animatable from 'react-native-animatable';
 import {
   View,
@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import {convertDatetoString2} from '../../Helper/convertDate';
+import { convertDatetoString2 } from '../../Helper/convertDate';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 export const TripPlanScreen: FC = (): JSX.Element => {
@@ -32,7 +32,7 @@ export const TripPlanScreen: FC = (): JSX.Element => {
 
   const senRequest = async (tokenAccess: string) => {
     try {
-      const APIurl = 'http://52.63.147.17:8080/trip-plan/get-trip';
+      const APIurl = 'http://www.aloca.dns-dynamic.net:8080/trip-plan/get-trip';
       const res = await axios.get(APIurl, {
         headers: {
           Authorization: 'Bearer ' + tokenAccess,
@@ -55,12 +55,12 @@ export const TripPlanScreen: FC = (): JSX.Element => {
           onPress={() => navigation.navigate('TripPlanChoose')}>
           <AntDesign name="pluscircle" size={47} color={'#2AB6AD'} />
         </TouchableOpacity>
-        <Text style={{color: '#000', marginTop: 5, fontWeight: '600'}}>
+        <Text style={{ color: '#000', marginTop: 5, fontWeight: '600' }}>
           Thêm mới một kế hoạch
         </Text>
       </View>
       {result && (
-        <View style={{flexDirection: 'row'}}>
+        <View style={{ flexDirection: 'row' }}>
           <Text
             style={{
               color: '#000',
@@ -92,9 +92,9 @@ export const TripPlanScreen: FC = (): JSX.Element => {
       )}
       <FlatList
         ref={flatList}
-        style={{flex: 1, marginBottom: 15}}
+        style={{ flex: 1, marginBottom: 15 }}
         data={result}
-        renderItem={({item}: any) => (
+        renderItem={({ item }: any) => (
           <View>
             <TouchableOpacity
               style={styles.trip}
@@ -103,7 +103,7 @@ export const TripPlanScreen: FC = (): JSX.Element => {
                   idTrip: item._id,
                 });
               }}>
-              <Text style={{...styles.text, fontWeight: '600'}}>
+              <Text style={{ ...styles.text, fontWeight: '600' }}>
                 {item.nameTrip}
               </Text>
               <View
@@ -130,8 +130,8 @@ export const TripPlanScreen: FC = (): JSX.Element => {
                       showsHorizontalScrollIndicator={false}>
                       <Animatable.Text
                         animation={{
-                          from: {translateX: 0},
-                          to: {translateX: -20},
+                          from: { translateX: 0 },
+                          to: { translateX: -20 },
                         }}
                         duration={1000}
                         iterationCount="infinite"
@@ -142,7 +142,7 @@ export const TripPlanScreen: FC = (): JSX.Element => {
                       </Animatable.Text>
                     </ScrollView>
                   ) : (
-                    <Text style={{color: '#000'}}>{item.location}</Text>
+                    <Text style={{ color: '#000' }}>{item.location}</Text>
                   )}
                   <Text style={styles.text}>
                     {`${convertDatetoString2(item.startDate).slice(

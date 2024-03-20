@@ -9,13 +9,13 @@ import {
   ScrollView,
   ToastAndroid,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useMutation, useQueryClient} from '@tanstack/react-query';
-import {launchImageLibrary} from 'react-native-image-picker';
-import {string} from 'yup';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { launchImageLibrary } from 'react-native-image-picker';
+import { string } from 'yup';
 interface getProfile {
   fullname: string;
   email: string;
@@ -24,7 +24,7 @@ interface getProfile {
   selectedImage: string;
   image: string;
 }
-export default function EditProfile({navigation}: any): getProfile[] {
+export default function EditProfile({ navigation }: any): getProfile[] {
   const [_userData, setUserData] = useState<any>();
   const [newName, setNewName] = useState<string>('');
   const [newPhone, setNewPhone] = useState<string>();
@@ -73,7 +73,7 @@ export default function EditProfile({navigation}: any): getProfile[] {
         const dataProfile = JSON.parse(jsonValue);
         const token = dataProfile.accessToken;
         const response = await axios.post(
-          'http://52.63.147.17:8080/user/profile',
+          'http://www.aloca.dns-dynamic.net:8080/user/profile',
           data,
           {
             headers: {
@@ -93,7 +93,7 @@ export default function EditProfile({navigation}: any): getProfile[] {
             newUser.data[key] = value;
           }
           await AsyncStorage.setItem('user', JSON.stringify(newUser));
-          queryClient.invalidateQueries({queryKey: ['profile']});
+          queryClient.invalidateQueries({ queryKey: ['profile'] });
           navigation.navigate('Tài khoản');
         } else {
           Alert.alert('Invalid information!');
@@ -138,7 +138,7 @@ export default function EditProfile({navigation}: any): getProfile[] {
         });
         setUserData(response.data);
       }
-    } catch (error) {}
+    } catch (error) { }
   };
   const handleGoBack = () => {
     navigation.goBack();
@@ -184,7 +184,7 @@ export default function EditProfile({navigation}: any): getProfile[] {
           onPress={openImagePicker}
           onTouchEnd={openImagePicker}>
           {selectedImage ? (
-            <Image source={{uri: selectedImage}} style={styles.image} />
+            <Image source={{ uri: selectedImage }} style={styles.image} />
           ) : (
             <TouchableOpacity
               onPress={openImagePicker}

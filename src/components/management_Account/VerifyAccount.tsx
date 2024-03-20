@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react';
+import React, { useState, useRef } from 'react';
 import {
   View,
   Text,
@@ -11,7 +11,7 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
-export default function VerifyAccount({navigation}: any) {
+export default function VerifyAccount({ navigation }: any) {
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const firstInput = useRef();
   const secondInput = useRef();
@@ -28,7 +28,7 @@ export default function VerifyAccount({navigation}: any) {
     }
     AsyncStorage.getItem('registeredEmail').then(email => {
       axios
-        .post('http://52.63.147.17:8080/auth/confirm-account', {
+        .post('http://www.aloca.dns-dynamic.net:8080/auth/confirm-account', {
           email,
           code: enteredOTP.toString(),
         })
@@ -96,14 +96,14 @@ export default function VerifyAccount({navigation}: any) {
                 index === 0
                   ? firstInput
                   : index === 1
-                  ? secondInput
-                  : index === 2
-                  ? thirdInput
-                  : index === 3
-                  ? fourthInput
-                  : index === 4
-                  ? fifthInput
-                  : sixthInput
+                    ? secondInput
+                    : index === 2
+                      ? thirdInput
+                      : index === 3
+                        ? fourthInput
+                        : index === 4
+                          ? fifthInput
+                          : sixthInput
               }
               onChangeText={text => handleInputChange(index, text)}
             />
@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 20,
     color: '#FFFF',
-    fontSize:15,
+    fontSize: 15,
   },
   contentInput: {
     flexDirection: 'row',

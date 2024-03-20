@@ -1,8 +1,8 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import Navigation from './src/navigation/Navigation';
-import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
-import {PermissionsAndroid} from 'react-native';
-
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { PermissionsAndroid } from 'react-native';
+import { requestPermission } from './src/Helper/handleNotification';
 const queryClient = new QueryClient();
 export default function App() {
   useEffect(() => {
@@ -15,7 +15,10 @@ export default function App() {
       buttonNegative: 'Hủy',
       buttonPositive: 'Cho phép',
     });
-  },[]);
+  }, []);
+  useEffect(() => {
+    requestPermission();
+  }, [])
   return (
     <QueryClientProvider client={queryClient}>
       <Navigation />

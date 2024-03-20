@@ -10,21 +10,21 @@ import {
   ScrollView,
 } from 'react-native';
 import React from 'react';
-import {TouchableOpacity} from 'react-native';
-import {Formik} from 'formik';
-import {useMutation} from '@tanstack/react-query';
+import { TouchableOpacity } from 'react-native';
+import { Formik } from 'formik';
+import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {validateSchema} from './ForgotPassword_Validate';
+import { validateSchema } from './ForgotPassword_Validate';
 interface Account {
   email: string;
 }
-export default function ForgotPassword({navigation}: any) {
+export default function ForgotPassword({ navigation }: any) {
   const mutationForgotpassword = useMutation({
     mutationFn: async (email: Account) => {
       try {
         const res = await axios.post(
-          'http://52.63.147.17:8080/auth/forgot-password',
+          'http://www.aloca.dns-dynamic.net:8080/auth/forgot-password',
           email,
         );
         if (res.status === 200) {
@@ -52,47 +52,47 @@ export default function ForgotPassword({navigation}: any) {
   return (
     <Formik
       validationSchema={validateSchema}
-      initialValues={{email: ''}}
+      initialValues={{ email: '' }}
       onSubmit={values => {
         let data = {
           email: values.email,
         };
         handleForgotPassword(data);
       }}>
-      {({errors, touched, handleChange, handleBlur, values, handleSubmit}) => (
+      {({ errors, touched, handleChange, handleBlur, values, handleSubmit }) => (
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'height' : 'padding'}
           style={styles.container}>
-            <ScrollView style={styles.content}>
-          <Image
-            source={require('../../Images/Icon.png')}
-            style={styles.logoImage}
-          />
-          <Text style={styles.textAloca}>Xác thực mật khẩu</Text>
-          <View style={styles.containerContent}>
-            <Text style={styles.lable}>NHẬP EMAIL BẠN ĐÃ ĐĂNG KÝ</Text>
-            <TextInput
-              value={values.email}
-              style={styles.textInput}
-              placeholderTextColor={'#000'}
-              onChangeText={handleChange('email')}
-              onBlur={handleBlur('email')}
-            />
-            {errors.email && touched.email ? (
-              <Text style={styles.errorText}>* {errors.email}</Text>
-            ) : null}
-          </View>
-          <TouchableOpacity
-            style={styles.contentRegister}
-            onPress={handleSubmit}>
-            <Text style={styles.textRegister}>Xác nhận</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+          <ScrollView style={styles.content}>
             <Image
-              source={require('../../Images/backBlue.png')}
-              style={styles.backIcon}
+              source={require('../../Images/Icon.png')}
+              style={styles.logoImage}
             />
-          </TouchableOpacity>
+            <Text style={styles.textAloca}>Xác thực mật khẩu</Text>
+            <View style={styles.containerContent}>
+              <Text style={styles.lable}>NHẬP EMAIL BẠN ĐÃ ĐĂNG KÝ</Text>
+              <TextInput
+                value={values.email}
+                style={styles.textInput}
+                placeholderTextColor={'#000'}
+                onChangeText={handleChange('email')}
+                onBlur={handleBlur('email')}
+              />
+              {errors.email && touched.email ? (
+                <Text style={styles.errorText}>* {errors.email}</Text>
+              ) : null}
+            </View>
+            <TouchableOpacity
+              style={styles.contentRegister}
+              onPress={handleSubmit}>
+              <Text style={styles.textRegister}>Xác nhận</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+              <Image
+                source={require('../../Images/backBlue.png')}
+                style={styles.backIcon}
+              />
+            </TouchableOpacity>
           </ScrollView>
         </KeyboardAvoidingView>
       )}
@@ -103,10 +103,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-   
+
   },
-  content:{
-    paddingTop:50,
+  content: {
+    paddingTop: 50,
   },
   textInput: {
     borderWidth: 1,
@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 12,
     width: 320,
     alignSelf: 'center',
-    marginTop:50,
+    marginTop: 50,
   },
   logoImage: {
     width: 250,

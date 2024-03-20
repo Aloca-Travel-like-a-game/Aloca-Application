@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "761521443405",
+    "project_id": "aloca-415016",
+    "storage_bucket": "aloca-415016.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:761521443405:android:3a427411ee173af80e8204",
+        "android_client_info": {
+          "package_name": "com.aloca_application"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDGZOIvjMOf7gRXeJKvJ8gSYTxV4zn6mwo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
