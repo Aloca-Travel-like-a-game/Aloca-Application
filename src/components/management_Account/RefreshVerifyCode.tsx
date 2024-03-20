@@ -23,33 +23,24 @@ export default function RefreshVerifyCode({navigation}: any) {
     try {
       const enteredOTP = otp.join('');
       if (enteredOTP.length !== 6) {
-        ToastAndroid.show(
-          'Vui lòng nhập đầy đủ mã OTP! ',
-          ToastAndroid.SHORT,
-        );
+        ToastAndroid.show('Vui lòng nhập đầy đủ mã OTP! ', ToastAndroid.SHORT);
         return;
       }
       let code = enteredOTP.toString();
       let email = await AsyncStorage.getItem('emailResetPassword');
       console.log('showemail==', email);
       axios
-        .post(`http://52.63.147.17:8080/auth/reset-password/${code}`, {
+        .post(`http://${ipAddress}:8080/auth/reset-password/${code}`, {
           email,
         })
         .then(response => {
           console.log('Verification successful:', response.data);
-          ToastAndroid.show(
-            'Xác thực thành công! ',
-            ToastAndroid.SHORT,
-          );
+          ToastAndroid.show('Xác thực thành công! ', ToastAndroid.SHORT);
           navigation.navigate('NewPassword');
         })
         .catch(error => {
           if (error.response && error.response.status === 401) {
-            ToastAndroid.show(
-              'Mã OTP không chính xác! ',
-              ToastAndroid.SHORT,
-            );
+            ToastAndroid.show('Mã OTP không chính xác! ', ToastAndroid.SHORT);
           } else {
             ToastAndroid.show(
               'Xác thực không thành công! ',
@@ -57,8 +48,7 @@ export default function RefreshVerifyCode({navigation}: any) {
             );
           }
         });
-    } catch (err) {
-    }
+    } catch (err) {}
   };
 
   const handleInputChange = (index: number, value: string) => {
@@ -156,7 +146,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 20,
     color: '#FFFF',
-    fontSize:15,
+    fontSize: 15,
   },
   contentInput: {
     flexDirection: 'row',
@@ -180,7 +170,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderRadius: 10,
     width: 250,
-    height:50,
+    height: 50,
     justifyContent: 'center',
     alignItems: 'center',
   },

@@ -2,6 +2,7 @@ import {View, Text, StyleSheet, TouchableOpacity, FlatList} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {Image} from 'react-native-animatable';
 import axios from 'axios';
+import { ipAddress } from '../Helper/ip';
 export default function RankingScreen() {
   const [data, setData] = useState<any>([]);
   const [selectedButton, setSelectedButton] = useState<string>('Theo Điểm');
@@ -23,19 +24,19 @@ export default function RankingScreen() {
   };
   const getWeeklyData = async () => {
     const response = await axios.get(
-      'http://52.63.147.17:8080/rankings/weekly',
+      `http://${ipAddress}:8080/rankings/weekly`,
     );
     setData(response.data);
   };
   const getMonthlyData = async () => {
     const response = await axios.get(
-      'http://52.63.147.17:8080/rankings/monthly',
+      `http://${ipAddress}:8080/rankings/monthly`,
     );
     setData(response.data);
   };
   const getHighestData = async () => {
     const response = await axios.get(
-      'http://52.63.147.17:8080/rankings/rankingUserHighest',
+      `http://${ipAddress}:8080/rankings/rankingUserHighest`,
     );
     setData(response.data);
   };

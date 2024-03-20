@@ -22,6 +22,7 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import {KeyboardAvoidingView} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import {ipAddress} from '../../Helper/ip';
 
 export const GenerateTripsScreen = () => {
   const [loading, setLoading] = useState(false);
@@ -43,7 +44,6 @@ export const GenerateTripsScreen = () => {
     startDate,
     endDate,
   }: any = route.params;
-  const APIurl = 'http://52.63.147.17:8080/trip-plan/';
 
   const sendRequest = async (
     loca: any,
@@ -53,6 +53,7 @@ export const GenerateTripsScreen = () => {
     userLocation: any,
     numDay: number | undefined,
   ) => {
+    const APIurl = `http://${ipAddress}:8080/trip-plan/`;
     try {
       setLoading(true);
       const res = await axios.post(APIurl, {
@@ -87,7 +88,7 @@ export const GenerateTripsScreen = () => {
     try {
       setLoading(true);
       const res = await axios.post(
-        'http://52.63.147.17:8080/trip-plan/save-trip',
+        `http://${ipAddress}:8080/trip-plan/save-trip`,
         {
           jsonTrip: item.planConfirm,
           location: location,
@@ -396,11 +397,12 @@ const styles = StyleSheet.create({
   },
   retryBtn: {
     color: '#2AB6AD',
-    fontSize: 30,
+    fontSize: 25,
     fontWeight: '900',
     alignSelf: 'center',
     backgroundColor: '#fff',
     padding: 10,
+    paddingHorizontal: 18,
     borderRadius: 10,
     borderWidth: 1,
     borderColor: '#2AB6AD',

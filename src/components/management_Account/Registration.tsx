@@ -16,6 +16,7 @@ import axios from 'axios';
 import {Signup_validate} from './SignUp_validate';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useMutation} from '@tanstack/react-query';
+import { ipAddress } from '../../Helper/ip';
 export default function Registration({navigation}: any) {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -35,7 +36,7 @@ export default function Registration({navigation}: any) {
   const mutation = useMutation({
     mutationFn: async (data: Data) => {
       axios
-        .post('http://52.63.147.17:8080/auth/register', data)
+        .post(`http://${ipAddress}:8080/auth/register`, data)
         .then(res => {
           if (res.status === 200) {
             ToastAndroid.show(
@@ -81,7 +82,7 @@ export default function Registration({navigation}: any) {
       }}>
       {({errors, touched, handleChange, handleBlur, handleSubmit, values}) => (
         <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'height' : 'padding'}
+          behavior={Platform.OS === 'ios' ? 'height' : 'padding'}
           style={styles.container}>
           <ScrollView style={styles.content}>
             <Image
@@ -177,8 +178,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
   },
-  content:{
-  paddingTop:50,
+  content: {
+    paddingTop: 50,
   },
   textInput: {
     borderWidth: 1,
@@ -226,7 +227,7 @@ const styles = StyleSheet.create({
     fontSize: 35,
     fontWeight: '600',
     textAlign: 'center',
-    marginTop:10,
+    marginTop: 10,
   },
   lable: {
     color: '#3E4958',

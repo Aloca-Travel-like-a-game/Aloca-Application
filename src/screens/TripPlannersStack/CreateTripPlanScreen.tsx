@@ -1,6 +1,4 @@
-/* eslint-disable react/self-closing-comp */
 /* eslint-disable @typescript-eslint/no-shadow */
-/* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable no-sequences */
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react/no-unstable-nested-components */
@@ -412,7 +410,7 @@ export const TripPlanChoose: FC = (): JSX.Element => {
                   }}>
                   <Text
                     style={{
-                      fontSize: 20,
+                      fontSize: 16,
                       color: '#2AB6AD',
                       fontWeight: '700',
                     }}>
@@ -462,7 +460,7 @@ export const TripPlanChoose: FC = (): JSX.Element => {
                   }}>
                   <Text
                     style={{
-                      fontSize: 20,
+                      fontSize: 16,
                       color: '#fff',
                       fontWeight: '700',
                     }}>
@@ -559,7 +557,7 @@ export const styles = StyleSheet.create({
   sendBtn: {
     backgroundColor: '#2AB6AD',
     padding: 10,
-    borderRadius: 20,
+    borderRadius: 10,
     width: '40%',
     justifyContent: 'center',
     alignItems: 'center',

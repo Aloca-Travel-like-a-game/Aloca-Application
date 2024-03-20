@@ -17,6 +17,7 @@ import {useMutation} from '@tanstack/react-query';
 import axios from 'axios';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { ipAddress } from '../../Helper/ip';
 interface Account {
   username: string;
   password: string;
@@ -30,7 +31,7 @@ export default function Login({navigation}: any) {
     mutationFn: async (data: Account) => {
       try {
         const res = await axios.post(
-          'http://52.63.147.17:8080/auth/login',
+          `http://${ipAddress}:8080/auth/login`,
           data,
         );
         if (res.status === 200) {

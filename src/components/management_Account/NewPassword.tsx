@@ -16,7 +16,8 @@ import {Formik} from 'formik';
 import {useMutation} from '@tanstack/react-query';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { NewPassword_validate } from './NewPassword_validate';
+import {NewPassword_validate} from './NewPassword_validate';
+import { ipAddress } from '../../Helper/ip';
 interface NewAccount {
   password: string;
   confirmPassword: string;
@@ -38,7 +39,7 @@ export default function NewPassword({navigation}: any) {
         const dataPass = data;
 
         const res = await axios.post(
-          'http://52.63.147.17:8080/auth/reset-password/',
+          `http://${ipAddress}:8080/auth/reset-password/`,
           {
             password: dataPass.password,
             confirmPassword: dataPass.confirmPassword,
@@ -112,70 +113,70 @@ export default function NewPassword({navigation}: any) {
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'height' : 'padding'}
           style={styles.container}>
-            <ScrollView style={styles.content}>
-          <Image
-            source={require('../../Images/Icon.png')}
-            style={styles.logoImage}
-          />
-          <Text style={styles.textAloca}>ALOCA</Text>
-          <View style={styles.containerContent}>
-            <Text style={styles.lable}>NHẬP MẬT KHẨU MỚI</Text>
-            <View>
-              <TextInput
-                style={styles.textInput}
-                secureTextEntry={!showPassword}
-                onChangeText={handleChange('password')}
-                onBlur={handleBlur('password')}
-                value={values.password}
-              />
-              <Ionicons
-                name={showPassword ? 'eye' : 'eye-off'}
-                size={24}
-                color="#aaa"
-                onPress={toggleShowPassword}
-                style={styles.toggleShowPassword}
-              />
-             {errors.password && touched.password ? (
-              <Text style={styles.errorText}>* {errors.password}</Text>
-            ) : null}
+          <ScrollView style={styles.content}>
+            <Image
+              source={require('../../Images/Icon.png')}
+              style={styles.logoImage}
+            />
+            <Text style={styles.textAloca}>ALOCA</Text>
+            <View style={styles.containerContent}>
+              <Text style={styles.lable}>NHẬP MẬT KHẨU MỚI</Text>
+              <View>
+                <TextInput
+                  style={styles.textInput}
+                  secureTextEntry={!showPassword}
+                  onChangeText={handleChange('password')}
+                  onBlur={handleBlur('password')}
+                  value={values.password}
+                />
+                <Ionicons
+                  name={showPassword ? 'eye' : 'eye-off'}
+                  size={24}
+                  color="#aaa"
+                  onPress={toggleShowPassword}
+                  style={styles.toggleShowPassword}
+                />
+                {errors.password && touched.password ? (
+                  <Text style={styles.errorText}>* {errors.password}</Text>
+                ) : null}
+              </View>
+              <Text style={styles.lable}>XÁC NHẬN MẬT KHẨU MỚI</Text>
+              <View>
+                <TextInput
+                  style={styles.textInput}
+                  secureTextEntry={!confirmShow}
+                  onChangeText={handleChange('confirmPassword')}
+                  onBlur={handleBlur('confirmPassword')}
+                  value={values.confirmPassword}
+                />
+                <Ionicons
+                  name={confirmShow ? 'eye' : 'eye-off'}
+                  size={24}
+                  color="#aaa"
+                  onPress={confirmShowPassword}
+                  style={styles.toggleShowPassword}
+                />
+              </View>
+              {errors.confirmPassword && touched.confirmPassword ? (
+                <Text style={styles.errorText}>* {errors.confirmPassword}</Text>
+              ) : null}
             </View>
-            <Text style={styles.lable}>XÁC NHẬN MẬT KHẨU MỚI</Text>
-            <View>
-              <TextInput
-                style={styles.textInput}
-                secureTextEntry={!confirmShow}
-                onChangeText={handleChange('confirmPassword')}
-                onBlur={handleBlur('confirmPassword')}
-                value={values.confirmPassword}
-              />
-              <Ionicons
-                name={confirmShow ? 'eye' : 'eye-off'}
-                size={24}
-                color="#aaa"
-                onPress={confirmShowPassword}
-                style={styles.toggleShowPassword}
-              />
-            </View>
-            {errors.confirmPassword && touched.confirmPassword ? (
-              <Text style={styles.errorText}>* {errors.confirmPassword}</Text>
-            ) : null}
-          </View>
-          <TouchableOpacity
-            style={styles.contentRegister}
-            onPress={handleSubmit}>
-            <Text style={styles.textRegister}>Đổi mật khẩu</Text>
-          </TouchableOpacity>
-          <View style={styles.contentLogin}>
-            <Text style={styles.text}>Chưa có tài khoản,</Text>
             <TouchableOpacity
-              onPress={() => navigation.navigate('Registration')}>
-              <Text style={styles.textLogin}>Đăng ký</Text>
+              style={styles.contentRegister}
+              onPress={handleSubmit}>
+              <Text style={styles.textRegister}>Đổi mật khẩu</Text>
             </TouchableOpacity>
-          </View>
-          <TouchableOpacity
-            onPress={() => navigation.navigate('ForgotPassword')}>
-            <Text style={styles.textLogin}>Đăng nhập</Text>
-          </TouchableOpacity>
+            <View style={styles.contentLogin}>
+              <Text style={styles.text}>Chưa có tài khoản,</Text>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('Registration')}>
+                <Text style={styles.textLogin}>Đăng ký</Text>
+              </TouchableOpacity>
+            </View>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('ForgotPassword')}>
+              <Text style={styles.textLogin}>Đăng nhập</Text>
+            </TouchableOpacity>
           </ScrollView>
         </KeyboardAvoidingView>
       )}
@@ -187,8 +188,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
   },
-  content:{
-    paddingTop:50,
+  content: {
+    paddingTop: 50,
   },
   textInput: {
     borderWidth: 1,
@@ -204,13 +205,13 @@ const styles = StyleSheet.create({
     marginHorizontal: 12,
     width: 320,
     alignSelf: 'center',
-    marginTop:30,
+    marginTop: 30,
   },
   logoImage: {
     width: 250,
     height: 250,
     borderRadius: 12,
-    alignSelf:'center',
+    alignSelf: 'center',
   },
   textRegister: {
     color: '#ffff',
@@ -225,7 +226,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 12,
     width: 320,
     alignSelf: 'center',
-    marginTop:10,
+    marginTop: 10,
     borderRadius: 10,
     backgroundColor: '#2AB6AD',
     borderColor: '#2AB6AD',
@@ -235,7 +236,7 @@ const styles = StyleSheet.create({
     fontSize: 35,
     fontWeight: '600',
     textAlign: 'center',
-    marginTop:15,
+    marginTop: 15,
   },
   lable: {
     color: '#000',
@@ -255,7 +256,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     gap: 5,
-    marginTop:15,
+    marginTop: 15,
   },
   optionalLogin: {
     flexDirection: 'row',
@@ -314,7 +315,7 @@ const styles = StyleSheet.create({
     right: '5%',
     top: '27%',
   },
-  errorText:{
+  errorText: {
     fontWeight: 'bold',
     color: 'red',
     margin: 0,

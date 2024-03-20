@@ -23,6 +23,7 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import {convertDatetoString2} from '../../Helper/convertDate';
 import {JSX} from 'react/jsx-runtime';
 import {BackHandler} from 'react-native';
+import { ipAddress } from '../../Helper/ip';
 
 export const DetailTripScreen: FC = (): JSX.Element => {
   const navigation = useNavigation<any>();
@@ -43,7 +44,7 @@ export const DetailTripScreen: FC = (): JSX.Element => {
       console.log('ab', token);
       const senRequest = async () => {
         try {
-          const APIurl = `http://52.63.147.17:8080/trip-plan/get-trip/${idTrip}`;
+          const APIurl = `http://${ipAddress}:8080/trip-plan/get-trip/${idTrip}`;
           const res = await axios.get(APIurl, {
             headers: {
               Authorization: 'Bearer ' + token,

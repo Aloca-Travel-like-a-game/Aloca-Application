@@ -16,6 +16,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {string} from 'yup';
+import { ipAddress } from '../../Helper/ip';
 interface getProfile {
   fullname: string;
   email: string;
@@ -38,7 +39,7 @@ export default function EditProfile({navigation}: any): getProfile[] {
     name: 'product_image.jpg',
   });
   Object.keys(string).forEach(key => {
-    formData.append(key, string[key]);
+    formData.append(key, key);
   });
   useEffect(() => {
     const fetchData = async () => {
@@ -73,7 +74,7 @@ export default function EditProfile({navigation}: any): getProfile[] {
         const dataProfile = JSON.parse(jsonValue);
         const token = dataProfile.accessToken;
         const response = await axios.post(
-          'http://52.63.147.17:8080/user/profile',
+          `http://${ipAddress}:8080/user/profile`,
           data,
           {
             headers: {
@@ -124,18 +125,15 @@ export default function EditProfile({navigation}: any): getProfile[] {
           ToastAndroid.SHORT,
         );
       } else if (newPhone.length !== 10) {
-        ToastAndroid.show(
-          'Số điện thoại không hợp lệ ',
-          ToastAndroid.SHORT,
-        );
-      }
-      else {
+        ToastAndroid.show('Số điện thoại không hợp lệ ', ToastAndroid.SHORT);
+      } else {
         const response = await mutationEdit.mutate({
           fullname: newName,
           phone: newPhone,
           address: newAddress,
           image: selectedImage,
         });
+        
         setUserData(response.data);
       }
     } catch (error) {}

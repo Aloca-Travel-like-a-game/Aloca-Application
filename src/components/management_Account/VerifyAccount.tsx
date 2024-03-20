@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import { ipAddress } from '../../Helper/ip';
 
 export default function VerifyAccount({navigation}: any) {
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
@@ -28,7 +29,7 @@ export default function VerifyAccount({navigation}: any) {
     }
     AsyncStorage.getItem('registeredEmail').then(email => {
       axios
-        .post('http://52.63.147.17:8080/auth/confirm-account', {
+        .post(`http://${ipAddress}:8080/auth/confirm-account`, {
           email,
           code: enteredOTP.toString(),
         })
@@ -143,7 +144,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 20,
     color: '#FFFF',
-    fontSize:15,
+    fontSize: 15,
   },
   contentInput: {
     flexDirection: 'row',

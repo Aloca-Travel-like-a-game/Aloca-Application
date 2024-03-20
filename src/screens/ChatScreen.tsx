@@ -15,9 +15,10 @@ import Feather from 'react-native-vector-icons/Feather';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { ipAddress } from '../Helper/ip';
 
 export const ChatScreen: FC = (): JSX.Element => {
-  const APIurl = 'http://52.63.147.17:8080/chat ';
+  const APIurl = `http://${ipAddress}:8080/chat`;
   const [token, setToken] = useState<any>();
   const [data, setData] = useState([
     {
@@ -39,23 +40,36 @@ export const ChatScreen: FC = (): JSX.Element => {
 
   const sendRequest = (prompt: any) => {
     console.log(token);
-    const res = axios.post(
-      APIurl,
-      {
-        message: prompt,
-        idChat: idChat,
-      },
-      {
-        headers: {
-          Authorization: 'Bearer ' + token,
+    return axios
+      .post(
+        APIurl,
+        {
+          message: prompt,
+          idChat: idChat,
         },
-      },
-    );
-    return res;
+        {
+          headers: {
+            Authorization: 'Bearer ' + token,
+          },
+        },
+      )
+      .then(res => {
+        return res;
+      })
+      .catch(error => {
+        setAnalyzing(false);
+        const text = 'Đã xảy ra lỗi trong quá trình gửi tin nhắn, thử lại';
+        setData([...data, {type: 'bot', text: text, error: true}]);
+        setIdChat(idChat);
+        setReload(true);
+        console.log(error);
+        throw error; // Ném lại lỗi để xử lý ở nơi gọi hàm
+      });
   };
   const reloadSend = async (prompt: string) => {
     setAnalyzing(true);
     const response = await sendRequest(prompt);
+    console.log(response);
     setData(data.filter(item => item.error !== true));
     if (response.data.message === 'Send message successfully') {
       setAnalyzing(false);
@@ -89,6 +103,7 @@ export const ChatScreen: FC = (): JSX.Element => {
     );
     setTextInput('');
     const response = await sendRequest(prompt);
+    console.log(response);
     if (response.data.message === 'Send message successfully') {
       setAnalyzing(false);
       const text = response.data.data.ChatResponse;

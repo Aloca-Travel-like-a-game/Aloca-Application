@@ -19,6 +19,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import {convertDatetoString2} from '../../Helper/convertDate';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { ipAddress } from '../../Helper/ip';
 
 export const TripPlanScreen: FC = (): JSX.Element => {
   const [token, setToken] = useState<string>();
@@ -35,7 +36,7 @@ export const TripPlanScreen: FC = (): JSX.Element => {
   const sendRequest = async (tokenAccess: string) => {
     setLoading(true);
     try {
-      const APIurl = 'http://52.63.147.17:8080/trip-plan/get-trip';
+      const APIurl = `http://${ipAddress}:8080/trip-plan/get-trip`;
       const res = await axios.get(APIurl, {
         headers: {
           Authorization: 'Bearer ' + tokenAccess,
@@ -43,16 +44,17 @@ export const TripPlanScreen: FC = (): JSX.Element => {
       });
       setResult(res.data.dataTrip);
       // console.log(res.data.dataTrip);
-      setLoading(false);
     } catch (e) {
       console.log(e);
+    } finally {
+      setLoading(false);
     }
   };
 
   const deleteRequest = async (tokenAccess: string, id: string) => {
     try {
       console.log(tokenAccess);
-      const APIurl = 'http://52.63.147.17:8080/trip-plan/' + id;
+      const APIurl = `http://${ipAddress}:8080/trip-plan/` + id;
       const res = await axios.delete(APIurl, {
         headers: {
           Authorization: 'Bearer ' + tokenAccess,

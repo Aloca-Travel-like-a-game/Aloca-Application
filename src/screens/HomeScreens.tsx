@@ -18,6 +18,7 @@ import {useQuery} from '@tanstack/react-query';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import Swiper from 'react-native-swiper';
+import { ipAddress } from '../Helper/ip';
 // import  RemoteImage from 'react-native-banner-carousel';
 // import BannerCarousel from 'react-native-banner-carousel';
 export default function HomeScreens({navigation}: any) {
@@ -33,7 +34,7 @@ export default function HomeScreens({navigation}: any) {
 
   const getHighestData = async () => {
     const response = await axios.get(
-      'http://52.63.147.17:8080/rankings/rankingUserHighest',
+      `http://${ipAddress}:8080/rankings/rankingUserHighest`,
     );
     setRankingData(response.data);
   };
