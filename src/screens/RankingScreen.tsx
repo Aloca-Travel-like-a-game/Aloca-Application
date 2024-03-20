@@ -8,10 +8,15 @@ import {
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
-import { ipAddress } from '../Helper/ip';
+import {ipAddress} from '../Helper/ip';
+interface Top{
+  a: any;
+  b: any;
+  experience:number;
+}
 export default function RankingScreen() {
-  const [highestScoreUserImage, setHighestScoreUserImage] = useState<string>('');
   const [data, setData] = useState<any>([]);
+  const [topThree, setTopThree] = useState<any[]>([]);
   const [selectedButton, setSelectedButton] = useState<string>('Theo Điểm');
   const handleButtonPress = async (buttonName: string) => {
     setSelectedButton(buttonName);
@@ -50,26 +55,15 @@ export default function RankingScreen() {
   useEffect(() => {
     getHighestData();
   }, []);
-  const getHighestScoreUser = (data: any) => {
-    if (!data || data.length === 0) {
-      return null;
-    }
-    // Sắp xếp dữ liệu theo điểm giảm dần
-    const sortedData = data.sort(
-      (a: any, b: any) => b.experience - a.experience,
-    );
-    const highestScoreUser = sortedData[0];
-    return highestScoreUser;
-  };
   useEffect(() => {
-    const highestScoreUser = getHighestScoreUser(data.dataRanks);
-    if (highestScoreUser) {
-      const {image} = highestScoreUser;
-      setHighestScoreUserImage(image);
+    let dataTop: Top[] = [];
+    if (data && data.dataRanks) {
+      dataTop = data.dataRanks;
+      dataTop.sort((a, b) => b.experience - a.experience);
+      const res = dataTop.slice(0, 3);
+      setTopThree(res);
     }
   }, [data]);
-  // console.log('ảnh hí:',highestScoreUserImage );
-  
   return (
     <View style={styles.containerContent}>
       <View style={styles.headerRanking}>
@@ -78,31 +72,32 @@ export default function RankingScreen() {
           style={styles.backgroundRanking}
         />
         <Text style={styles.text}>
-          {' '}
           Chào mừng bạn đến với cuộc {'\n'} đua của Aloca
         </Text>
       </View>
-      {/* <Image
-        source={require('../Images/ImageProfile.png')}
-        style={styles.imgeRank}
-      /> */}
-      <Image source={{uri: highestScoreUserImage}} style={styles.imgeRank} />
+      <View style={styles.contentop}>
+        <FlatList
+          data={topThree}
+          renderItem={({item}) => (
+            <View style={styles.dataTop}>
+              <Image
+                source={{uri: item.image}}
+                style={styles.imageTop}
+              />
+            </View>
+          )}
+          keyExtractor={(item, index) => index.toString()}
+          horizontal
+        />
+      </View>
       <Image
         source={require('../Images/topRanking.png')}
         style={styles.imgeRankTop}
       />
-      {/* <Image
-        source={require('../Images/ImageProfile.png')}
-        style={styles.imgeRank2}
-      /> */}
       <Image
         source={require('../Images/top3ranking.png')}
         style={styles.imgeRankTop2}
       />
-      {/* <Image
-        source={require('../Images/ImageProfile.png')}
-        style={styles.imgeRank3}
-      /> */}
       <Image
         source={require('../Images/top2ranking.png')}
         style={styles.imgeRankTop3}
@@ -289,7 +284,7 @@ const styles = StyleSheet.create({
     width: 60,
     height: 30,
     marginTop: 179,
-    left: 70,
+    left: 77
   },
   imgeRank3: {
     position: 'absolute',
@@ -323,4 +318,17 @@ const styles = StyleSheet.create({
   headerRanking: {
     // marginTop:10,
   },
+  dataTop:{
+  margin:10,
+  },
+  imageTop:{
+    width:65,
+    height:65,
+    borderRadius:50,
+  },
+  contentop:{
+    position:'absolute',
+    top:'18%',
+   alignSelf:'center',
+  }
 });

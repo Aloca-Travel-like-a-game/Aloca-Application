@@ -98,6 +98,51 @@ export default function HomeScreens({navigation}: any) {
   //   require('../Images/silder.png'),
   //   require('../Images/silder.png'),
   // ];
+
+  const a = [
+    {
+      name:'quang',
+    },
+    {
+      name:'quang',
+    },
+    {
+      name:'quang',
+    },
+    {
+      name:'quang',
+    },
+    {
+      name:'quang',
+    },
+    {
+      name:'quang',
+    },
+    {
+      name:'quang',
+    },
+    {
+      name:'quang',
+    },
+    {
+      name:'quang',
+    },
+    {
+      name:'quang',
+    },
+    {
+      name:'quang',
+    },
+    {
+      name:'quang',
+    },
+  ];
+  let result;
+  if (a.length >= 10) {
+    result = 9 + '+';
+  } else {
+    result = a.length.toString();
+  }
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
@@ -115,7 +160,7 @@ export default function HomeScreens({navigation}: any) {
           style={styles.iconnotifications}
           onPress={() => navigation.navigate('Notification')}>
           <Ionicons name="notifications-outline" size={40} color="black" />
-          <Text style={styles.numbernotification}>10</Text>
+          <Text style={styles.numbernotification}>{result}</Text>
         </TouchableOpacity>
         <View>
           {dataUser?.data.image ? (
@@ -222,7 +267,7 @@ const styles = StyleSheet.create({
   containerContent: {
     flex: 1,
     marginHorizontal: 12,
-    paddingTop: 10,
+    paddingTop: 14,
   },
   icon: {
     position: 'absolute',
@@ -324,7 +369,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     backgroundColor: '#FF5858',
     borderRadius: 50,
-    // margin: 10,
+    textAlign:'center',
     width: 20,
     height: 20,
     // marginTop: 20,
