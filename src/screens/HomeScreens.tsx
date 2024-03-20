@@ -8,6 +8,8 @@ import {
   TouchableOpacity,
   Linking,
   ScrollView,
+  BackHandler,
+  Alert,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Video from 'react-native-video';
@@ -16,6 +18,7 @@ import {useQuery} from '@tanstack/react-query';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import Swiper from 'react-native-swiper';
+import { ipAddress } from '../Helper/ip';
 // import  RemoteImage from 'react-native-banner-carousel';
 // import BannerCarousel from 'react-native-banner-carousel';
 export default function HomeScreens({navigation}: any) {
@@ -28,12 +31,32 @@ export default function HomeScreens({navigation}: any) {
       return datauser;
     },
   });
+
   const getHighestData = async () => {
     const response = await axios.get(
-      'http://52.63.147.17:8080/rankings/rankingUserHighest',
+      `http://${ipAddress}:8080/rankings/rankingUserHighest`,
     );
     setRankingData(response.data);
   };
+  useEffect(() => {
+    const backAction = () => {
+      Alert.alert('Chờ đã', 'Bạn chắc chắn muốn thoát chứ?', [
+        {
+          text: 'Không',
+          onPress: () => null,
+          style: 'cancel',
+        },
+        {text: 'Có', onPress: () => BackHandler.exitApp()},
+      ]);
+      return true;
+    };
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
+
+    return () => backHandler.remove();
+  }, []);
   useEffect(() => {
     getHighestData();
   }, []);
@@ -92,7 +115,7 @@ export default function HomeScreens({navigation}: any) {
           style={styles.iconnotifications}
           onPress={() => navigation.navigate('Notification')}>
           <Ionicons name="notifications-outline" size={40} color="black" />
-          <Text style={styles.numbernotification}>1+</Text>
+          <Text style={styles.numbernotification}>10</Text>
         </TouchableOpacity>
         <View>
           {dataUser?.data.image ? (
@@ -199,7 +222,7 @@ const styles = StyleSheet.create({
   containerContent: {
     flex: 1,
     marginHorizontal: 12,
-    paddingTop: 25,
+    paddingTop: 10,
   },
   icon: {
     position: 'absolute',
@@ -301,11 +324,11 @@ const styles = StyleSheet.create({
     position: 'absolute',
     backgroundColor: '#FF5858',
     borderRadius: 50,
-    margin: 10,
+    // margin: 10,
     width: 20,
     height: 20,
-    marginTop: 20,
-    left:10,
+    // marginTop: 20,
+    left:20,
   },
   viewRanking: {
     marginBottom: 20,
@@ -336,5 +359,5 @@ const styles = StyleSheet.create({
   },
   TopRanking:{
     margin:5,
-  }
+  },
 });

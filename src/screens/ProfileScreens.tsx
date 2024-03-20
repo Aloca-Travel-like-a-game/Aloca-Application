@@ -22,9 +22,10 @@ export default function ProfileScreens({navigation}: any) {
   };
   const handleLogout = async () => {
     await AsyncStorage.removeItem('user');
+       navigation.navigate('Login');
     const user = await AsyncStorage.getItem('user');
     if (user === null) {
-      navigation.navigate('LandingPage');
+      navigation.navigate('Login');
     }
   };
   return (
@@ -32,7 +33,9 @@ export default function ProfileScreens({navigation}: any) {
       showsVerticalScrollIndicator={false}
       style={styles.containerContent}>
       <View style={styles.editProfile}>
-        {data?.image !== null && data?.image !== undefined ? <Image style={styles.image} source={{uri: data.image}} /> : null}
+        {data?.image !== null && data?.image !== undefined ? (
+          <Image style={styles.image} source={{uri: data?.image}} />
+        ) : null}
         <Text style={styles.textfullname}>{data?.fullname}</Text>
         <TouchableOpacity onPress={handleEditprofile}>
           <AntDesign name="form" size={28} color="black" />
@@ -57,8 +60,14 @@ export default function ProfileScreens({navigation}: any) {
           />
           <Text style={styles.textEditprofile}>Thông báo</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={()=>navigation.navigate('Trợ lý')}>
-          <Ionicons name="airplane-outline" size={24} color="black" style={styles.icon}/>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('Trợ lý', {screen: 'AddNewTrip'})}>
+          <Ionicons
+            name="airplane-outline"
+            size={24}
+            color="black"
+            style={styles.icon}
+          />
           <Text style={styles.textEditprofile}>Kế hoạch</Text>
         </TouchableOpacity>
       </View>
@@ -79,23 +88,6 @@ export default function ProfileScreens({navigation}: any) {
         <View>
           <Image style={styles.image1} source={require('../Images/Genz.png')} />
         </View>
-      </View>
-      <View style={styles.contentManage}>
-        <TouchableOpacity style={styles.contenttext}>
-          <AntDesign name="copy1" size={24} color="black" />
-          <Text style={styles.text}>Quản lý hoá đơn</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.contenttext}>
-          <AntDesign name="enviromento" size={24} color="black" />
-          <Text style={styles.text}>Quản lý địa chỉ của tôi</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.contenttext}>
-          <AntDesign name="alipay-square" size={24} color="black" />
-          <Text style={styles.text}>Quốc gia & {'\n'} Ngôn ngữ </Text>
-          <View style={styles.textlanguage}>
-            <Text style={styles.textvn}>Việt nam {'\n'} Tiếng việt </Text>
-          </View>
-        </TouchableOpacity>
       </View>
       <View style={styles.contentManage}>
         <TouchableOpacity style={styles.contenttext}>
@@ -121,7 +113,7 @@ export default function ProfileScreens({navigation}: any) {
           <Text style={styles.text}>
             Giúp chúng tôi nâng cao {'\n'} chất lượng dịch vụ
           </Text>
-          <Text style={styles.evaluate}>đánh giá</Text>
+          <Text style={styles.evaluate}>Đánh giá</Text>
         </View>
         <Image source={require('../Images/user.png')} />
       </View>
@@ -183,7 +175,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   textbenefit: {
-    color: '#000',
+    color: '#FFFFFF',
     backgroundColor: '#2AB6AD',
     padding: 8,
     width: 80,

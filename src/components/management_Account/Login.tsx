@@ -17,6 +17,7 @@ import axios from 'axios';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-toast-message';
+import { ipAddress } from '../../Helper/ip';
 interface Account {
   username: string;
   password: string;
@@ -30,12 +31,11 @@ export default function Login({navigation}: any) {
     mutationFn: async (data: Account) => {
       try {
         const res = await axios.post(
-          'http://52.63.147.17:8080/auth/login',
+          `http://${ipAddress}:8080/auth/login`,
           data,
         );
         if (res.status === 200) {
           const token = res.data;
-          console.log(token);
           const user = JSON.stringify(token);
           await AsyncStorage.setItem('AccessToken', token.accessToken);
           await AsyncStorage.setItem('user', user);
@@ -44,7 +44,7 @@ export default function Login({navigation}: any) {
             text1: 'Thành công',
             text2: 'Đăng nhập thành công 👋',
           });
-          navigation.navigate('Homestack');
+          navigation.navigate('Homestack',{screen:'Trang chủ'});
         }
       } catch (error: any) {
         if (error.response && error.response.status === 404) {

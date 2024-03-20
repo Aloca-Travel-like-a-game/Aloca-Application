@@ -22,6 +22,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {convertDatetoString2} from '../../Helper/convertDate';
 import {JSX} from 'react/jsx-runtime';
+import {BackHandler} from 'react-native';
+import { ipAddress } from '../../Helper/ip';
 
 export const DetailTripScreen: FC = (): JSX.Element => {
   const navigation = useNavigation<any>();
@@ -42,7 +44,7 @@ export const DetailTripScreen: FC = (): JSX.Element => {
       console.log('ab', token);
       const senRequest = async () => {
         try {
-          const APIurl = `http://52.63.147.17:8080/trip-plan/get-trip/${idTrip}`;
+          const APIurl = `http://${ipAddress}:8080/trip-plan/get-trip/${idTrip}`;
           const res = await axios.get(APIurl, {
             headers: {
               Authorization: 'Bearer ' + token,
@@ -57,6 +59,17 @@ export const DetailTripScreen: FC = (): JSX.Element => {
       senRequest();
     }
   }, [token]);
+
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => {
+        navigation.navigate('AddNewTrip');
+        return true;
+      },
+    );
+    return () => backHandler.remove();
+  }, []);
 
   const handleSelectChange = (item: string) => {
     const isselectDay = selectDay.includes(item);
@@ -203,7 +216,7 @@ export const DetailTripScreen: FC = (): JSX.Element => {
                 gap: 5,
                 width: '50%',
                 alignSelf: 'center',
-                marginBottom: '13%',
+                marginBottom: 45,
               }}
               onPress={() => navigation.navigate('MapScreen')}>
               <Text style={{...styles.text, color: '#fff'}}>Xem bản đồ</Text>

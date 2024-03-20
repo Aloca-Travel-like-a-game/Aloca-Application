@@ -1,10 +1,8 @@
-/* eslint-disable react/self-closing-comp */
 /* eslint-disable @typescript-eslint/no-shadow */
-/* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable no-sequences */
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react/no-unstable-nested-components */
-import React, {FC, useState} from 'react';
+import React, {FC, useEffect, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -24,6 +22,7 @@ import DatePicker from 'react-native-date-picker';
 import {convertDatetoString} from '../../Helper/convertDate';
 import {useNavigation} from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const budgetList = [
   'Dưới 1.000.000 VND',
@@ -55,6 +54,13 @@ export const TripPlanChoose: FC = (): JSX.Element => {
   const [quantity, setQuantity] = useState(1);
   const [budget, setBudget] = useState<any>('');
   const [areaTypes, setAreaTypes] = useState<string[]>([]);
+  const [userLocation, setUserLocation] = useState<any>();
+
+  useEffect(() => {
+    AsyncStorage.getItem('userLocation').then((result: any) =>
+      setUserLocation(result),
+    );
+  });
 
   const useSearch = (string: string) => {
     const provicesFilter = provices.filter(
@@ -420,7 +426,7 @@ export const TripPlanChoose: FC = (): JSX.Element => {
                   }}>
                   <Text
                     style={{
-                      fontSize: 20,
+                      fontSize: 16,
                       color: '#2AB6AD',
                       fontWeight: '700',
                     }}>
@@ -439,6 +445,7 @@ export const TripPlanChoose: FC = (): JSX.Element => {
                       quantity,
                       budget,
                       areaTypes,
+                      userLocation,
                     );
 
                     if (
@@ -451,6 +458,7 @@ export const TripPlanChoose: FC = (): JSX.Element => {
                         quantity: quantity,
                         budget: budget,
                         areaTypes: areaTypes,
+                        userLocation: userLocation,
                         days: days,
                         startDate: startDate,
                         endDate: endDate,
@@ -474,7 +482,7 @@ export const TripPlanChoose: FC = (): JSX.Element => {
                   }}>
                   <Text
                     style={{
-                      fontSize: 20,
+                      fontSize: 16,
                       color: '#fff',
                       fontWeight: '700',
                     }}>
@@ -571,7 +579,7 @@ export const styles = StyleSheet.create({
   sendBtn: {
     backgroundColor: '#2AB6AD',
     padding: 10,
-    borderRadius: 20,
+    borderRadius: 10,
     width: '40%',
     justifyContent: 'center',
     alignItems: 'center',

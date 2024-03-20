@@ -5,9 +5,40 @@ import {
   TouchableOpacity,
   ImageBackground,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 export default function LandingPage({navigation}: any) {
+  useEffect(() => {
+    const checkWelcomeScreen = async () => {
+      try {
+        const hasShownWelcomeScreen = await AsyncStorage.getItem(
+          'hasShownWelcomeScreen',
+        );
+        if (!hasShownWelcomeScreen) {
+          // Đánh dấu rằng đã hiển thị màn hình chào mừng
+          await AsyncStorage.setItem('hasShownWelcomeScreen', 'true');
+        } else {
+          // Chuyển đến màn hình chính
+          try {
+            const jsonValue = await AsyncStorage.getItem('user');
+            const value = jsonValue != null ? JSON.parse(jsonValue) : null;
+            if (value !== null) {
+              navigation.navigate('Homestack');
+            } else {
+              navigation.navigate('Login');
+            }
+          } catch (error) {
+            // console.log('lỗi', error);
+          }
+        }
+      } catch (error) {
+        console.error('Lỗi khi kiểm tra màn hình chào mừng:', error);
+      }
+    };
+
+    checkWelcomeScreen();
+  }, [navigation]);
+
   const handleGetStart = async () => {
     try {
       const jsonValue = await AsyncStorage.getItem('user');
@@ -21,13 +52,14 @@ export default function LandingPage({navigation}: any) {
       // console.log('lỗi', error);
     }
   };
+
   return (
     <ImageBackground
       source={require('../../Images/BackgroundApp.png')}
       style={styles.container}>
       <View>
         <Text style={styles.textWellcome}>Chào mừng bạn {'\n'} đến với </Text>
-        <Text style={styles.textAloca}>Aloca</Text>
+        <Text style={styles.textAloca}>ALOCA</Text>
         <TouchableOpacity style={styles.ButtomNext} onPress={handleGetStart}>
           <Text style={styles.textStart}>Bắt đầu thôi</Text>
         </TouchableOpacity>
@@ -38,37 +70,39 @@ export default function LandingPage({navigation}: any) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#00BCD4',
-    justifyContent: 'center',
+    backgroundColor: '#2AB6AD',
     alignItems: 'center',
   },
   textWellcome: {
-    fontSize: 35,
+    fontSize: 45,
     fontWeight: '500',
     textAlign: 'center',
-    color: '#000',
+    color: '#fff',
+    marginTop: '30%',
   },
   textAloca: {
-    fontSize: 35,
+    fontSize: 45,
     fontWeight: '500',
     textAlign: 'center',
-    color: '#000',
-    paddingTop: 230,
+    color: '#fff',
+    marginTop: '80%',
   },
   ButtomNext: {
     flexDirection: 'row',
     backgroundColor: '#fff',
     width: 250,
-    marginTop: 100,
+    marginTop: '20%',
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
+    alignSelf: 'center',
     gap: 30,
   },
   textStart: {
     fontSize: 20,
-    color: '#00BCD4',
+    color: '#2AB6AD',
     padding: 10,
+    fontWeight: '600',
   },
   iconNext: {
     width: 16,

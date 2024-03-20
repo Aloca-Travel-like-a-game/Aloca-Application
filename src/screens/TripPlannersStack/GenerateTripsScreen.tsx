@@ -22,6 +22,7 @@ import {KeyboardAvoidingView} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Toast from 'react-native-toast-message';
+import {ipAddress} from '../../Helper/ip';
 
 export const GenerateTripsScreen = () => {
   const [loading, setLoading] = useState(false);
@@ -33,17 +34,26 @@ export const GenerateTripsScreen = () => {
   const route = useRoute();
   const navigation = useNavigation<any>();
 
-  const {location, quantity, budget, areaTypes, days, startDate, endDate}: any =
-    route.params;
-  const APIurl = 'http://52.63.147.17:8080/trip-plan/';
+  const {
+    location,
+    quantity,
+    budget,
+    areaTypes,
+    userLocation,
+    days,
+    startDate,
+    endDate,
+  }: any = route.params;
 
   const sendRequest = async (
     loca: any,
     numPeople: number,
     bud: any,
     interests: any,
+    userLocation: any,
     numDay: number | undefined,
   ) => {
+    const APIurl = `http://${ipAddress}:8080/trip-plan/`;
     try {
       setLoading(true);
       const res = await axios.post(APIurl, {
@@ -51,10 +61,11 @@ export const GenerateTripsScreen = () => {
         numberOfPeople: numPeople,
         budget: bud,
         interest: interests,
-        userLocation: 'Đà Nẵng',
+        userLocation: userLocation,
         numberOfDay: numDay,
       });
       setResult(res.data.data);
+      console.log(res.data.data);
     } catch (error) {
       console.error('Lỗi:', error);
       setResult(null);
@@ -63,13 +74,13 @@ export const GenerateTripsScreen = () => {
     }
   };
   useEffect(() => {
-    sendRequest(location, quantity, budget, areaTypes, days);
-  }, [location, quantity, budget, areaTypes, days]);
+    sendRequest(location, quantity, budget, areaTypes, userLocation, days);
+  }, [location, quantity, budget, areaTypes, userLocation, days]);
   useEffect(() => {
     AsyncStorage.getItem('AccessToken').then((result: any) => setToken(result));
   });
   const retryRequest = () => {
-    sendRequest(location, quantity, budget, areaTypes, days);
+    sendRequest(location, quantity, budget, areaTypes, userLocation, days);
   };
 
   const PickUpPlan = async (item: any) => {
@@ -77,7 +88,7 @@ export const GenerateTripsScreen = () => {
     try {
       setLoading(true);
       const res = await axios.post(
-        'http://52.63.147.17:8080/trip-plan/save-trip',
+        `http://${ipAddress}:8080/trip-plan/save-trip`,
         {
           jsonTrip: item.planConfirm,
           location: location,
@@ -230,7 +241,8 @@ export const GenerateTripsScreen = () => {
                       alignSelf: 'flex-end',
                       width: '50%',
                       flexDirection: 'row',
-                      justifyContent: 'space-between',
+                      justifyContent: 'flex-end',
+                      gap: 10,
                     }}>
                     <TouchableOpacity
                       onPress={() => setModalVisible(!modalVisible)}>
@@ -389,11 +401,12 @@ const styles = StyleSheet.create({
   },
   retryBtn: {
     color: '#2AB6AD',
-    fontSize: 30,
+    fontSize: 25,
     fontWeight: '900',
     alignSelf: 'center',
     backgroundColor: '#fff',
     padding: 10,
+    paddingHorizontal: 18,
     borderRadius: 10,
     borderWidth: 1,
     borderColor: '#2AB6AD',

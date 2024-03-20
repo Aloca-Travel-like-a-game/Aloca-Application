@@ -4,7 +4,6 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  Alert,
   ImageBackground,
   StyleSheet,
 } from 'react-native';
@@ -14,6 +13,8 @@ import Toast from 'react-native-toast-message';
 interface InputRef {
   focus: () => void;
 }
+import { ipAddress } from '../../Helper/ip';
+
 export default function VerifyAccount({navigation}: any) {
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const firstInput = useRef<InputRef>(null);
@@ -35,7 +36,7 @@ export default function VerifyAccount({navigation}: any) {
     }
     AsyncStorage.getItem('registeredEmail').then(email => {
       axios
-        .post('http://52.63.147.17:8080/auth/confirm-account', {
+        .post(`http://${ipAddress}:8080/auth/confirm-account`, {
           email,
           code: enteredOTP.toString(),
         })
@@ -191,7 +192,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 20,
     color: '#FFFF',
-    fontSize:15,
+    fontSize: 15,
   },
   contentInput: {
     flexDirection: 'row',

@@ -11,6 +11,7 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import Toast from 'react-native-toast-message';
+import { ipAddress } from '../../Helper/ip';
 interface InputRef {
   focus: () => void;
 }
@@ -26,17 +27,18 @@ const sixthInput = useRef<InputRef>(null);
     try {
       const enteredOTP = otp.join('');
       if (enteredOTP.length !== 6) {
-        ToastAndroid.show(
-          'Vui lòng nhập đầy đủ mã OTP! ',
-          ToastAndroid.SHORT,
-        );
+        Toast.show({
+          type: 'error',
+          text1: 'Thất bại',
+          text2: 'Vui lòng nhập đầy đủ mã OTP !!',
+        });
         return;
       }
       let code = enteredOTP.toString();
       let email = await AsyncStorage.getItem('emailResetPassword');
       console.log('showemail==', email);
       axios
-        .post(`http://52.63.147.17:8080/auth/reset-password/${code}`, {
+        .post(`http://${ipAddress}:8080/auth/reset-password/${code}`, {
           email,
         })
         .then(response => {
@@ -63,8 +65,7 @@ const sixthInput = useRef<InputRef>(null);
           });
           }
         });
-    } catch (err) {
-    }
+    } catch (err) {}
   };
 
   const handleInputChange = (index: number, value: string) => {
@@ -188,7 +189,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 20,
     color: '#FFFF',
-    fontSize:15,
+    fontSize: 15,
   },
   contentInput: {
     flexDirection: 'row',
@@ -212,7 +213,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderRadius: 10,
     width: 250,
-    height:50,
+    height: 50,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom:10,

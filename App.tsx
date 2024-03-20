@@ -1,10 +1,13 @@
 import React, {useEffect} from 'react';
 import Navigation from './src/navigation/Navigation';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
-import {PermissionsAndroid, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 import Toast, { BaseToast, ErrorToast } from 'react-native-toast-message';
-// import Geolocation from '@react-native-community/geolocation';
+import {Alert, Linking, PermissionsAndroid, Platform} from 'react-native';
+import Geolocation from '@react-native-community/geolocation';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const queryClient = new QueryClient();
+// import Geolocation from '@react-native-community/geolocation';
 const toastConfig = {
   success: (props: any) => (
     <BaseToast
@@ -24,6 +27,7 @@ const toastConfig = {
     />
   ),
   };
+
 export default function App() {
   useEffect(() => {
     const requestLocationPermission = async () => {
@@ -39,6 +43,40 @@ export default function App() {
           },
         );
         if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          Geolocation.getCurrentPosition(
+            async (info: any) => {
+              const getlatitude = info.coords.latitude;
+              const getlongitude = info.coords.longitude;
+              const response = await fetch(
+                `https://revgeocode.search.hereapi.com/v1/revgeocode?apikey=TYWNfgg1aUErbBEMMhjeeiX4uDup2tkboazOS0PY4BQ&at=${getlatitude},${getlongitude}&lang=vi`,
+              );
+              const data = await response.json();
+              console.log(data.items[0].address.county);
+              AsyncStorage.setItem(
+                'userLocation',
+                data.items[0].address.county,
+              );
+            },
+            () => {
+              Alert.alert(
+                'Thông báo',
+                'Vui lòng bật định vị để sử dụng ứng dụng.',
+                [
+                  {
+                    text: 'OK',
+                    onPress: () => {
+                      if (Platform.OS === 'android') {
+                        Linking.openSettings();
+                      } else {
+                        Linking.openURL('app-settings:');
+                      }
+                    },
+                  },
+                ],
+              );
+            },
+            undefined,
+          );
           console.log('Location permission granted');
         } else {
           console.log('Location permission denied');
@@ -47,8 +85,8 @@ export default function App() {
         console.warn(err);
       }
     };
-
     requestLocationPermission();
+
     PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.CAMERA, {
       title: 'Cho phép truy cập máy ảnh',
       message:
@@ -58,7 +96,7 @@ export default function App() {
       buttonNegative: 'Hủy',
       buttonPositive: 'Cho phép',
     });
-  },[]);
+  }, []);
   return (
     <QueryClientProvider client={queryClient}>
       <Navigation />

@@ -13,17 +13,20 @@ import {
   Dimensions,
   Modal,
   Pressable,
+  ActivityIndicator,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import {convertDatetoString2} from '../../Helper/convertDate';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { ipAddress } from '../../Helper/ip';
 
 export const TripPlanScreen: FC = (): JSX.Element => {
   const [token, setToken] = useState<string>();
   const [result, setResult] = useState<any>(null);
   const [itemDelete, setItemDelete] = useState<any>(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     AsyncStorage.getItem('AccessToken').then((tokenSave: any) =>
       setToken(tokenSave),
@@ -31,8 +34,9 @@ export const TripPlanScreen: FC = (): JSX.Element => {
   }, []);
 
   const sendRequest = async (tokenAccess: string) => {
+    setLoading(true);
     try {
-      const APIurl = 'http://52.63.147.17:8080/trip-plan/get-trip';
+      const APIurl = `http://${ipAddress}:8080/trip-plan/get-trip`;
       const res = await axios.get(APIurl, {
         headers: {
           Authorization: 'Bearer ' + tokenAccess,
@@ -42,13 +46,15 @@ export const TripPlanScreen: FC = (): JSX.Element => {
       // console.log(res.data.dataTrip);
     } catch (e) {
       console.log(e);
+    } finally {
+      setLoading(false);
     }
   };
 
   const deleteRequest = async (tokenAccess: string, id: string) => {
     try {
       console.log(tokenAccess);
-      const APIurl = 'http://52.63.147.17:8080/trip-plan/' + id;
+      const APIurl = `http://${ipAddress}:8080/trip-plan/` + id;
       const res = await axios.delete(APIurl, {
         headers: {
           Authorization: 'Bearer ' + tokenAccess,
@@ -116,170 +122,177 @@ export const TripPlanScreen: FC = (): JSX.Element => {
           </TouchableOpacity>
         </View>
       )}
-      <FlatList
-        ListHeaderComponent={
-          <Modal
-            style={{zIndex: 2, backgroundColor: 'black', width: '100%'}}
-            animationType="fade"
-            transparent={true}
-            visible={modalVisible}
-            onRequestClose={() => {
-              setModalVisible(!modalVisible);
-            }}>
-            <Pressable
-              onPress={() => setModalVisible(!modalVisible)}
-              style={{
-                flex: 1,
-                alignItems: 'center',
-                justifyContent: 'center',
-                backgroundColor: 'black',
-                opacity: 0.4,
-              }}
-            />
-            <View style={styles.confirmDelete}>
-              <Text
-                style={{
-                  width: '100%',
-                  color: '#2AB6AD',
-                  fontWeight: '600',
-                  fontSize: 19.9,
-                  marginBottom: 10,
-                  alignSelf: 'center',
-                  textAlign: 'center',
-                }}>
-                {`Bạn có chắc muốn xóa kế hoạch ${itemDelete?.nameTrip}`}
-              </Text>
-              <View
-                style={{
-                  alignSelf: 'flex-end',
-                  width: '50%',
-                  flexDirection: 'row',
-                  justifyContent: 'flex-end',
-                  gap: 10,
-                }}>
-                <TouchableOpacity
-                  onPress={() => setModalVisible(!modalVisible)}>
-                  <Text
-                    style={{
-                      ...styles.btn,
-                      fontWeight: '600',
-                      color: '#2AB6AD',
-                      borderColor: '#2AB6AD',
-                      backgroundColor: '#fff',
-                      borderWidth: 1,
-                    }}>
-                    Hủy
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => {
-                    if (token !== undefined) {
-                      deleteRequest(token, itemDelete._id);
-                      sendRequest(token);
-                    }
-                    setModalVisible(!modalVisible);
-                  }}>
-                  <Text
-                    style={{
-                      ...styles.btn,
-                      fontWeight: '600',
-                      color: '#fff',
-                    }}>
-                    Xác nhận
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </Modal>
-        }
-        ref={flatList}
-        style={{flex: 1, marginBottom: 15}}
-        data={result}
-        renderItem={({item}: any) => (
-          <View style={{display: item.status === 'active' ? 'flex' : 'none'}}>
-            <TouchableOpacity
-              style={styles.trip}
-              onPress={() => {
-                navigation.navigate('DetailTripScreen', {
-                  idTrip: item._id,
-                });
+      {loading && (
+        <View style={{flex: 1, alignItems: 'center'}}>
+          <ActivityIndicator size={30} color="#2AB6AD" />
+        </View>
+      )}
+      {!loading && (
+        <FlatList
+          ListHeaderComponent={
+            <Modal
+              style={{zIndex: 2, backgroundColor: 'black', width: '100%'}}
+              animationType="fade"
+              transparent={true}
+              visible={modalVisible}
+              onRequestClose={() => {
+                setModalVisible(!modalVisible);
               }}>
-              <Text style={{...styles.text, fontWeight: '600'}}>
-                {item.nameTrip}
-              </Text>
-              <View
+              <Pressable
+                onPress={() => setModalVisible(!modalVisible)}
                 style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
+                  flex: 1,
                   alignItems: 'center',
-                  width: '60%',
-                  gap: 10,
+                  justifyContent: 'center',
+                  backgroundColor: 'black',
+                  opacity: 0.4,
+                }}
+              />
+              <View style={styles.confirmDelete}>
+                <Text
+                  style={{
+                    width: '100%',
+                    color: '#2AB6AD',
+                    fontWeight: '600',
+                    fontSize: 19.9,
+                    marginBottom: 10,
+                    alignSelf: 'center',
+                    textAlign: 'center',
+                  }}>
+                  {`Bạn có chắc muốn xóa kế hoạch ${itemDelete?.nameTrip}`}
+                </Text>
+                <View
+                  style={{
+                    alignSelf: 'flex-end',
+                    width: '50%',
+                    flexDirection: 'row',
+                    justifyContent: 'flex-end',
+                    gap: 10,
+                  }}>
+                  <TouchableOpacity
+                    onPress={() => setModalVisible(!modalVisible)}>
+                    <Text
+                      style={{
+                        ...styles.btn,
+                        fontWeight: '600',
+                        color: '#2AB6AD',
+                        borderColor: '#2AB6AD',
+                        backgroundColor: '#fff',
+                        borderWidth: 1,
+                      }}>
+                      Hủy
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => {
+                      if (token !== undefined) {
+                        deleteRequest(token, itemDelete._id);
+                        sendRequest(token);
+                      }
+                      setModalVisible(!modalVisible);
+                    }}>
+                    <Text
+                      style={{
+                        ...styles.btn,
+                        fontWeight: '600',
+                        color: '#fff',
+                      }}>
+                      Xác nhận
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </Modal>
+          }
+          ref={flatList}
+          style={{flex: 1, marginBottom: 15}}
+          data={result}
+          renderItem={({item}: any) => (
+            <View style={{display: item.status === 'active' ? 'flex' : 'none'}}>
+              <TouchableOpacity
+                style={styles.trip}
+                onPress={() => {
+                  navigation.navigate('DetailTripScreen', {
+                    idTrip: item._id,
+                  });
                 }}>
+                <Text style={{...styles.text, fontWeight: '600'}}>
+                  {item.nameTrip}
+                </Text>
                 <View
                   style={{
                     flexDirection: 'row',
                     justifyContent: 'space-between',
                     alignItems: 'center',
-                    gap: 15,
-                    flex: 1,
+                    width: '60%',
+                    gap: 10,
                   }}>
-                  {[
-                    'Bà Rịa Vũng Tàu',
-                    'TP. Hồ Chí Minh',
-                    'Thừa Thiên Huế',
-                  ].includes(item.location) ? (
-                    <ScrollView
-                      horizontal
-                      showsHorizontalScrollIndicator={false}>
-                      <Animatable.Text
-                        animation={{
-                          from: {translateX: 0},
-                          to: {translateX: -20},
-                        }}
-                        duration={1000}
-                        iterationCount="infinite"
-                        easing="linear"
-                        direction="alternate"
-                        style={styles.text}>
-                        {item.location}
-                      </Animatable.Text>
-                    </ScrollView>
-                  ) : (
-                    <Text style={{color: '#000'}}>{item.location}</Text>
-                  )}
-                  <Text style={styles.text}>
-                    {`${convertDatetoString2(item.startDate).slice(
-                      0,
-                      -5,
-                    )} - ${convertDatetoString2(item.endDate).slice(0, -5)}`}
-                  </Text>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      gap: 15,
+                      flex: 1,
+                    }}>
+                    {[
+                      'Bà Rịa Vũng Tàu',
+                      'TP. Hồ Chí Minh',
+                      'Thừa Thiên Huế',
+                    ].includes(item.location) ? (
+                      <ScrollView
+                        horizontal
+                        showsHorizontalScrollIndicator={false}>
+                        <Animatable.Text
+                          animation={{
+                            from: {translateX: 0},
+                            to: {translateX: -20},
+                          }}
+                          duration={1000}
+                          iterationCount="infinite"
+                          easing="linear"
+                          direction="alternate"
+                          style={styles.text}>
+                          {item.location}
+                        </Animatable.Text>
+                      </ScrollView>
+                    ) : (
+                      <Text style={{color: '#000'}}>{item.location}</Text>
+                    )}
+                    <Text style={styles.text}>
+                      {`${convertDatetoString2(item.startDate).slice(
+                        0,
+                        -5,
+                      )} - ${convertDatetoString2(item.endDate).slice(0, -5)}`}
+                    </Text>
+                  </View>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setModalVisible(true);
+                      console.log(modalVisible);
+                      setItemDelete(item);
+                    }}>
+                    <Ionicons name="trash" size={20} color="#2AB6AD" />
+                  </TouchableOpacity>
                 </View>
-                <TouchableOpacity
-                  onPress={() => {
-                    setModalVisible(true);
-                    console.log(modalVisible);
-                    setItemDelete(item);
-                  }}>
-                  <Ionicons name="trash" size={20} color="#2AB6AD" />
-                </TouchableOpacity>
-              </View>
-            </TouchableOpacity>
-          </View>
-        )}
-        inverted
-        contentContainerStyle={{
-          flexGrow: 1,
-          justifyContent: 'flex-end',
-        }}
-        keyExtractor={(item: any, index: any) =>
-          item.nameTrip + index.toString()
-        }
-        onContentSizeChange={() => {
-          if (flatList.current !== null) {
-            flatList.current.scrollToEnd();
+              </TouchableOpacity>
+            </View>
+          )}
+          inverted
+          contentContainerStyle={{
+            flexGrow: 1,
+            justifyContent: 'flex-end',
+          }}
+          keyExtractor={(item: any, index: any) =>
+            item.nameTrip + index.toString()
           }
-        }}
-      />
+          onContentSizeChange={() => {
+            if (flatList.current !== null) {
+              flatList.current.scrollToEnd();
+            }
+          }}
+        />
+      )}
     </View>
   );
 };
