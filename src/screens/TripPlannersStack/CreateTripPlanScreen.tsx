@@ -12,7 +12,6 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Keyboard,
-  Alert,
 } from 'react-native';
 
 import {provices} from '../../Helper/provices';
@@ -22,6 +21,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import DatePicker from 'react-native-date-picker';
 import {convertDatetoString} from '../../Helper/convertDate';
 import {useNavigation} from '@react-navigation/native';
+import Toast from 'react-native-toast-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const budgetList = [
@@ -132,7 +132,11 @@ export const TripPlanChoose: FC = (): JSX.Element => {
 
   const handleCalculateDateRange = (startDate: Date, endDate: Date) => {
     if (startDate > endDate) {
-      Alert.alert('Vui lòng chọn lại ngày');
+      Toast.show({
+        type: 'error',
+        text1: 'Thất bại',
+        text2: 'Vui lòng chọn lại ngày',
+      });
     } else {
       const days =
         Math.ceil(
@@ -147,13 +151,21 @@ export const TripPlanChoose: FC = (): JSX.Element => {
         if (
           new Date(selectedDate.getTime() + 24 * 60 * 60 * 1000) < new Date()
         ) {
-          Alert.alert('Không được chọn trước hôm nay');
+          Toast.show({
+            type: 'error',
+            text1: 'Thất bại',
+            text2: 'Không được chọn trước ngày hôm nay',
+          });
         } else {
           if (
             selectedDate.getDate() === new Date().getDate() &&
             new Date().getHours() >= 18
           ) {
-            Alert.alert('Hôm nay muộn quá bạn ơi!');
+            Toast.show({
+              type: 'error',
+              text1: 'Thất bại',
+              text2: 'Hôm nay muộn quá bạn ơi',
+            });
           } else {
             setStartDate(selectedDate);
           }
@@ -162,7 +174,11 @@ export const TripPlanChoose: FC = (): JSX.Element => {
         if (selectedDate >= startDate) {
           setEndDate(selectedDate);
         } else {
-          Alert.alert('Ngày về không được chọn trước ngày đi');
+          Toast.show({
+            type: 'error',
+            text1: 'Thất bại',
+            text2: 'Ngày về không được chọn trước ngày đi',
+          });
         }
       }
     };
@@ -449,12 +465,18 @@ export const TripPlanChoose: FC = (): JSX.Element => {
                       });
                     } else {
                       if (days !== undefined && days > 7) {
-                        Alert.alert(
-                          'Chúng tôi chỉ có thể tạo cho bạn kế hoạch tối đa 7 ngày',
-                        );
+                        Toast.show({
+                          type: 'error',
+                          text1: 'Thất bại',
+                          text2: 'Chúng tôi chỉ có thể tạo cho bạn kế hoạch tối đa 7 ngày',
+                        });
                       }
                       if (validate(location, budget) === false) {
-                        Alert.alert('Vui lòng điền đầy đủ thông tin!');
+                        Toast.show({
+                          type: 'error',
+                          text1: 'Thất bại',
+                          text2: 'Vui lòng điền đầy đủ thông tin!',
+                        });
                       }
                     }
                   }}>
