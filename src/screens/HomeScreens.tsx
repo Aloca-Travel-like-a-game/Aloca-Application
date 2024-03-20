@@ -92,7 +92,7 @@ export default function HomeScreens({navigation}: any) {
           style={styles.iconnotifications}
           onPress={() => navigation.navigate('Notification')}>
           <Ionicons name="notifications-outline" size={40} color="black" />
-          <Text style={styles.numbernotification}>10</Text>
+          <Text style={styles.numbernotification}>1+</Text>
         </TouchableOpacity>
         <View>
           {dataUser?.data.image ? (
@@ -110,13 +110,13 @@ export default function HomeScreens({navigation}: any) {
           </View>
           <View style={styles.slide2}>
             <Image
-              source={require('../Images/silder.png')}
+              source={require('../Images/sliderImge.jpg')}
               style={styles.imageSlider}
             />
           </View>
           <View style={styles.slide3}>
             <Image
-              source={require('../Images/silder.png')}
+              source={require('../Images/sliderImage1.jpg')}
               style={styles.imageSlider}
             />
           </View>
@@ -305,7 +305,7 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     marginTop: 20,
-    right: 10,
+    left:10,
   },
   viewRanking: {
     marginBottom: 20,
@@ -313,27 +313,19 @@ const styles = StyleSheet.create({
   },
   wrapper: {
     height: 200,
-    gap: 8,
+    alignSelf:'center',
+    gap: 5,
   },
   slide1: {
     height: 200,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#9DD6EB',
     borderRadius: 10,
   },
   slide2: {
     height: 200,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#97CAE5',
     borderRadius: 10,
   },
   slide3: {
     height: 200,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#92BBD9',
     borderRadius: 10,
   },
   text: {
@@ -343,6 +335,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   TopRanking:{
-    gap:10,
+    margin:5,
   }
 });
