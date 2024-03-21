@@ -60,6 +60,12 @@ export default function RankingScreen() {
     if (data && data.dataRanks) {
       dataTop = data.dataRanks;
       dataTop.sort((a, b) => b.experience - a.experience);
+      // Sửa vị trí của phần tử lớn nhất để đứng ở vị trí thứ hai
+      if (dataTop.length >= 2) {
+          const temp = dataTop[0];
+          dataTop[0] = dataTop[1];
+          dataTop[1] = temp;
+      }
       const res = dataTop.slice(0, 3);
       setTopThree(res);
     }
@@ -284,7 +290,7 @@ const styles = StyleSheet.create({
     width: 60,
     height: 30,
     marginTop: 179,
-    left: 77
+    left: 77,
   },
   imgeRank3: {
     position: 'absolute',
@@ -331,5 +337,5 @@ const styles = StyleSheet.create({
     position:'absolute',
     top:'18%',
    alignSelf:'center',
-  }
+  },
 });

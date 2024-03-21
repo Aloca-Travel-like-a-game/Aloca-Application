@@ -273,7 +273,7 @@ const styles = StyleSheet.create({
   containerContent: {
     flex: 1,
     marginHorizontal: 12,
-    paddingTop: 14,
+    paddingTop: 16,
   },
   icon: {
     position: 'absolute',

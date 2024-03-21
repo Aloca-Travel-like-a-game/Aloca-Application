@@ -34,7 +34,7 @@ export default function ForgotPassword({navigation}: any) {
           Toast.show({
             type: 'success',
             text1: 'Thành công',
-            text2: 'Mã xác thực đã được gửi đến Email của bạn 👋',
+            text2: 'Mã xác thực đã được gửi đến Email của bạn',
           });
           navigation.navigate('RefreshVerifyCode');
         }

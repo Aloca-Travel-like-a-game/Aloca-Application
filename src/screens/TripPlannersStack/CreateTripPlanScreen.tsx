@@ -19,16 +19,10 @@ import {FlatList} from 'react-native';
 import {removeVietnameseTones} from '../../Helper/removeVietNamTone';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import DatePicker from 'react-native-date-picker';
-import {convertDatetoString} from '../../Helper/convertDate';
+import {addCommas, convertDatetoString} from '../../Helper/convertDate';
 import {useNavigation} from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-const budgetList = [
-  'Dưới 1.000.000 VND',
-  '1.000.000 VND - 5.000.000 VND',
-  '5.000.000 VND - 15.000.000 VND',
-];
 
 const AreaTypes = [
   'Phù hợp với trẻ em',
@@ -51,10 +45,20 @@ export const TripPlanChoose: FC = (): JSX.Element => {
   const [location, onChangeLocation] = useState('');
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
-  const [quantity, setQuantity] = useState(1);
+  const [quantity, setQuantity] = useState<any>(1);
   const [budget, setBudget] = useState<any>('');
   const [areaTypes, setAreaTypes] = useState<string[]>([]);
   const [userLocation, setUserLocation] = useState<any>();
+
+  const budgetList = [
+    `Dưới ${addCommas(1000000 * quantity)} VND`,
+    `${addCommas(1000000 * quantity)} VND - ${addCommas(
+      5000000 * quantity,
+    )} VND`,
+    `${addCommas(5000000 * quantity)} VND - ${addCommas(
+      15000000 * quantity,
+    )} VND`,
+  ];
 
   useEffect(() => {
     AsyncStorage.getItem('userLocation').then((result: any) =>
@@ -189,7 +193,7 @@ export const TripPlanChoose: FC = (): JSX.Element => {
           style={{
             ...styles.input,
             borderWidth: 0,
-            justifyContent: 'space-evenly',
+            justifyContent: 'space-between',
             flexDirection: 'row',
             alignItems: 'center',
             paddingLeft: 0,
@@ -200,7 +204,9 @@ export const TripPlanChoose: FC = (): JSX.Element => {
               setIsChoosingStartDate(true);
               setShowPicker(true);
             }}>
-            <Text style={{color: '#fff', fontWeight: '500'}}>Chọn ngày đi</Text>
+            <Text style={{color: '#fff', fontWeight: '500'}}>
+              Ngày đi: {convertDatetoString(startDate)}
+            </Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.btn}
@@ -208,7 +214,9 @@ export const TripPlanChoose: FC = (): JSX.Element => {
               setIsChoosingStartDate(false);
               setShowPicker(true);
             }}>
-            <Text style={{color: '#fff', fontWeight: '500'}}>Chọn ngày về</Text>
+            <Text style={{color: '#fff', fontWeight: '500'}}>
+              Ngày về: {convertDatetoString(endDate)}
+            </Text>
           </TouchableOpacity>
         </View>
         <DatePicker
@@ -232,9 +240,25 @@ export const TripPlanChoose: FC = (): JSX.Element => {
     );
   };
   const updateQuantity = (newQuantity: number) => {
-    const clampedQuantity = Math.max(1, Math.floor(newQuantity));
+    const clampedQuantity = Math.max(1, Math.min(50, Math.floor(newQuantity)));
     setQuantity(clampedQuantity);
   };
+
+  const handleInputChange = (text: string) => {
+    const newQuantity = parseInt(text, 10);
+    if (text.trim() === '') {
+      updateQuantity(1);
+    } else if (!isNaN(newQuantity)) {
+      updateQuantity(newQuantity);
+    }
+  };
+
+  const handleInputBlur = (text: string) => {
+    if (text.trim() === '') {
+      updateQuantity(1);
+    }
+  };
+
   const increaseQuantity = () => {
     updateQuantity(quantity + 1);
   };
@@ -243,7 +267,11 @@ export const TripPlanChoose: FC = (): JSX.Element => {
   };
 
   const validate = (location: any, budget: any) => {
-    if (location === (false || undefined || null || '')) {
+    if (
+      location === (false || undefined || null || '') ||
+      provices.includes(location) === false
+    ) {
+      console.log(provices.includes(location));
       return false;
     }
     if (budget === (false || undefined || null || '')) {
@@ -317,15 +345,6 @@ export const TripPlanChoose: FC = (): JSX.Element => {
                       style={styles.dropdown}
                     />
                   ) : null}
-                  <TextInput
-                    inputMode="none"
-                    placeholder={`${convertDatetoString(
-                      startDate,
-                    )} - ${convertDatetoString(endDate)}`}
-                    placeholderTextColor={'#000'}
-                    style={{...styles.input, borderColor: '#000'}}
-                    editable={false}
-                  />
                   <DateRangePicker />
                 </View>
                 <View>
@@ -334,10 +353,11 @@ export const TripPlanChoose: FC = (): JSX.Element => {
                   </Text>
                   <View style={{width: 250, alignSelf: 'center'}}>
                     <TextInput
-                      value={quantity.toString() + ' người'}
-                      editable={false}
-                      placeholderTextColor={'#aaa'}
-                      style={styles.input}
+                      value={quantity.toString()}
+                      onChangeText={handleInputChange}
+                      onBlur={() => handleInputBlur(quantity.toString())}
+                      style={{...styles.input, alignItems: 'center'}}
+                      keyboardType="numeric"
                     />
                     <View
                       style={{
@@ -472,11 +492,19 @@ export const TripPlanChoose: FC = (): JSX.Element => {
                         });
                       }
                       if (validate(location, budget) === false) {
-                        Toast.show({
+                        if (provices.includes(location) === false) {
+                          Toast.show({
+                            type: 'error',
+                            text1: 'Thất bại',
+                            text2: 'Vui lòng chọn đúng tỉnh, thành phố mà chúng tôi đã cung cấp',
+                          });
+                        } else {
+                          Toast.show({
                           type: 'error',
                           text1: 'Thất bại',
                           text2: 'Vui lòng điền đầy đủ thông tin!',
                         });
+                        }
                       }
                     }
                   }}>
@@ -557,8 +585,8 @@ export const styles = StyleSheet.create({
   },
   btn: {
     backgroundColor: '#2AB6AD',
-    padding: 10,
-    borderRadius: 10,
+    padding: 9,
+    borderRadius: 8,
   },
   areaType: {
     color: '#000',

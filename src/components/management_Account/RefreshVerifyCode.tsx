@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   ImageBackground,
   StyleSheet,
-  ToastAndroid,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
@@ -18,11 +17,11 @@ interface InputRef {
 export default function RefreshVerifyCode({navigation}: any) {
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const firstInput = useRef<InputRef>(null);
-const secondInput = useRef<InputRef>(null);
-const thirdInput = useRef<InputRef>(null);
-const fourthInput = useRef<InputRef>(null);
-const fifthInput = useRef<InputRef>(null);
-const sixthInput = useRef<InputRef>(null);
+  const secondInput = useRef<InputRef>(null);
+  const thirdInput = useRef<InputRef>(null);
+  const fourthInput = useRef<InputRef>(null);
+  const fifthInput = useRef<InputRef>(null);
+  const sixthInput = useRef<InputRef>(null);
   const handleVerification = async () => {
     try {
       const enteredOTP = otp.join('');
@@ -46,7 +45,7 @@ const sixthInput = useRef<InputRef>(null);
           Toast.show({
             type: 'success',
             text1: 'Thành công',
-            text2: 'Xác thực thành công 👋',
+            text2: 'Xác thực thành công',
           });
           navigation.navigate('NewPassword');
         })

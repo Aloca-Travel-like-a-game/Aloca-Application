@@ -86,7 +86,7 @@ export default function EditProfile({navigation}: any): getProfile[] {
           Toast.show({
             type: 'success',
             text1: 'Thành công',
-            text2: 'Cập nhật thông tin thành công 👋',
+            text2: 'Cập nhật thông tin thành công',
           });
           setUserData(response.data);
           let newUser = JSON.parse(await AsyncStorage.getItem('user'));
@@ -100,7 +100,7 @@ export default function EditProfile({navigation}: any): getProfile[] {
           Toast.show({
             type: 'error',
             text1: 'Thất bại',
-            text2: 'Cập nhật thông tin không thành công 👋',
+            text2: 'Cập nhật thông tin không thành công!',
           });
         }
         return response.data;
@@ -149,26 +149,28 @@ export default function EditProfile({navigation}: any): getProfile[] {
     navigation.goBack();
   };
   const openImagePicker = async () => {
-    const options = {
-      mediaType: 'photo',
-      includeBase64: false,
-      maxHeight: 2000,
-      maxWidth: 2000,
-    };
-    launchImageLibrary(options, async response => {
-      if (response.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (response.error) {
-        console.log('Image picker error: ', response.error);
-      } else {
-        try {
-          let imageUri = response.uri || response.assets?.[0]?.uri;
-          setSelectedImage(imageUri);
-        } catch (error) {
-          console.error('Error saving image: ', error);
+    launchImageLibrary(
+      {
+        mediaType: 'photo',
+        includeBase64: false,
+        maxHeight: 2000,
+        maxWidth: 2000,
+      },
+      async response => {
+        if (response.didCancel) {
+          console.log('User cancelled image picker');
+        } else if (response.errorCode) {
+          console.log('Image picker error: ', response.errorCode);
+        } else {
+          try {
+            let imageUri = response.uri || response.assets?.[0]?.uri;
+            setSelectedImage(imageUri);
+          } catch (error) {
+            console.error('Error saving image: ', error);
+          }
         }
-      }
-    });
+      },
+    );
   };
   return (
     <ScrollView style={styles.container}>
@@ -184,22 +186,17 @@ export default function EditProfile({navigation}: any): getProfile[] {
         <Text style={styles.textInformation}> Thông tin </Text>
       </View>
       <View style={styles.contentTextInput}>
-        <View
-          style={styles.contentImage}
-          onPress={openImagePicker}
-          onTouchEnd={openImagePicker}>
+        <View style={styles.contentImage} onTouchEnd={openImagePicker}>
           {selectedImage ? (
             <Image source={{uri: selectedImage}} style={styles.image} />
           ) : (
-            <TouchableOpacity
-              onPress={openImagePicker}
-              style={styles.cameraIcon}>
+            <TouchableOpacity style={styles.cameraIcon}>
               <View style={styles.imagePlaceholder}>
                 <AntDesign name="camera" size={28} color="#000" />
               </View>
             </TouchableOpacity>
           )}
-          <TouchableOpacity onPress={openImagePicker} style={styles.cameraIcon}>
+          <TouchableOpacity style={styles.cameraIcon}>
             <View style={styles.imagePlaceholder}>
               <AntDesign name="camera" size={28} color="#000" />
             </View>

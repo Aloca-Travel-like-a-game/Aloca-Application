@@ -42,9 +42,9 @@ export default function Login({navigation}: any) {
           Toast.show({
             type: 'success',
             text1: 'Thành công',
-            text2: 'Đăng nhập thành công ',
+            text2: 'Đăng nhập thành công',
           });
-          navigation.navigate('Homestack',{screen:'Trang chủ'});
+          navigation.navigate('Homestack', {screen: 'Trang chủ'});
         }
       } catch (error: any) {
         if (error.response && error.response.status === 404) {

@@ -31,7 +31,7 @@ export default function ProfileScreens({navigation}: any) {
       <View style={styles.editProfile}>
         <View style={styles.contentheader}>
         {data?.image !== null && data?.image !== undefined ? (
-          <Image style={styles.image} source={{uri: data.image}} />
+          <Image style={styles.image} source={{uri: data?.image}} />
         ) : null}
         <Text style={styles.textfullname}>{data?.fullname}</Text>
         </View>
@@ -39,7 +39,7 @@ export default function ProfileScreens({navigation}: any) {
           <AntDesign name="form" size={28} color="black" />
         </TouchableOpacity>
       </View>
-      <View style={styles.editProfile}>
+      <View style={styles.navBtn}>
         <TouchableOpacity>
           <AntDesign
             name="hearto"
@@ -126,13 +126,19 @@ export default function ProfileScreens({navigation}: any) {
 const styles = StyleSheet.create({
   containerContent: {
     flex: 1,
-    marginHorizontal: 20,
-    marginTop: 10,
+    paddingHorizontal: 20,
+    // marginTop: 10,
     // marginVertical:20,
   },
   editProfile: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  navBtn: {
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
     alignItems: 'center',
     marginTop: 20,
   },
@@ -261,5 +267,5 @@ const styles = StyleSheet.create({
     justifyContent:'center',
     alignItems:'center',
     gap:20,
-  }
+  },
 });
