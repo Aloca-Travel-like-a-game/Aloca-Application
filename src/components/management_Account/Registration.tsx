@@ -10,13 +10,14 @@ import {
   ScrollView,
 } from 'react-native';
 import React, {useState} from 'react';
-import {TouchableOpacity, ToastAndroid} from 'react-native';
+import {TouchableOpacity} from 'react-native';
 import {Formik} from 'formik';
 import axios from 'axios';
 import {Signup_validate} from './SignUp_validate';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useMutation} from '@tanstack/react-query';
-import { ipAddress } from '../../Helper/ip';
+import Toast from 'react-native-toast-message';
+import {ipAddress} from '../../Helper/ip';
 export default function Registration({navigation}: any) {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -39,18 +40,27 @@ export default function Registration({navigation}: any) {
         .post(`http://${ipAddress}:8080/auth/register`, data)
         .then(res => {
           if (res.status === 200) {
-            ToastAndroid.show(
-              'Đăng ký tài khoản thành công',
-              ToastAndroid.LONG,
-            );
+            Toast.show({
+              type: 'success',
+              text1: 'Thành công',
+              text2: 'Đăng ký thành công',
+            });
             navigation.navigate('VerifyAccount');
           } else {
-            Alert.alert('Thông tin không hợp lệ');
+            Toast.show({
+              type: 'error',
+              text1: 'Thất bại',
+              text2: 'Đăng ký không thành công',
+            });
           }
         })
         .catch(e => {
           console.log('error', e);
-          Alert.alert('Tài khoản này đã tồn tại');
+          Toast.show({
+            type: 'error',
+            text1: 'Thất bại',
+            text2: 'Tài khoản này đã tồn tại',
+          });
         });
     },
   });

@@ -20,10 +20,11 @@ import LinearGradient from 'react-native-linear-gradient';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation, useRoute} from '@react-navigation/native';
-import {convertDatetoString2} from '../../Helper/convertDate';
+import {addCommas, convertDatetoString2} from '../../Helper/convertDate';
 import {JSX} from 'react/jsx-runtime';
 import {BackHandler} from 'react-native';
-import { ipAddress } from '../../Helper/ip';
+import {ipAddress} from '../../Helper/ip';
+import {launchCamera} from 'react-native-image-picker';
 
 export const DetailTripScreen: FC = (): JSX.Element => {
   const navigation = useNavigation<any>();
@@ -105,20 +106,54 @@ export const DetailTripScreen: FC = (): JSX.Element => {
             {activity.location}
           </Animatable.Text>
         </ScrollView>
-        <Text
-          style={{
-            ...styles.text,
-            fontWeight: '200',
-            alignSelf: 'flex-end',
-          }}>
-          Điểm nhận được: {activity.points}
-        </Text>
+
+        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+          <Text
+            style={
+              activity.completed
+                ? {
+                    ...styles.text,
+                    fontWeight: '200',
+                    alignSelf: 'flex-end',
+                    color: 'green',
+                  }
+                : {
+                    ...styles.text,
+                    fontWeight: '200',
+                    alignSelf: 'flex-end',
+                    color: 'red',
+                  }
+            }>
+            {activity.completed ? 'Hoàn thành' : 'Chưa hoàn thành'}
+          </Text>
+          <Text
+            style={{
+              ...styles.text,
+              fontWeight: '200',
+              alignSelf: 'flex-end',
+            }}>
+            Điểm nhận được: {activity.points}
+          </Text>
+        </View>
       </View>
       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
         <TouchableOpacity>
           <Text
             style={{...styles.text, ...styles.btn}}
-            onPress={() => navigation.navigate('CameraScreen')}>
+            onPress={() =>
+              launchCamera(
+                {
+                  includeBase64: false,
+                  mediaType: 'photo',
+                  quality: 0.8,
+                },
+                response => {
+                  if (response.errorCode || response.didCancel) {
+                    return;
+                  }
+                },
+              )
+            }>
             Thêm ảnh
           </Text>
         </TouchableOpacity>
@@ -171,11 +206,27 @@ export const DetailTripScreen: FC = (): JSX.Element => {
       </TouchableOpacity>
 
       {selectDay.includes(index.toString()) && (
-        <FlatList
-          data={day.challenges}
-          keyExtractor={(item, index) => item + index.toString()}
-          renderItem={renderActivity}
-        />
+        <>
+          <FlatList
+            data={day.challenges}
+            keyExtractor={(item, index) => item + index.toString()}
+            renderItem={renderActivity}
+          />
+          <Text
+            style={{
+              ...styles.text,
+            }}>
+            {`Chi phí di chuyển: ${addCommas(
+              day.transportCost,
+            )} VND (Ước tính)`}
+          </Text>
+          <Text
+            style={{
+              ...styles.text,
+            }}>
+            {`Chi phí ăn uống: ${addCommas(day.transportCost)} VND (Ước tính)`}
+          </Text>
+        </>
       )}
     </View>
   );

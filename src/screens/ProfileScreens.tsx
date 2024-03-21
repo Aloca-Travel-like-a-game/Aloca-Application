@@ -21,7 +21,8 @@ export default function ProfileScreens({navigation}: any) {
     navigation.navigate('Editprofile');
   };
   const handleLogout = async () => {
-    await AsyncStorage.removeItem('user');
+    await AsyncStorage.clear();
+    navigation.navigate('Login');
     const user = await AsyncStorage.getItem('user');
     if (user === null) {
       navigation.navigate('Login');
@@ -33,14 +34,14 @@ export default function ProfileScreens({navigation}: any) {
       style={styles.containerContent}>
       <View style={styles.editProfile}>
         {data?.image !== null && data?.image !== undefined ? (
-          <Image style={styles.image} source={{uri: data.image}} />
+          <Image style={styles.image} source={{uri: data?.image}} />
         ) : null}
         <Text style={styles.textfullname}>{data?.fullname}</Text>
         <TouchableOpacity onPress={handleEditprofile}>
           <AntDesign name="form" size={28} color="black" />
         </TouchableOpacity>
       </View>
-      <View style={styles.editProfile}>
+      <View style={styles.navBtn}>
         <TouchableOpacity>
           <AntDesign
             name="hearto"
@@ -112,7 +113,7 @@ export default function ProfileScreens({navigation}: any) {
           <Text style={styles.text}>
             Giúp chúng tôi nâng cao {'\n'} chất lượng dịch vụ
           </Text>
-          <Text style={styles.evaluate}>đánh giá</Text>
+          <Text style={styles.evaluate}>Đánh giá</Text>
         </View>
         <Image source={require('../Images/user.png')} />
       </View>
@@ -125,13 +126,19 @@ export default function ProfileScreens({navigation}: any) {
 const styles = StyleSheet.create({
   containerContent: {
     flex: 1,
-    marginHorizontal: 20,
-    marginTop: 10,
+    paddingHorizontal: 20,
+    // marginTop: 10,
     // marginVertical:20,
   },
   editProfile: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  navBtn: {
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
     alignItems: 'center',
     marginTop: 20,
   },
@@ -174,7 +181,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   textbenefit: {
-    color: '#000',
+    color: '#FFFFFF',
     backgroundColor: '#2AB6AD',
     padding: 8,
     width: 80,

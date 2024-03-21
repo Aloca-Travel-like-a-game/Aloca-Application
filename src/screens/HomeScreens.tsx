@@ -124,7 +124,7 @@ export default function HomeScreens({navigation}: any) {
         </View>
       </View>
       <View style={styles.sliderContainer}>
-        <Swiper style={styles.wrapper} showsButtons={true} autoplay>
+        <Swiper style={styles.wrapper} showsButtons={false} autoplay>
           <View style={styles.slide1}>
             <Image
               source={require('../Images/silder.png')}
@@ -133,13 +133,13 @@ export default function HomeScreens({navigation}: any) {
           </View>
           <View style={styles.slide2}>
             <Image
-              source={require('../Images/silder.png')}
+              source={require('../Images/sliderImge.jpg')}
               style={styles.imageSlider}
             />
           </View>
           <View style={styles.slide3}>
             <Image
-              source={require('../Images/silder.png')}
+              source={require('../Images/sliderImage1.jpg')}
               style={styles.imageSlider}
             />
           </View>
@@ -196,7 +196,7 @@ export default function HomeScreens({navigation}: any) {
           data={rankingData.dataRanks}
           renderItem={({item}) => {
             return (
-              <View>
+              <View style={styles.TopRanking}>
                 <Image source={{uri: item.image}} style={styles.imageRanking} />
               </View>
             );
@@ -221,8 +221,8 @@ const styles = StyleSheet.create({
   },
   containerContent: {
     flex: 1,
-    paddingHorizontal: 16,
-    paddingTop: 25,
+    marginHorizontal: 12,
+    paddingTop: 10,
   },
   icon: {
     position: 'absolute',
@@ -316,6 +316,7 @@ const styles = StyleSheet.create({
   },
   imageSlider: {
     height: 200,
+    width:'100%',
     borderRadius: 10,
   },
   numbernotification: {
@@ -323,40 +324,31 @@ const styles = StyleSheet.create({
     position: 'absolute',
     backgroundColor: '#FF5858',
     borderRadius: 50,
-    margin: 10,
+    // margin: 10,
     width: 20,
     height: 20,
-    marginTop: 20,
-    right: 10,
+    // marginTop: 20,
+    left:20,
   },
   viewRanking: {
     marginBottom: 20,
     marginTop: 8,
   },
-  // test slider----------
   wrapper: {
     height: 200,
-    gap: 8,
+    alignSelf:'center',
+    gap: 5,
   },
   slide1: {
     height: 200,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#9DD6EB',
     borderRadius: 10,
   },
   slide2: {
     height: 200,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#97CAE5',
     borderRadius: 10,
   },
   slide3: {
     height: 200,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#92BBD9',
     borderRadius: 10,
   },
   text: {
@@ -364,5 +356,8 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: 'bold',
     textAlign: 'center',
+  },
+  TopRanking:{
+    margin:5,
   },
 });

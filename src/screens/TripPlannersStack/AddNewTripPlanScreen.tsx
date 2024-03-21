@@ -19,7 +19,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import {convertDatetoString2} from '../../Helper/convertDate';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { ipAddress } from '../../Helper/ip';
+import {ipAddress} from '../../Helper/ip';
 
 export const TripPlanScreen: FC = (): JSX.Element => {
   const [token, setToken] = useState<string>();
@@ -43,7 +43,6 @@ export const TripPlanScreen: FC = (): JSX.Element => {
         },
       });
       setResult(res.data.dataTrip);
-      // console.log(res.data.dataTrip);
     } catch (e) {
       console.log(e);
     } finally {
@@ -53,7 +52,6 @@ export const TripPlanScreen: FC = (): JSX.Element => {
 
   const deleteRequest = async (tokenAccess: string, id: string) => {
     try {
-      console.log(tokenAccess);
       const APIurl = `http://${ipAddress}:8080/trip-plan/` + id;
       const res = await axios.delete(APIurl, {
         headers: {
@@ -99,7 +97,7 @@ export const TripPlanScreen: FC = (): JSX.Element => {
               marginTop: 10,
               marginLeft: '5%',
               fontWeight: '600',
-              fontSize: 20,
+              fontSize: 16,
             }}>
             Kế hoạch đã tạo:
           </Text>
@@ -115,7 +113,7 @@ export const TripPlanScreen: FC = (): JSX.Element => {
                 marginTop: 10,
                 marginLeft: '5%',
                 fontWeight: '600',
-                fontSize: 20,
+                fontSize: 16,
               }}>
               Làm mới
             </Text>
@@ -269,7 +267,6 @@ export const TripPlanScreen: FC = (): JSX.Element => {
                   <TouchableOpacity
                     onPress={() => {
                       setModalVisible(true);
-                      console.log(modalVisible);
                       setItemDelete(item);
                     }}>
                     <Ionicons name="trash" size={20} color="#2AB6AD" />

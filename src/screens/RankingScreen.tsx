@@ -1,9 +1,16 @@
-import {View, Text, StyleSheet, TouchableOpacity, FlatList} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  FlatList,
+  Image,
+} from 'react-native';
 import React, {useEffect, useState} from 'react';
-import {Image} from 'react-native-animatable';
 import axios from 'axios';
 import { ipAddress } from '../Helper/ip';
 export default function RankingScreen() {
+  const [highestScoreUserImage, setHighestScoreUserImage] = useState<string>('');
   const [data, setData] = useState<any>([]);
   const [selectedButton, setSelectedButton] = useState<string>('Theo Điểm');
   const handleButtonPress = async (buttonName: string) => {
@@ -43,6 +50,26 @@ export default function RankingScreen() {
   useEffect(() => {
     getHighestData();
   }, []);
+  const getHighestScoreUser = (data: any) => {
+    if (!data || data.length === 0) {
+      return null;
+    }
+    // Sắp xếp dữ liệu theo điểm giảm dần
+    const sortedData = data.sort(
+      (a: any, b: any) => b.experience - a.experience,
+    );
+    const highestScoreUser = sortedData[0];
+    return highestScoreUser;
+  };
+  useEffect(() => {
+    const highestScoreUser = getHighestScoreUser(data.dataRanks);
+    if (highestScoreUser) {
+      const {image} = highestScoreUser;
+      setHighestScoreUserImage(image);
+    }
+  }, [data]);
+  // console.log('ảnh hí:',highestScoreUserImage );
+  
   return (
     <View style={styles.containerContent}>
       <View style={styles.headerRanking}>
@@ -59,6 +86,7 @@ export default function RankingScreen() {
         source={require('../Images/ImageProfile.png')}
         style={styles.imgeRank}
       /> */}
+      <Image source={{uri: highestScoreUserImage}} style={styles.imgeRank} />
       <Image
         source={require('../Images/topRanking.png')}
         style={styles.imgeRankTop}
@@ -239,6 +267,8 @@ const styles = StyleSheet.create({
     height: 75,
     marginTop: 130,
     alignSelf: 'center',
+    backgroundColor: 'red',
+    borderRadius: 50,
   },
   imgeRankTop: {
     position: 'absolute',

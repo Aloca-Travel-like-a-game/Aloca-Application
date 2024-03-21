@@ -2,10 +2,32 @@ import React, { useEffect } from 'react';
 import Navigation from './src/navigation/Navigation';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Alert, Linking, PermissionsAndroid, Platform } from 'react-native';
+import { StyleSheet } from 'react-native';
+import Toast, { BaseToast, ErrorToast } from 'react-native-toast-message';
 import Geolocation from '@react-native-community/geolocation';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { requestPermission } from './src/Helper/handleNotification';
 const queryClient = new QueryClient();
+// import Geolocation from '@react-native-community/geolocation';
+const toastConfig = {
+  success: (props: any) => (
+    <BaseToast
+      {...props}
+      style={styles.sucessnotice}
+      contentContainerStyle={styles.contentsucess}
+      text1Style={styles.sucessText}
+      text2Style={styles.sucessText2}
+    />
+  ),
+  error: (props: any) => (
+    <ErrorToast
+      {...props}
+      text1Style={styles.failText}
+      text2Style={styles.failText2}
+      style={styles.failNotice}
+    />
+  ),
+  };
 
 export default function App() {
   useEffect(() => {
@@ -30,7 +52,7 @@ export default function App() {
                 `https://revgeocode.search.hereapi.com/v1/revgeocode?apikey=TYWNfgg1aUErbBEMMhjeeiX4uDup2tkboazOS0PY4BQ&at=${getlatitude},${getlongitude}&lang=vi`,
               );
               const data = await response.json();
-              console.log(data.items[0].address.county);
+              console.log(data);
               AsyncStorage.setItem(
                 'userLocation',
                 data.items[0].address.county,
@@ -82,6 +104,31 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <Navigation />
+      <Toast config={toastConfig} />
     </QueryClientProvider>
   );
 }
+const styles = StyleSheet.create({
+  sucessnotice:{
+    borderLeftColor: '#2AB6AD',
+  },
+  contentsucess:{
+    paddingHorizontal: 15,
+  },
+  sucessText:{
+    fontSize: 20,
+    fontWeight: '600',
+  },
+  sucessText2:{
+    fontSize:13,
+  },
+  failText:{
+    fontSize: 20,
+  },
+  failText2:{
+    fontSize:13,
+  },
+  failNotice:{
+    borderLeftColor: 'red',
+  },
+});
