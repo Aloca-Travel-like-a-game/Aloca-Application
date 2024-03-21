@@ -27,6 +27,8 @@ import {DetailTripScreen} from '../screens/TripPlannersStack/DetailTripScreen';
 import VideoTravel from '../components/shortVideo/VideoTravel';
 import RankingScreen from '../screens/RankingScreen';
 import {MapScreen} from '../screens/MapsScreen';
+import Benefit from '../components/contentAloca/Benefit';
+import WhatAloca from '../components/contentAloca/WhatAloca';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -198,6 +200,8 @@ export default function Navigation() {
         <Stack.Screen name="Notification" component={Notification} />
         <Stack.Screen name="VideoTravel" component={VideoTravel} />
         <Stack.Screen name="MapScreen" component={MapScreen} />
+        <Stack.Screen name="WhatAloca" component={WhatAloca} />
+        <Stack.Screen name="Benefit" component={Benefit} />
       </Stack.Navigator>
     </NavigationContainer>
   );

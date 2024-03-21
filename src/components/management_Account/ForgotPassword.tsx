@@ -16,7 +16,7 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {validateSchema} from './ForgotPassword_Validate';
 import Toast from 'react-native-toast-message';
-import {ipAddress} from '../../Helper/ip';
+import { ipAddress } from '../../Helper/ip';
 interface Account {
   email: string;
 }
@@ -41,8 +41,8 @@ export default function ForgotPassword({navigation}: any) {
       } catch (error) {
         Toast.show({
           type: 'success',
-          text1: 'Thất bại',
-          text2: 'Gửi mã thất bại',
+          text1:'Thất bại',
+          text2:'Gửi mã thất bại',
         });
       }
     },
