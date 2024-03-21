@@ -6,12 +6,11 @@ import {
   TouchableOpacity,
   ImageBackground,
   StyleSheet,
-  ToastAndroid,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import Toast from 'react-native-toast-message';
-import {ipAddress} from '../../Helper/ip';
+import { ipAddress } from '../../Helper/ip';
 interface InputRef {
   focus: () => void;
 }
@@ -53,16 +52,16 @@ export default function RefreshVerifyCode({navigation}: any) {
         .catch(error => {
           if (error.response && error.response.status === 401) {
             Toast.show({
-              type: 'error',
-              text1: 'Thất bại',
-              text2: 'Mã OTP không chính xác',
-            });
+              type:'error',
+              text1:'Thất bại',
+              text2:'Mã OTP không chính xác',
+          });
           } else {
             Toast.show({
-              type: 'error',
-              text1: 'Thất bại',
-              text2: 'Xác thực không thành công',
-            });
+              type:'error',
+              text1:'Thất bại',
+              text2:'Xác thực không thành công',
+          });
           }
         });
     } catch (err) {}
@@ -126,7 +125,7 @@ export default function RefreshVerifyCode({navigation}: any) {
                   : sixthInput
               }
               onChangeText={text => handleInputChange(index, text)}
-              onKeyPress={({nativeEvent}) => {
+              onKeyPress={({ nativeEvent }) => {
                 if (nativeEvent.key === 'Backspace') {
                   // Xoá giá trị và di chuyển con trỏ tới ô input trước đó (nếu có)
                   if (index > 0) {
@@ -216,7 +215,7 @@ const styles = StyleSheet.create({
     height: 50,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 10,
+    marginBottom:10,
   },
   verify: {
     color: '#40B59F',

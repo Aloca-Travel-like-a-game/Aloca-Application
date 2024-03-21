@@ -505,7 +505,6 @@ export const TripPlanChoose: FC = (): JSX.Element => {
                           text2: 'Vui lòng điền đầy đủ thông tin!',
                         });
                         }
-                        
                       }
                     }
                   }}>
