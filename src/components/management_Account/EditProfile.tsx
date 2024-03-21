@@ -4,10 +4,8 @@ import {
   TouchableOpacity,
   StyleSheet,
   TextInput,
-  Alert,
   Image,
   ScrollView,
-  ToastAndroid,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -16,6 +14,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {string} from 'yup';
+import Toast from 'react-native-toast-message';
 import { ipAddress } from '../../Helper/ip';
 interface getProfile {
   fullname: string;
@@ -84,10 +83,11 @@ export default function EditProfile({navigation}: any): getProfile[] {
           },
         );
         if (response.status === 200) {
-          ToastAndroid.show(
-            'Cập nhật thông tin thành công ',
-            ToastAndroid.SHORT,
-          );
+          Toast.show({
+            type: 'success',
+            text1: 'Thành công',
+            text2: 'Cập nhật thông tin thành công 👋',
+          });
           setUserData(response.data);
           let newUser = JSON.parse(await AsyncStorage.getItem('user'));
           for (const [key, value] of Object.entries(data)) {
@@ -97,7 +97,11 @@ export default function EditProfile({navigation}: any): getProfile[] {
           queryClient.invalidateQueries({queryKey: ['profile']});
           navigation.navigate('Tài khoản');
         } else {
-          Alert.alert('Invalid information!');
+          Toast.show({
+            type: 'error',
+            text1: 'Thất bại',
+            text2: 'Cập nhật thông tin không thành công 👋',
+          });
         }
         return response.data;
       } catch (error) {
@@ -110,9 +114,8 @@ export default function EditProfile({navigation}: any): getProfile[] {
       setNewName(value);
     } else if (key === 'phone') {
       // setNewPhone(value);
-      if (/^\d+$/.test(value)) {
         setNewPhone(value);
-      }
+ 
     } else if (key === 'address') {
       setNewAddress(value);
     }
@@ -120,13 +123,19 @@ export default function EditProfile({navigation}: any): getProfile[] {
   const handleSaveProfile = async () => {
     try {
       if (!newName || !newPhone || !newAddress || !selectedImage) {
-        ToastAndroid.show(
-          'Vui lòng nhập đầy đủ thông tin ',
-          ToastAndroid.SHORT,
-        );
+        Toast.show({
+            type: 'error',
+            text1: 'Thất bại',
+            text2: 'Vui lòng nhập đầy đủ thông tin',
+          });
       } else if (newPhone.length !== 10) {
-        ToastAndroid.show('Số điện thoại không hợp lệ ', ToastAndroid.SHORT);
-      } else {
+        Toast.show({
+          type: 'error',
+          text1: 'Thất bại',
+          text2: 'Số điện thoại không hợp lệ ',
+        });
+      }
+      else {
         const response = await mutationEdit.mutate({
           fullname: newName,
           phone: newPhone,
@@ -207,7 +216,7 @@ export default function EditProfile({navigation}: any): getProfile[] {
           />
           <Text style={styles.text}>Email</Text>
           <TextInput
-            style={styles.textInput}
+            style={styles.textInputemail}
             value={_userData?.data?.email}
             onChangeText={text => handleOnChange('email', text)}
             editable={false}
@@ -253,6 +262,13 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '400',
   },
+  textInputemail: {
+    borderBottomWidth: 1,
+    borderColor: '#808080',
+    color: '#757575',
+    fontSize: 18,
+    fontWeight: '400',
+  },
   contentTextInput: {
     marginHorizontal: 16,
     marginTop: 25,
@@ -281,8 +297,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
   },
   contentImage: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    alignSelf:'center',
   },
   imagePlaceholder: {
     width: 50,
@@ -291,9 +306,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 50,
     position: 'absolute',
-    marginTop: -15,
+    marginTop: -25,
     backgroundColor: '#FFF',
     elevation: 2,
+    left:55,
+    
   },
   cameraIcon: {
     backgroundColor: 'rgba(255, 255, 255, 0.5)',

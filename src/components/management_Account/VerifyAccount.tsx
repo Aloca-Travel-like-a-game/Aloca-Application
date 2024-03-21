@@ -4,27 +4,34 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  Alert,
   ImageBackground,
   StyleSheet,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import Toast from 'react-native-toast-message';
+interface InputRef {
+  focus: () => void;
+}
 import { ipAddress } from '../../Helper/ip';
 
 export default function VerifyAccount({navigation}: any) {
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
-  const firstInput = useRef();
-  const secondInput = useRef();
-  const thirdInput = useRef();
-  const fourthInput = useRef();
-  const fifthInput = useRef();
-  const sixthInput = useRef();
+  const firstInput = useRef<InputRef>(null);
+  const secondInput = useRef<InputRef>(null);
+  const thirdInput = useRef<InputRef>(null);
+  const fourthInput = useRef<InputRef>(null);
+  const fifthInput = useRef<InputRef>(null);
+  const sixthInput = useRef<InputRef>(null);
 
   const handleVerification = () => {
     const enteredOTP = otp.join('');
     if (enteredOTP.length !== 6) {
-      Alert.alert('Lỗi', 'Vui lòng nhập đầy đủ mã OTP');
+      Toast.show({
+        type: 'error',
+        text1: 'Thất bại',
+        text2: 'Vui lòng nhập lại mã OTP',
+      });
       return;
     }
     AsyncStorage.getItem('registeredEmail').then(email => {
@@ -35,14 +42,26 @@ export default function VerifyAccount({navigation}: any) {
         })
         .then(response => {
           console.log('Verification successful:', response.data);
-          Alert.alert('Xác thực thành công!');
+          Toast.show({
+            type: 'success',
+            text1: 'Thành công',
+            text2: 'Xác thực thành công',
+          });
           navigation.navigate('Login');
         })
         .catch(error => {
           if (error.response && error.response.status === 401) {
-            Alert.alert('Lỗi', 'Mã OTP không chính xác');
+            Toast.show({
+              type: 'error',
+              text1: 'Thất bại',
+              text2: 'Mã OTP không chính xác',
+            });
           } else {
-            Alert.alert('Lỗi', 'Xác thực không thành công');
+            Toast.show({
+              type: 'error',
+              text1: 'Thất bại',
+              text2: 'Xác thực không thành công',
+            });
           }
           console.error('Verification failed:', error);
         });
@@ -57,19 +76,19 @@ export default function VerifyAccount({navigation}: any) {
     if (value && index < 5) {
       switch (index) {
         case 0:
-          secondInput.current.focus();
+          secondInput.current?.focus();
           break;
         case 1:
-          thirdInput.current.focus();
+          thirdInput.current?.focus();
           break;
         case 2:
-          fourthInput.current.focus();
+          fourthInput.current?.focus();
           break;
         case 3:
-          fifthInput.current.focus();
+          fifthInput.current?.focus();
           break;
         case 4:
-          sixthInput.current.focus();
+          sixthInput.current?.focus();
           break;
         default:
           break;
@@ -107,6 +126,35 @@ export default function VerifyAccount({navigation}: any) {
                   : sixthInput
               }
               onChangeText={text => handleInputChange(index, text)}
+              onKeyPress={({ nativeEvent }) => {
+                if (nativeEvent.key === 'Backspace') {
+                  if (index > 0) {
+                    handleInputChange(index - 1, '');
+                    switch (index - 1) {
+                      case 0:
+                        firstInput.current?.focus();
+                        break;
+                      case 1:
+                        secondInput.current?.focus();
+                        break;
+                      case 2:
+                        thirdInput.current?.focus();
+                        break;
+                      case 3:
+                        fourthInput.current?.focus();
+                        break;
+                      case 4:
+                        fifthInput.current?.focus();
+                        break;
+                      case 5:
+                        sixthInput.current?.focus();
+                        break;
+                      default:
+                        break;
+                    }
+                  }
+                }
+              }}
             />
           ))}
         </View>
@@ -116,10 +164,10 @@ export default function VerifyAccount({navigation}: any) {
           onPress={handleVerification}>
           <Text style={styles.verify}>Xác Thực</Text>
         </TouchableOpacity>
-        <View style={styles.textRefresh}>
+        {/* <View style={styles.textRefresh}>
           <Text style={styles.codeOTP}>Chưa nhận được mã OTP,</Text>
           <Text style={styles.sendCode}>gửi lại</Text>
-        </View>
+        </View> */}
       </View>
     </ImageBackground>
   );

@@ -7,7 +7,6 @@ import {
   Image,
   KeyboardAvoidingView,
   Platform,
-  ToastAndroid,
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
@@ -17,6 +16,7 @@ import {useMutation} from '@tanstack/react-query';
 import axios from 'axios';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Toast from 'react-native-toast-message';
 import { ipAddress } from '../../Helper/ip';
 interface Account {
   username: string;
@@ -36,28 +36,29 @@ export default function Login({navigation}: any) {
         );
         if (res.status === 200) {
           const token = res.data;
-          console.log(token);
           const user = JSON.stringify(token);
           await AsyncStorage.setItem('AccessToken', token.accessToken);
           await AsyncStorage.setItem('user', user);
-          ToastAndroid.showWithGravity(
-            'Đăng nhập thành công ',
-            ToastAndroid.LONG,
-            ToastAndroid.TOP,
-          );
-          navigation.navigate('Homestack');
+          Toast.show({
+            type: 'success',
+            text1: 'Thành công',
+            text2: 'Đăng nhập thành công 👋',
+          });
+          navigation.navigate('Homestack',{screen:'Trang chủ'});
         }
       } catch (error: any) {
         if (error.response && error.response.status === 404) {
-          ToastAndroid.show(
-            'Sai tên đăng nhập hoặc mật khẩu ',
-            ToastAndroid.SHORT,
-          );
+          Toast.show({
+            type: 'error',
+            text1: 'Thất bại',
+            text2: 'Sai tên đăng nhập hoặc mật khẩu!!',
+          });
         } else {
-          ToastAndroid.show(
-            'Thông tin đăng nhập không chính xác',
-            ToastAndroid.SHORT,
-          );
+          Toast.show({
+            type: 'error',
+            text1: 'Thất bại',
+            text2: 'Không thành công!!',
+          });
         }
       }
     },
@@ -101,9 +102,9 @@ export default function Login({navigation}: any) {
               />
               {errors.username && touched.username ? (
                 <Text style={styles.errorText}>* {errors.username}</Text>
-              ) : null}
+                ) : null}
               <Text style={styles.label}>MẬT KHẨU</Text>
-              <View style={{position: 'relative'}}>
+              <View style={styles.content}>
                 <TextInput
                   secureTextEntry={!showPassword}
                   style={styles.textInput}
@@ -121,7 +122,7 @@ export default function Login({navigation}: any) {
               </View>
               {errors.password && touched.password ? (
                 <Text style={styles.errorText}>* {errors.password}</Text>
-              ) : null}
+                ) : null}
             </View>
             <TouchableOpacity
               style={styles.contentRegister}
@@ -271,6 +272,9 @@ const styles = StyleSheet.create({
   errorText: {
     fontWeight: 'bold',
     color: 'red',
-    marginBottom: 12,
+   marginBottom:12,
+  },
+  content:{
+    position:'relative',
   },
 });
