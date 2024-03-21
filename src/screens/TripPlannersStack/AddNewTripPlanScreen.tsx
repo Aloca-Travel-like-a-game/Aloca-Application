@@ -97,7 +97,7 @@ export const TripPlanScreen: FC = (): JSX.Element => {
               marginTop: 10,
               marginLeft: '5%',
               fontWeight: '600',
-              fontSize: 18,
+              fontSize: 16,
             }}>
             Kế hoạch đã tạo:
           </Text>
@@ -113,7 +113,7 @@ export const TripPlanScreen: FC = (): JSX.Element => {
                 marginTop: 10,
                 marginLeft: '5%',
                 fontWeight: '600',
-                fontSize: 18,
+                fontSize: 16,
               }}>
               Làm mới
             </Text>

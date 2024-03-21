@@ -15,7 +15,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import ProfileScreens from '../screens/ProfileScreens';
 import EditProfile from '../components/management_Account/EditProfile';
-import {useWindowDimensions} from 'react-native';
+import {Text, useWindowDimensions} from 'react-native';
 import {TripPlanChoose} from '../screens/TripPlannersStack/CreateTripPlanScreen';
 import RefreshVerifyCode from '../components/management_Account/RefreshVerifyCode';
 import ForgotPassword from '../components/management_Account/ForgotPassword';
@@ -59,6 +59,11 @@ const renderAssistanceTabBar = (props: any) => (
     bounces={true}
     labelStyle={{fontSize: 14, fontFamily: ''}}
     upperCaseLabel={false}
+    renderLabel={({route, color}) => (
+      <Text style={{fontSize: 16, fontWeight: '600', color, margin: 8}}>
+        {route.title}
+      </Text>
+    )}
   />
 );
 const AssistanceScreen = () => {

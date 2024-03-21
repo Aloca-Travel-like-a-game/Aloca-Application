@@ -15,7 +15,7 @@ import {useMutation, useQueryClient} from '@tanstack/react-query';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {string} from 'yup';
 import Toast from 'react-native-toast-message';
-import { ipAddress } from '../../Helper/ip';
+import {ipAddress} from '../../Helper/ip';
 interface getProfile {
   fullname: string;
   email: string;
@@ -86,7 +86,7 @@ export default function EditProfile({navigation}: any): getProfile[] {
           Toast.show({
             type: 'success',
             text1: 'Thành công',
-            text2: 'Cập nhật thông tin thành công 👋',
+            text2: 'Cập nhật thông tin thành công',
           });
           setUserData(response.data);
           let newUser = JSON.parse(await AsyncStorage.getItem('user'));
@@ -100,7 +100,7 @@ export default function EditProfile({navigation}: any): getProfile[] {
           Toast.show({
             type: 'error',
             text1: 'Thất bại',
-            text2: 'Cập nhật thông tin không thành công 👋',
+            text2: 'Cập nhật thông tin không thành công!',
           });
         }
         return response.data;
@@ -114,8 +114,7 @@ export default function EditProfile({navigation}: any): getProfile[] {
       setNewName(value);
     } else if (key === 'phone') {
       // setNewPhone(value);
-        setNewPhone(value);
- 
+      setNewPhone(value);
     } else if (key === 'address') {
       setNewAddress(value);
     }
@@ -124,25 +123,24 @@ export default function EditProfile({navigation}: any): getProfile[] {
     try {
       if (!newName || !newPhone || !newAddress || !selectedImage) {
         Toast.show({
-            type: 'error',
-            text1: 'Thất bại',
-            text2: 'Vui lòng nhập đầy đủ thông tin',
-          });
+          type: 'error',
+          text1: 'Thất bại',
+          text2: 'Vui lòng nhập đầy đủ thông tin',
+        });
       } else if (newPhone.length !== 10) {
         Toast.show({
           type: 'error',
           text1: 'Thất bại',
           text2: 'Số điện thoại không hợp lệ ',
         });
-      }
-      else {
+      } else {
         const response = await mutationEdit.mutate({
           fullname: newName,
           phone: newPhone,
           address: newAddress,
           image: selectedImage,
         });
-        
+
         setUserData(response.data);
       }
     } catch (error) {}
@@ -151,26 +149,28 @@ export default function EditProfile({navigation}: any): getProfile[] {
     navigation.goBack();
   };
   const openImagePicker = async () => {
-    const options = {
-      mediaType: 'photo',
-      includeBase64: false,
-      maxHeight: 2000,
-      maxWidth: 2000,
-    };
-    launchImageLibrary(options, async response => {
-      if (response.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (response.error) {
-        console.log('Image picker error: ', response.error);
-      } else {
-        try {
-          let imageUri = response.uri || response.assets?.[0]?.uri;
-          setSelectedImage(imageUri);
-        } catch (error) {
-          console.error('Error saving image: ', error);
+    launchImageLibrary(
+      {
+        mediaType: 'photo',
+        includeBase64: false,
+        maxHeight: 2000,
+        maxWidth: 2000,
+      },
+      async response => {
+        if (response.didCancel) {
+          console.log('User cancelled image picker');
+        } else if (response.errorCode) {
+          console.log('Image picker error: ', response.errorCode);
+        } else {
+          try {
+            let imageUri = response.uri || response.assets?.[0]?.uri;
+            setSelectedImage(imageUri);
+          } catch (error) {
+            console.error('Error saving image: ', error);
+          }
         }
-      }
-    });
+      },
+    );
   };
   return (
     <ScrollView style={styles.container}>
@@ -186,22 +186,17 @@ export default function EditProfile({navigation}: any): getProfile[] {
         <Text style={styles.textInformation}> Thông tin </Text>
       </View>
       <View style={styles.contentTextInput}>
-        <View
-          style={styles.contentImage}
-          onPress={openImagePicker}
-          onTouchEnd={openImagePicker}>
+        <View style={styles.contentImage} onTouchEnd={openImagePicker}>
           {selectedImage ? (
             <Image source={{uri: selectedImage}} style={styles.image} />
           ) : (
-            <TouchableOpacity
-              onPress={openImagePicker}
-              style={styles.cameraIcon}>
+            <TouchableOpacity style={styles.cameraIcon}>
               <View style={styles.imagePlaceholder}>
                 <AntDesign name="camera" size={28} color="#000" />
               </View>
             </TouchableOpacity>
           )}
-          <TouchableOpacity onPress={openImagePicker} style={styles.cameraIcon}>
+          <TouchableOpacity style={styles.cameraIcon}>
             <View style={styles.imagePlaceholder}>
               <AntDesign name="camera" size={28} color="#000" />
             </View>
@@ -297,7 +292,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
   },
   contentImage: {
-    alignSelf:'center',
+    alignSelf: 'center',
   },
   imagePlaceholder: {
     width: 50,
@@ -309,8 +304,7 @@ const styles = StyleSheet.create({
     marginTop: -25,
     backgroundColor: '#FFF',
     elevation: 2,
-    left:55,
-    
+    left: 55,
   },
   cameraIcon: {
     backgroundColor: 'rgba(255, 255, 255, 0.5)',

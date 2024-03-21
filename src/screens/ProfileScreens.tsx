@@ -21,8 +21,8 @@ export default function ProfileScreens({navigation}: any) {
     navigation.navigate('Editprofile');
   };
   const handleLogout = async () => {
-    await AsyncStorage.removeItem('user');
-       navigation.navigate('Login');
+    await AsyncStorage.clear();
+    navigation.navigate('Login');
     const user = await AsyncStorage.getItem('user');
     if (user === null) {
       navigation.navigate('Login');
@@ -41,7 +41,7 @@ export default function ProfileScreens({navigation}: any) {
           <AntDesign name="form" size={28} color="black" />
         </TouchableOpacity>
       </View>
-      <View style={styles.editProfile}>
+      <View style={styles.navBtn}>
         <TouchableOpacity>
           <AntDesign
             name="hearto"
@@ -126,13 +126,19 @@ export default function ProfileScreens({navigation}: any) {
 const styles = StyleSheet.create({
   containerContent: {
     flex: 1,
-    marginHorizontal: 20,
-    marginTop: 10,
+    paddingHorizontal: 20,
+    // marginTop: 10,
     // marginVertical:20,
   },
   editProfile: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  navBtn: {
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
     alignItems: 'center',
     marginTop: 20,
   },

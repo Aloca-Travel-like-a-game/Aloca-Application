@@ -17,7 +17,7 @@ import {Signup_validate} from './SignUp_validate';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useMutation} from '@tanstack/react-query';
 import Toast from 'react-native-toast-message';
-import { ipAddress } from '../../Helper/ip';
+import {ipAddress} from '../../Helper/ip';
 export default function Registration({navigation}: any) {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -43,14 +43,14 @@ export default function Registration({navigation}: any) {
             Toast.show({
               type: 'success',
               text1: 'Thành công',
-              text2: 'Đăng ký thành công 👋',
+              text2: 'Đăng ký thành công',
             });
             navigation.navigate('VerifyAccount');
           } else {
             Toast.show({
               type: 'error',
               text1: 'Thất bại',
-              text2: 'Đăng ký không thành công 👋',
+              text2: 'Đăng ký không thành công',
             });
           }
         })
