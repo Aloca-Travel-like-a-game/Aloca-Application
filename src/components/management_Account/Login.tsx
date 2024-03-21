@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -11,9 +11,9 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
-import {Formik} from 'formik';
-import {Login_validate} from './Login_validate';
-import {useMutation} from '@tanstack/react-query';
+import { Formik } from 'formik';
+import { Login_validate } from './Login_validate';
+import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -22,7 +22,7 @@ interface Account {
   username: string;
   password: string;
 }
-export default function Login({navigation}: any) {
+export default function Login({ navigation }: any) {
   const [showPassword, setShowPassword] = useState(false);
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
@@ -30,9 +30,13 @@ export default function Login({navigation}: any) {
   const mutationLogin = useMutation({
     mutationFn: async (data: Account) => {
       try {
+        let fcmToken: string | null = await AsyncStorage.getItem("fcm_token");
+        console.log("token",fcmToken);
+        
         const res = await axios.post(
           `http://${ipAddress}:8080/auth/login`,
           data,
+          fcmToken
         );
         if (res.status === 200) {
           const token = res.data;
@@ -81,7 +85,7 @@ export default function Login({navigation}: any) {
           handleLogin(account);
         }, 100);
       }}>
-      {({errors, touched, handleChange, handleBlur, handleSubmit, values}) => (
+      {({ errors, touched, handleChange, handleBlur, handleSubmit, values }) => (
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'height' : 'padding'}
           style={styles.container}>
@@ -103,7 +107,7 @@ export default function Login({navigation}: any) {
                 <Text style={styles.errorText}>* {errors.username}</Text>
               ) : null}
               <Text style={styles.label}>MẬT KHẨU</Text>
-              <View style={{position: 'relative'}}>
+              <View style={{ position: 'relative' }}>
                 <TextInput
                   secureTextEntry={!showPassword}
                   style={styles.textInput}
