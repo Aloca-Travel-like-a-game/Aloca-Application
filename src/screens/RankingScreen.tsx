@@ -194,7 +194,7 @@ const styles = StyleSheet.create({
   backgroundRanking: {
     alignSelf: 'center',
     width: 352,
-    height: 200,
+    height: 210,
   },
   contentRanking: {
     marginHorizontal: 15,
@@ -235,7 +235,7 @@ const styles = StyleSheet.create({
   imageStyle: {
     width: 50,
     height: 50,
-    backgroundColor: '#2AB6AD',
+    backgroundColor: '#FFFFFF',
     borderRadius: 50,
     margin: 10,
   },
@@ -325,6 +325,7 @@ const styles = StyleSheet.create({
     width:65,
     height:65,
     borderRadius:50,
+    backgroundColor:'#FFFFFF',
   },
   contentop:{
     position:'absolute',

@@ -23,20 +23,18 @@ export default function ProfileScreens({navigation}: any) {
   const handleLogout = async () => {
     await AsyncStorage.removeItem('user');
        navigation.navigate('Login');
-    const user = await AsyncStorage.getItem('user');
-    if (user === null) {
-      navigation.navigate('Login');
-    }
   };
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
       style={styles.containerContent}>
       <View style={styles.editProfile}>
+        <View style={styles.contentheader}>
         {data?.image !== null && data?.image !== undefined ? (
-          <Image style={styles.image} source={{uri: data?.image}} />
+          <Image style={styles.image} source={{uri: data.image}} />
         ) : null}
         <Text style={styles.textfullname}>{data?.fullname}</Text>
+        </View>
         <TouchableOpacity onPress={handleEditprofile}>
           <AntDesign name="form" size={28} color="black" />
         </TouchableOpacity>
@@ -73,7 +71,9 @@ export default function ProfileScreens({navigation}: any) {
       </View>
       <View style={styles.contentAloca}>
         <Image source={require('../Images/Vector.png')} />
-        <Text style={styles.textAloca}>Aloca là gì ?</Text>
+        <TouchableOpacity onPress={()=>navigation.navigate('WhatAloca')}>
+          <Text style={styles.textAloca}>Aloca là gì ?</Text>
+        </TouchableOpacity>
       </View>
       <View style={styles.alocaforGenZ}>
         <View>
@@ -81,7 +81,7 @@ export default function ProfileScreens({navigation}: any) {
           <Text style={styles.textAloca}>
             bạn cần đặt tua du lịch đúng không ?
           </Text>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={()=>navigation.navigate('Benefit')}>
             <Text style={styles.textbenefit}>Lợi ích</Text>
           </TouchableOpacity>
         </View>
@@ -256,4 +256,10 @@ const styles = StyleSheet.create({
   imagePlaceholder: {
     backgroundColor: '#ccc',
   },
+  contentheader:{
+    flexDirection:'row',
+    justifyContent:'center',
+    alignItems:'center',
+    gap:20,
+  }
 });

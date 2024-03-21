@@ -84,9 +84,9 @@ export default function HomeScreens({navigation}: any) {
   ];
   const imageshomescreen = [
     require('../Images/imagehomepage.png'),
-    require('../Images/imagehomepage.png'),
-    require('../Images/imagehomepage.png'),
-    require('../Images/imagehomepage.png'),
+    require('../Images/hagiangImage.jpg'),
+    require('../Images/hagiangImage1.jpg'),
+    require('../Images/hagiangImage2.jpg'),
     require('../Images/imagehomepage.png'),
     require('../Images/imagehomepage.png'),
     require('../Images/imagehomepage.png'),
@@ -185,6 +185,12 @@ export default function HomeScreens({navigation}: any) {
           <View style={styles.slide3}>
             <Image
               source={require('../Images/sliderImage1.jpg')}
+              style={styles.imageSlider}
+            />
+          </View>
+          <View style={styles.slide3}>
+            <Image
+              source={require('../Images/sliderImage4.jpg')}
               style={styles.imageSlider}
             />
           </View>
@@ -342,6 +348,7 @@ const styles = StyleSheet.create({
     margin: 3,
     width: 217,
     height: 162,
+    borderRadius:10,
   },
   titilebestTravel: {
     flexDirection: 'row',

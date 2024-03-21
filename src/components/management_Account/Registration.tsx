@@ -6,7 +6,6 @@ import {
   Image,
   KeyboardAvoidingView,
   Platform,
-  Alert,
   ScrollView,
 } from 'react-native';
 import React, {useState} from 'react';
@@ -43,14 +42,14 @@ export default function Registration({navigation}: any) {
             Toast.show({
               type: 'success',
               text1: 'Thành công',
-              text2: 'Đăng ký thành công 👋',
+              text2: 'Đăng ký thành công ',
             });
             navigation.navigate('VerifyAccount');
           } else {
             Toast.show({
               type: 'error',
               text1: 'Thất bại',
-              text2: 'Đăng ký không thành công 👋',
+              text2: 'Đăng ký không thành công ',
             });
           }
         })
@@ -69,7 +68,11 @@ export default function Registration({navigation}: any) {
       console.log(data);
       mutation.mutate(data);
     } else {
-      Alert.alert('Vui lòng kiểm tra lại mật khẩu');
+      Toast.show({
+        type:'error',
+        text1:'Thất bại',
+        text2:'Vui lòng kiểm tra lại mật khẩu',
+      });
     }
   };
   return (

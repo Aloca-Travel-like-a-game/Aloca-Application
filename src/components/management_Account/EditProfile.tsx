@@ -15,7 +15,7 @@ import {useMutation, useQueryClient} from '@tanstack/react-query';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {string} from 'yup';
 import Toast from 'react-native-toast-message';
-import { ipAddress } from '../../Helper/ip';
+import {ipAddress} from '../../Helper/ip';
 interface getProfile {
   fullname: string;
   email: string;
@@ -114,8 +114,7 @@ export default function EditProfile({navigation}: any): getProfile[] {
       setNewName(value);
     } else if (key === 'phone') {
       // setNewPhone(value);
-        setNewPhone(value);
- 
+      setNewPhone(value);
     } else if (key === 'address') {
       setNewAddress(value);
     }
@@ -124,25 +123,24 @@ export default function EditProfile({navigation}: any): getProfile[] {
     try {
       if (!newName || !newPhone || !newAddress || !selectedImage) {
         Toast.show({
-            type: 'error',
-            text1: 'Thất bại',
-            text2: 'Vui lòng nhập đầy đủ thông tin',
-          });
+          type: 'error',
+          text1: 'Thất bại',
+          text2: 'Vui lòng nhập đầy đủ thông tin',
+        });
       } else if (newPhone.length !== 10) {
         Toast.show({
           type: 'error',
           text1: 'Thất bại',
           text2: 'Số điện thoại không hợp lệ ',
         });
-      }
-      else {
+      } else {
         const response = await mutationEdit.mutate({
           fullname: newName,
           phone: newPhone,
           address: newAddress,
           image: selectedImage,
         });
-        
+
         setUserData(response.data);
       }
     } catch (error) {}
@@ -297,7 +295,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
   },
   contentImage: {
-    alignSelf:'center',
+    alignSelf: 'center',
   },
   imagePlaceholder: {
     width: 50,
@@ -309,8 +307,7 @@ const styles = StyleSheet.create({
     marginTop: -25,
     backgroundColor: '#FFF',
     elevation: 2,
-    left:55,
-    
+    left: 55,
   },
   cameraIcon: {
     backgroundColor: 'rgba(255, 255, 255, 0.5)',
