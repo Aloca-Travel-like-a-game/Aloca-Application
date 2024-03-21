@@ -26,8 +26,7 @@ import Notification from '../components/management_Account/Notification';
 import {DetailTripScreen} from '../screens/TripPlannersStack/DetailTripScreen';
 import VideoTravel from '../components/shortVideo/VideoTravel';
 import RankingScreen from '../screens/RankingScreen';
-import CameraScreen from '../screens/Camera';
-import { MapScreen } from '../screens/MapsScreen';
+import {MapScreen} from '../screens/MapsScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -41,7 +40,6 @@ const TripPlanStack = (): React.JSX.Element => {
         component={GenerateTripsScreen}
       />
       <Stack.Screen name="DetailTripScreen" component={DetailTripScreen} />
-      <Stack.Screen name="CameraScreen" component={CameraScreen} />
     </Stack.Navigator>
   );
 };

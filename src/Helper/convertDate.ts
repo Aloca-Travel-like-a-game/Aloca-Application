@@ -53,3 +53,7 @@ export const convertDatetoString2 = (date: string) => {
   );
   return `${stringDate[1]}/${stringDate[2]}/${stringDate[3]}`;
 };
+
+export const addCommas = (number: number): string => {
+  return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+};

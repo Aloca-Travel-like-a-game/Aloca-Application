@@ -1,1 +1,1 @@
-export const ipAddress = '3.82.214.140';
+export const ipAddress = 'www.aloca.dns-dynamic.net';
