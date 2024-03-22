@@ -84,9 +84,16 @@ export default function RankingScreen() {
       <View style={styles.contentop}>
         <FlatList
           data={topThree}
-          renderItem={({item}) => (
+          renderItem={({item, index}) => (
             <View style={styles.dataTop}>
-              <Image source={{uri: item.image}} style={styles.imageTop} />
+              <Image
+                source={{uri: item.image}}
+                style={
+                  index === 1
+                    ? {...styles.imageTop, width: 80, height: 80}
+                    : styles.imageTop
+                }
+              />
             </View>
           )}
           keyExtractor={(item, index) => index.toString()}
@@ -323,6 +330,7 @@ const styles = StyleSheet.create({
   },
   dataTop: {
     margin: 10,
+    alignSelf: 'flex-end',
   },
   imageTop: {
     width: 65,
