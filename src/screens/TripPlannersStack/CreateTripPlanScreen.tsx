@@ -188,7 +188,7 @@ export const TripPlanChoose: FC = (): JSX.Element => {
     };
 
     return (
-      <View>
+      <View style={{justifyContent: 'center'}}>
         <View
           style={{
             ...styles.input,
@@ -292,6 +292,7 @@ export const TripPlanChoose: FC = (): JSX.Element => {
               backgroundColor: '#2AB6AD',
               padding: 10,
               top: 10,
+              left: 10,
               borderTopRightRadius: 50,
               borderBottomRightRadius: 50,
             }}
@@ -302,9 +303,7 @@ export const TripPlanChoose: FC = (): JSX.Element => {
             contentContainerStyle={styles.container}
             ListHeaderComponent={
               <>
-                <Text style={styles.header}>
-                  Lên kế hoạch cho chuyến đi của bạn
-                </Text>
+                <Text style={styles.header}>Lên kế hoạch chuyến đi</Text>
                 <View>
                   <Text style={styles.sdHeader}>Đâu sẽ là nơi bạn đến?</Text>
                   <View
@@ -457,17 +456,16 @@ export const TripPlanChoose: FC = (): JSX.Element => {
                   style={styles.sendBtn}
                   onPress={() => {
                     const days = handleCalculateDateRange(startDate, endDate);
-                    console.log(
-                      location,
-                      startDate,
-                      endDate,
-                      days,
-                      quantity,
-                      budget,
-                      areaTypes,
-                      userLocation,
-                    );
-
+                    // console.log(
+                    //   location,
+                    //   startDate,
+                    //   endDate,
+                    //   days,
+                    //   quantity,
+                    //   budget,
+                    //   areaTypes,
+                    //   userLocation,
+                    // );
                     if (
                       days !== undefined &&
                       days <= 7 &&
@@ -488,7 +486,8 @@ export const TripPlanChoose: FC = (): JSX.Element => {
                         Toast.show({
                           type: 'error',
                           text1: 'Thất bại',
-                          text2: 'Chúng tôi chỉ có thể tạo cho bạn kế hoạch tối đa 7 ngày',
+                          text2:
+                            'Chúng tôi chỉ có thể tạo cho bạn kế hoạch tối đa 7 ngày',
                         });
                       }
                       if (validate(location, budget) === false) {
@@ -496,14 +495,15 @@ export const TripPlanChoose: FC = (): JSX.Element => {
                           Toast.show({
                             type: 'error',
                             text1: 'Thất bại',
-                            text2: 'Vui lòng chọn đúng tỉnh, thành phố mà chúng tôi đã cung cấp',
+                            text2:
+                              'Vui lòng chọn đúng tỉnh, thành phố mà chúng tôi đã cung cấp',
                           });
                         } else {
                           Toast.show({
-                          type: 'error',
-                          text1: 'Thất bại',
-                          text2: 'Vui lòng điền đầy đủ thông tin!',
-                        });
+                            type: 'error',
+                            text1: 'Thất bại',
+                            text2: 'Vui lòng điền đầy đủ thông tin!',
+                          });
                         }
                       }
                     }

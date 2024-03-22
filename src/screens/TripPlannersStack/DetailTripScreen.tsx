@@ -12,6 +12,9 @@ import {
   TouchableOpacity,
   ImageBackground,
   ScrollView,
+  Image,
+  Modal,
+  Pressable,
 } from 'react-native';
 
 import * as Animatable from 'react-native-animatable';
@@ -33,6 +36,9 @@ export const DetailTripScreen: FC = (): JSX.Element => {
   const [selectDay, setselectDay] = useState<string[]>([]);
   const route = useRoute();
   const {idTrip}: any = route.params;
+  const [imageSource, setImageSource] = useState<any>([]);
+  const [isChange, setIsChange] = useState<any>([]);
+  const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     AsyncStorage.getItem('AccessToken').then((tokenSave: any) =>
@@ -42,7 +48,6 @@ export const DetailTripScreen: FC = (): JSX.Element => {
 
   useEffect(() => {
     if (token !== undefined) {
-      console.log('ab', token);
       const senRequest = async () => {
         try {
           const APIurl = `http://${ipAddress}:8080/trip-plan/get-trip/${idTrip}`;
@@ -52,7 +57,6 @@ export const DetailTripScreen: FC = (): JSX.Element => {
             },
           });
           setResult(res.data.tripDatas);
-          console.log(res.data.tripDatas);
         } catch {
           (e: any) => console.log(e);
         }
@@ -83,6 +87,31 @@ export const DetailTripScreen: FC = (): JSX.Element => {
     }
   };
 
+  const handleAddImage = (index: any) => {
+    setModalVisible(false);
+    launchCamera(
+      {
+        includeBase64: false,
+        mediaType: 'photo',
+        quality: 0.8,
+      },
+      response => {
+        if (response.errorCode || response.didCancel) {
+          return;
+        } else if (response.assets) {
+          try {
+            let imageUri = response.assets?.[0]?.uri;
+            setImageSource((prevState: any) => ({
+              ...prevState,
+              [index]: imageUri,
+            }));
+          } catch (error) {
+            console.error('Error saving image: ', error);
+          }
+        }
+      },
+    );
+  };
   const renderActivity = ({item: activity}: any) => (
     <View style={{flexDirection: 'row', marginVertical: 5, marginLeft: 5}}>
       <View style={{flex: 2}}>
@@ -137,26 +166,24 @@ export const DetailTripScreen: FC = (): JSX.Element => {
         </View>
       </View>
       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        <TouchableOpacity>
-          <Text
-            style={{...styles.text, ...styles.btn}}
-            onPress={() =>
-              launchCamera(
-                {
-                  includeBase64: false,
-                  mediaType: 'photo',
-                  quality: 0.8,
-                },
-                response => {
-                  if (response.errorCode || response.didCancel) {
-                    return;
-                  }
-                },
-              )
-            }>
-            Thêm ảnh
-          </Text>
-        </TouchableOpacity>
+        {imageSource[activity._id] ? (
+          <TouchableOpacity
+            style={{flex: 1, width: '100%', paddingLeft: '5%'}}
+            onPress={() => {
+              setIsChange(activity._id);
+              setModalVisible(true);
+            }}>
+            <Image
+              source={{uri: imageSource[activity._id]}}
+              style={{flex: 1, width: '100%'}}
+              resizeMode="cover"
+            />
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity onPress={() => handleAddImage(activity._id)}>
+            <Text style={{...styles.text, ...styles.btn}}>Thêm ảnh</Text>
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );
@@ -210,7 +237,9 @@ export const DetailTripScreen: FC = (): JSX.Element => {
           <FlatList
             data={day.challenges}
             keyExtractor={(item, index) => item + index.toString()}
-            renderItem={renderActivity}
+            renderItem={(item: {index: number}) =>
+              renderActivity(item)
+            }
           />
           <Text
             style={{
@@ -301,6 +330,75 @@ export const DetailTripScreen: FC = (): JSX.Element => {
         }
         renderItem={(item: {index: number}) => renderDay(item, item.index + 1)}
       />
+      <Modal
+        style={{zIndex: 2, backgroundColor: 'black', width: '100%'}}
+        animationType="fade"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}>
+        <Pressable
+          onPress={() => setModalVisible(!modalVisible)}
+          style={{
+            flex: 1,
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: 'black',
+            opacity: 0.4,
+          }}
+        />
+        <View style={styles.takePhotoAgain}>
+          <Text
+            style={{
+              width: '100%',
+              color: '#2AB6AD',
+              fontWeight: '600',
+              fontSize: 19.9,
+              marginBottom: 10,
+              alignSelf: 'center',
+              textAlign: 'center',
+            }}>
+            {'Bạn có muốn chụp lại ảnh?'}
+          </Text>
+          <View
+            style={{
+              alignSelf: 'flex-end',
+              width: '50%',
+              flexDirection: 'row',
+              justifyContent: 'flex-end',
+              gap: 10,
+            }}>
+            <TouchableOpacity onPress={() => setModalVisible(!modalVisible)}>
+              <Text
+                style={{
+                  ...styles.btn,
+                  fontWeight: '600',
+                  color: '#2AB6AD',
+                  borderColor: '#2AB6AD',
+                  backgroundColor: '#fff',
+                  borderWidth: 1,
+                }}>
+                Hủy
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                handleAddImage(isChange);
+                setIsChange(undefined);
+              }}>
+              <Text
+                style={{
+                  ...styles.btn,
+                  fontWeight: '600',
+                  color: '#fff',
+                }}>
+                Xác nhận
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -380,5 +478,25 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#2AB6AD',
     marginTop: 10,
+  },
+  takePhotoAgain: {
+    position: 'absolute',
+    backgroundColor: '#fff',
+    padding: 20,
+    borderRadius: 10,
+    borderColor: '#2AB6AD',
+    borderWidth: 1,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+    opacity: 1,
+    left: Dimensions.get('window').width / 2 - 145,
+    right: Dimensions.get('window').width / 2 - 145,
+    top: Dimensions.get('window').height / 2 - 80,
   },
 });

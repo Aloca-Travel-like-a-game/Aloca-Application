@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useEffect} from 'react';
-import {BackHandler, Dimensions, StyleSheet, View} from 'react-native';
+import {BackHandler, StyleSheet, View} from 'react-native';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 
 export const MapScreen = () => {
@@ -18,14 +18,16 @@ export const MapScreen = () => {
   return (
     <View style={styles.container}>
       <MapView
-        provider={PROVIDER_GOOGLE} // remove if not using Google Maps
         style={styles.map}
-        region={{
+        initialRegion={{
           latitude: 37.78825,
           longitude: -122.4324,
-          latitudeDelta: 0.015,
-          longitudeDelta: 0.0121,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
         }}
+        showsUserLocation={true}
+        showsMyLocationButton={true}
+        followsUserLocation
       />
     </View>
   );
@@ -36,6 +38,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   map: {
-    ...StyleSheet.absoluteFillObject,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 50,
   },
 });

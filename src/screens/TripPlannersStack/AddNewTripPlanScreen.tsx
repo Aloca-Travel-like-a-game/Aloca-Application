@@ -214,9 +214,11 @@ export const TripPlanScreen: FC = (): JSX.Element => {
                     idTrip: item._id,
                   });
                 }}>
-                <Text style={{...styles.text, fontWeight: '600'}}>
-                  {item.nameTrip}
-                </Text>
+                <ScrollView>
+                  <Text style={{...styles.text, fontWeight: '600'}}>
+                    {item.nameTrip}
+                  </Text>
+                </ScrollView>
                 <View
                   style={{
                     flexDirection: 'row',
@@ -264,13 +266,23 @@ export const TripPlanScreen: FC = (): JSX.Element => {
                       )} - ${convertDatetoString2(item.endDate).slice(0, -5)}`}
                     </Text>
                   </View>
-                  <TouchableOpacity
-                    onPress={() => {
-                      setModalVisible(true);
-                      setItemDelete(item);
-                    }}>
-                    <Ionicons name="trash" size={20} color="#2AB6AD" />
-                  </TouchableOpacity>
+                  <View style={{height: 20, width: '10%'}}>
+                    <TouchableOpacity
+                      style={{
+                        height: 30,
+                        width: 30,
+                        bottom: -5,
+                        position: 'absolute',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}
+                      onPress={() => {
+                        setModalVisible(true);
+                        setItemDelete(item);
+                      }}>
+                      <Ionicons name="trash" size={20} color="#2AB6AD" />
+                    </TouchableOpacity>
+                  </View>
                 </View>
               </TouchableOpacity>
             </View>
@@ -324,6 +336,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     marginTop: 5,
+    gap: 25,
   },
   text: {
     color: '#000',
