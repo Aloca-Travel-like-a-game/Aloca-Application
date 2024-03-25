@@ -52,7 +52,6 @@ export default function App() {
                 `https://revgeocode.search.hereapi.com/v1/revgeocode?apikey=TYWNfgg1aUErbBEMMhjeeiX4uDup2tkboazOS0PY4BQ&at=${getlatitude},${getlongitude}&lang=vi`,
               );
               const data = await response.json();
-              console.log(data);
               AsyncStorage.setItem(
                 'userLocation',
                 data.items[0].address.county,

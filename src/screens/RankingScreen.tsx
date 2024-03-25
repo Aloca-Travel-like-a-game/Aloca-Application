@@ -9,10 +9,10 @@ import {
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import {ipAddress} from '../Helper/ip';
-interface Top {
+interface Top{
   a: any;
   b: any;
-  experience: number;
+  experience:number;
 }
 export default function RankingScreen() {
   const [data, setData] = useState<any>([]);
@@ -111,6 +111,10 @@ export default function RankingScreen() {
       <Image
         source={require('../Images/top2ranking.png')}
         style={styles.imgeRankTop3}
+      />
+      <Image
+        source={require('../Images/top3ranking.png')}
+        style={styles.imgeRankTop2}
       />
       <View style={styles.option}>
         <TouchableOpacity
@@ -240,7 +244,7 @@ const styles = StyleSheet.create({
   textname: {
     color: '#FFFFFF',
     fontSize: 14,
-    width: 100,
+    width: 150,
   },
   imageStyle: {
     width: 50,
@@ -277,38 +281,24 @@ const styles = StyleSheet.create({
   },
   imgeRankTop: {
     position: 'absolute',
-    width: 70,
-    height: 40,
-    marginTop: 170,
+    width: '20%',
+    height:'5%',
     alignSelf: 'center',
-  },
-  imgeRank2: {
-    position: 'absolute',
-    width: 60,
-    height: 55,
-    marginTop: 150,
-    left: 70,
-  },
-  imgeRankTop2: {
-    position: 'absolute',
-    width: 60,
-    height: 30,
-    marginTop: 179,
-    left: 77,
-  },
-  imgeRank3: {
-    position: 'absolute',
-    width: 60,
-    height: 55,
-    marginTop: 150,
-    left: 250,
+    top:'25.6%',
   },
   imgeRankTop3: {
     position: 'absolute',
-    width: 60,
-    height: 35,
-    marginTop: 175,
-    left: 250,
+    width: '17%',
+    height:'4%',
+    top:'26.6%',
+    left: '19.4%',
+  },
+  imgeRankTop2: {
+    position: 'absolute',
+    width: '16%',
+    height:'4%',
+    top:'26.6%',
+    left: '64.4%',
   },
   buttonTitle: {
     color: '#FFFFFF',
@@ -329,7 +319,7 @@ const styles = StyleSheet.create({
     // marginTop:10,
   },
   dataTop: {
-    margin: 10,
+    margin: 6,
     alignSelf: 'flex-end',
   },
   imageTop: {
