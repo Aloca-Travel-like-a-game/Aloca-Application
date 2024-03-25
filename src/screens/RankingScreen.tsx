@@ -84,11 +84,15 @@ export default function RankingScreen() {
       <View style={styles.contentop}>
         <FlatList
           data={topThree}
-          renderItem={({item}) => (
+          renderItem={({item, index}) => (
             <View style={styles.dataTop}>
               <Image
                 source={{uri: item.image}}
-                style={styles.imageTop}
+                style={
+                  index === 1
+                    ? {...styles.imageTop, width: 80, height: 80}
+                    : styles.imageTop
+                }
               />
             </View>
           )}
@@ -99,6 +103,10 @@ export default function RankingScreen() {
       <Image
         source={require('../Images/topRanking.png')}
         style={styles.imgeRankTop}
+      />
+      <Image
+        source={require('../Images/top3ranking.png')}
+        style={styles.imgeRankTop2}
       />
       <Image
         source={require('../Images/top2ranking.png')}
@@ -276,35 +284,21 @@ const styles = StyleSheet.create({
     width: '20%',
     height:'5%',
     alignSelf: 'center',
-    top:'24%',
-  },
-  imgeRank2: {
-    position: 'absolute',
-    width: 60,
-    height: 55,
-    marginTop: 150,
-    left: 70,
+    top:'25.6%',
   },
   imgeRankTop3: {
     position: 'absolute',
     width: '17%',
     height:'4%',
-    top:'25%',
-    left: '19%',
-  },
-  imgeRank3: {
-    position: 'absolute',
-    width: 60,
-    height: 55,
-    marginTop: 150,
-    left: 250,
+    top:'26.6%',
+    left: '19.4%',
   },
   imgeRankTop2: {
     position: 'absolute',
     width: '16%',
     height:'4%',
-    top:'25%',
-    left: '64%',
+    top:'26.6%',
+    left: '64.4%',
   },
   buttonTitle: {
     color: '#FFFFFF',
@@ -324,18 +318,19 @@ const styles = StyleSheet.create({
   headerRanking: {
     // marginTop:10,
   },
-  dataTop:{
-  margin:10,
+  dataTop: {
+    margin: 6,
+    alignSelf: 'flex-end',
   },
-  imageTop:{
-    width:65,
-    height:65,
-    borderRadius:50,
-    backgroundColor:'#FFFFFF',
+  imageTop: {
+    width: 65,
+    height: 65,
+    borderRadius: 50,
+    backgroundColor: '#FFFFFF',
   },
-  contentop:{
-    position:'absolute',
-    top:'18%',
-   alignSelf:'center',
+  contentop: {
+    position: 'absolute',
+    top: '18%',
+    alignSelf: 'center',
   },
 });

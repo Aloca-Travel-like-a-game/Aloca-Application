@@ -188,12 +188,12 @@ export const TripPlanChoose: FC = (): JSX.Element => {
     };
 
     return (
-      <View>
+      <View style={{justifyContent: 'center'}}>
         <View
           style={{
             ...styles.input,
             borderWidth: 0,
-            justifyContent: 'space-between',
+            justifyContent: 'space-evenly',
             flexDirection: 'row',
             alignItems: 'center',
             paddingLeft: 0,
@@ -205,7 +205,7 @@ export const TripPlanChoose: FC = (): JSX.Element => {
               setShowPicker(true);
             }}>
             <Text style={{color: '#fff', fontWeight: '500'}}>
-              Ngày đi: {convertDatetoString(startDate)}
+              Ngày đi: {convertDatetoString(startDate).slice(0, -5)}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -215,7 +215,7 @@ export const TripPlanChoose: FC = (): JSX.Element => {
               setShowPicker(true);
             }}>
             <Text style={{color: '#fff', fontWeight: '500'}}>
-              Ngày về: {convertDatetoString(endDate)}
+              Ngày về: {convertDatetoString(endDate).slice(0, -5)}
             </Text>
           </TouchableOpacity>
         </View>
@@ -239,8 +239,8 @@ export const TripPlanChoose: FC = (): JSX.Element => {
       </View>
     );
   };
-  const updateQuantity = (newQuantity: number) => {
-    const clampedQuantity = Math.max(1, Math.min(50, Math.floor(newQuantity)));
+  const updateQuantity = (newQuantity: any) => {
+    const clampedQuantity = Math.max(1, Math.min(10, Math.floor(newQuantity)));
     setQuantity(clampedQuantity);
   };
 
@@ -255,7 +255,7 @@ export const TripPlanChoose: FC = (): JSX.Element => {
 
   const handleInputBlur = (text: string) => {
     if (text.trim() === '') {
-      updateQuantity(1);
+      updateQuantity(text);
     }
   };
 
@@ -292,6 +292,7 @@ export const TripPlanChoose: FC = (): JSX.Element => {
               backgroundColor: '#2AB6AD',
               padding: 10,
               top: 10,
+              left: 10,
               borderTopRightRadius: 50,
               borderBottomRightRadius: 50,
             }}
@@ -302,9 +303,7 @@ export const TripPlanChoose: FC = (): JSX.Element => {
             contentContainerStyle={styles.container}
             ListHeaderComponent={
               <>
-                <Text style={styles.header}>
-                  Lên kế hoạch cho chuyến đi của bạn
-                </Text>
+                <Text style={styles.header}>Lên kế hoạch chuyến đi</Text>
                 <View>
                   <Text style={styles.sdHeader}>Đâu sẽ là nơi bạn đến?</Text>
                   <View
@@ -348,9 +347,12 @@ export const TripPlanChoose: FC = (): JSX.Element => {
                   <DateRangePicker />
                 </View>
                 <View>
-                  <Text style={styles.sdHeader}>
-                    Kế hoạch lên cho bao nhiêu người?
-                  </Text>
+                  <View style={{flexDirection: 'row'}}>
+                    <Text style={styles.sdHeader}>Số người? </Text>
+                    <Text style={{fontSize: 15, color: '#000'}}>
+                      (Tối đa 10)
+                    </Text>
+                  </View>
                   <View style={{width: 250, alignSelf: 'center'}}>
                     <TextInput
                       value={quantity.toString()}
@@ -376,7 +378,9 @@ export const TripPlanChoose: FC = (): JSX.Element => {
                           color={'#aaa'}
                         />
                       </TouchableOpacity>
-                      <TouchableOpacity onPress={increaseQuantity}>
+                      <TouchableOpacity
+                        style={{display: quantity === 10 ? 'none' : 'flex'}}
+                        onPress={increaseQuantity}>
                         <Ionicons name="add-circle" size={30} color={'#aaa'} />
                       </TouchableOpacity>
                     </View>
@@ -457,17 +461,16 @@ export const TripPlanChoose: FC = (): JSX.Element => {
                   style={styles.sendBtn}
                   onPress={() => {
                     const days = handleCalculateDateRange(startDate, endDate);
-                    console.log(
-                      location,
-                      startDate,
-                      endDate,
-                      days,
-                      quantity,
-                      budget,
-                      areaTypes,
-                      userLocation,
-                    );
-
+                    // console.log(
+                    //   location,
+                    //   startDate,
+                    //   endDate,
+                    //   days,
+                    //   quantity,
+                    //   budget,
+                    //   areaTypes,
+                    //   userLocation,
+                    // );
                     if (
                       days !== undefined &&
                       days <= 7 &&
@@ -488,7 +491,8 @@ export const TripPlanChoose: FC = (): JSX.Element => {
                         Toast.show({
                           type: 'error',
                           text1: 'Thất bại',
-                          text2: 'Chúng tôi chỉ có thể tạo cho bạn kế hoạch tối đa 7 ngày',
+                          text2:
+                            'Chúng tôi chỉ có thể tạo cho bạn kế hoạch tối đa 7 ngày',
                         });
                       }
                       if (validate(location, budget) === false) {
@@ -496,14 +500,15 @@ export const TripPlanChoose: FC = (): JSX.Element => {
                           Toast.show({
                             type: 'error',
                             text1: 'Thất bại',
-                            text2: 'Vui lòng chọn đúng tỉnh, thành phố mà chúng tôi đã cung cấp',
+                            text2:
+                              'Vui lòng chọn đúng tỉnh, thành phố mà chúng tôi đã cung cấp',
                           });
                         } else {
                           Toast.show({
-                          type: 'error',
-                          text1: 'Thất bại',
-                          text2: 'Vui lòng điền đầy đủ thông tin!',
-                        });
+                            type: 'error',
+                            text1: 'Thất bại',
+                            text2: 'Vui lòng điền đầy đủ thông tin!',
+                          });
                         }
                       }
                     }
