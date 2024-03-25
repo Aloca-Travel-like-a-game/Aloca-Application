@@ -162,38 +162,30 @@ export default function HomeScreens({navigation}: any) {
           <Ionicons name="notifications-outline" size={40} color="black" />
           <Text style={styles.numbernotification}>{result}</Text>
         </TouchableOpacity>
-        <View>
+        <TouchableOpacity onPress={()=>navigation.navigate('Tài khoản')}>
           {dataUser?.data.image ? (
             <Image style={styles.image} source={{uri: dataUser?.data.image}} />
           ) : null}
-        </View>
+        </TouchableOpacity>
       </View>
       <View style={styles.sliderContainer}>
-        <Swiper style={styles.wrapper} showsButtons={false} autoplay>
-          <View style={styles.slide1}>
+        <Swiper style={styles.wrapper} showsButtons={false} autoplay >
             <Image
               source={require('../Images/silder.png')}
               style={styles.imageSlider}
             />
-          </View>
-          <View style={styles.slide2}>
             <Image
               source={require('../Images/sliderImge.jpg')}
               style={styles.imageSlider}
             />
-          </View>
-          <View style={styles.slide3}>
             <Image
               source={require('../Images/sliderImage1.jpg')}
               style={styles.imageSlider}
             />
-          </View>
-          <View style={styles.slide3}>
             <Image
               source={require('../Images/sliderImage4.jpg')}
               style={styles.imageSlider}
             />
-          </View>
         </Swiper>
       </View>
       <View style={styles.titileVideo}>
@@ -222,7 +214,6 @@ export default function HomeScreens({navigation}: any) {
       </View>
       <View style={styles.titilimage}>
         <Text style={styles.textVideo}>Có thể bạn sẽ thích?</Text>
-        <Text style={styles.textmore}>Xem thêm</Text>
       </View>
       <View style={styles.imagehomeScreen}>
         <FlatList
@@ -237,7 +228,7 @@ export default function HomeScreens({navigation}: any) {
         />
       </View>
       <View style={styles.titilebestTravel}>
-        <Text style={styles.textTravel}>Bảng xếp hạng"Vua du lịch"</Text>
+        <Text style={styles.textTravel}>Bảng xếp hạng ' Vua du lịch '</Text>
         <TouchableOpacity onPress={() => navigation.navigate('Xếp hạng')}>
           <Text style={styles.textmore}>Xem thêm</Text>
         </TouchableOpacity>
@@ -303,9 +294,6 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     marginBottom: 10,
   },
-  sliderContainer: {
-    marginTop: 10,
-  },
   sliderImage: {
     width: 350,
     height: 170,
@@ -366,11 +354,6 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     marginBottom: 10,
   },
-  imageSlider: {
-    height: 200,
-    width:'100%',
-    borderRadius: 10,
-  },
   numbernotification: {
     color: '#FFFFFF',
     position: 'absolute',
@@ -386,22 +369,18 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     marginTop: 8,
   },
+  sliderContainer: {
+    marginTop: 10,
+  },
   wrapper: {
-    height: 200,
     alignSelf:'center',
-    gap: 5,
   },
-  slide1: {
+  imageSlider: {
     height: 200,
     borderRadius: 10,
-  },
-  slide2: {
-    height: 200,
-    borderRadius: 10,
-  },
-  slide3: {
-    height: 200,
-    borderRadius: 10,
+    padding:5,
+    margin:5,
+    width:'auto',
   },
   text: {
     color: '#fff',

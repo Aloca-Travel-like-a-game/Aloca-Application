@@ -40,15 +40,6 @@ export default function ProfileScreens({navigation}: any) {
         </TouchableOpacity>
       </View>
       <View style={styles.navBtn}>
-        <TouchableOpacity>
-          <AntDesign
-            name="hearto"
-            size={20}
-            color={'black'}
-            style={styles.icon}
-          />
-          <Text style={styles.textEditprofile}>Yêu thích</Text>
-        </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate('Notification')}>
           <Ionicons
             name="notifications-outline"
@@ -93,10 +84,6 @@ export default function ProfileScreens({navigation}: any) {
         <TouchableOpacity style={styles.contenttext}>
           <AntDesign name="customerservice" size={24} color="black" />
           <Text style={styles.text}>hotline 24/6:19001009</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.contenttext}>
-          <AntDesign name="infocirlceo" size={24} color="black" />
-          <Text style={styles.text}>Về Aloca.vn</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.contenttext}>
           <AntDesign name="unlock" size={24} color="black" />
