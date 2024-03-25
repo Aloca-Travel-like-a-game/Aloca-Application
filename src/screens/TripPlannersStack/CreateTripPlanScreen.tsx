@@ -193,7 +193,7 @@ export const TripPlanChoose: FC = (): JSX.Element => {
           style={{
             ...styles.input,
             borderWidth: 0,
-            justifyContent: 'space-between',
+            justifyContent: 'space-evenly',
             flexDirection: 'row',
             alignItems: 'center',
             paddingLeft: 0,
@@ -205,7 +205,7 @@ export const TripPlanChoose: FC = (): JSX.Element => {
               setShowPicker(true);
             }}>
             <Text style={{color: '#fff', fontWeight: '500'}}>
-              Ngày đi: {convertDatetoString(startDate)}
+              Ngày đi: {convertDatetoString(startDate).slice(0, -5)}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -215,7 +215,7 @@ export const TripPlanChoose: FC = (): JSX.Element => {
               setShowPicker(true);
             }}>
             <Text style={{color: '#fff', fontWeight: '500'}}>
-              Ngày về: {convertDatetoString(endDate)}
+              Ngày về: {convertDatetoString(endDate).slice(0, -5)}
             </Text>
           </TouchableOpacity>
         </View>
@@ -239,8 +239,8 @@ export const TripPlanChoose: FC = (): JSX.Element => {
       </View>
     );
   };
-  const updateQuantity = (newQuantity: number) => {
-    const clampedQuantity = Math.max(1, Math.min(50, Math.floor(newQuantity)));
+  const updateQuantity = (newQuantity: any) => {
+    const clampedQuantity = Math.max(1, Math.min(10, Math.floor(newQuantity)));
     setQuantity(clampedQuantity);
   };
 
@@ -255,7 +255,7 @@ export const TripPlanChoose: FC = (): JSX.Element => {
 
   const handleInputBlur = (text: string) => {
     if (text.trim() === '') {
-      updateQuantity(1);
+      updateQuantity(text);
     }
   };
 
@@ -347,9 +347,12 @@ export const TripPlanChoose: FC = (): JSX.Element => {
                   <DateRangePicker />
                 </View>
                 <View>
-                  <Text style={styles.sdHeader}>
-                    Kế hoạch lên cho bao nhiêu người?
-                  </Text>
+                  <View style={{flexDirection: 'row'}}>
+                    <Text style={styles.sdHeader}>Số người? </Text>
+                    <Text style={{fontSize: 15, color: '#000'}}>
+                      (Tối đa 10)
+                    </Text>
+                  </View>
                   <View style={{width: 250, alignSelf: 'center'}}>
                     <TextInput
                       value={quantity.toString()}
@@ -375,7 +378,9 @@ export const TripPlanChoose: FC = (): JSX.Element => {
                           color={'#aaa'}
                         />
                       </TouchableOpacity>
-                      <TouchableOpacity onPress={increaseQuantity}>
+                      <TouchableOpacity
+                        style={{display: quantity === 10 ? 'none' : 'flex'}}
+                        onPress={increaseQuantity}>
                         <Ionicons name="add-circle" size={30} color={'#aaa'} />
                       </TouchableOpacity>
                     </View>
