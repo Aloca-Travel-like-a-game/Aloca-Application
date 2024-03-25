@@ -60,14 +60,14 @@ export default function RankingScreen() {
     if (data && data.dataRanks) {
       dataTop = data.dataRanks;
       dataTop.sort((a, b) => b.experience - a.experience);
-      // Sửa vị trí của phần tử lớn nhất để đứng ở vị trí thứ hai
-      if (dataTop.length >= 2) {
-          const temp = dataTop[0];
-          dataTop[0] = dataTop[1];
-          dataTop[1] = temp;
-      }
       const res = dataTop.slice(0, 3);
-      setTopThree(res);
+      // Sửa vị trí của phần tử lớn nhất để đứng ở vị trí thứ hai
+      if (res.length >= 2) {
+        const temp = res[0];
+        res[0] = res[1];
+        res[1] = temp;
+        setTopThree(res);
+      }
     }
   }, [data]);
   return (
@@ -101,12 +101,12 @@ export default function RankingScreen() {
         style={styles.imgeRankTop}
       />
       <Image
-        source={require('../Images/top3ranking.png')}
-        style={styles.imgeRankTop2}
-      />
-      <Image
         source={require('../Images/top2ranking.png')}
         style={styles.imgeRankTop3}
+      />
+      <Image
+        source={require('../Images/top3ranking.png')}
+        style={styles.imgeRankTop2}
       />
       <View style={styles.option}>
         <TouchableOpacity
@@ -236,7 +236,7 @@ const styles = StyleSheet.create({
   textname: {
     color: '#FFFFFF',
     fontSize: 14,
-    width: 100,
+    width: 150,
   },
   imageStyle: {
     width: 50,
@@ -273,10 +273,10 @@ const styles = StyleSheet.create({
   },
   imgeRankTop: {
     position: 'absolute',
-    width: 70,
-    height: 40,
-    marginTop: 170,
+    width: '20%',
+    height:'5%',
     alignSelf: 'center',
+    top:'24%',
   },
   imgeRank2: {
     position: 'absolute',
@@ -285,12 +285,12 @@ const styles = StyleSheet.create({
     marginTop: 150,
     left: 70,
   },
-  imgeRankTop2: {
+  imgeRankTop3: {
     position: 'absolute',
-    width: 60,
-    height: 30,
-    marginTop: 179,
-    left: 77,
+    width: '17%',
+    height:'4%',
+    top:'25%',
+    left: '19%',
   },
   imgeRank3: {
     position: 'absolute',
@@ -299,12 +299,12 @@ const styles = StyleSheet.create({
     marginTop: 150,
     left: 250,
   },
-  imgeRankTop3: {
+  imgeRankTop2: {
     position: 'absolute',
-    width: 60,
-    height: 35,
-    marginTop: 175,
-    left: 250,
+    width: '16%',
+    height:'4%',
+    top:'25%',
+    left: '64%',
   },
   buttonTitle: {
     color: '#FFFFFF',

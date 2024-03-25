@@ -162,11 +162,11 @@ export default function HomeScreens({navigation}: any) {
           <Ionicons name="notifications-outline" size={40} color="black" />
           <Text style={styles.numbernotification}>{result}</Text>
         </TouchableOpacity>
-        <View>
+        <TouchableOpacity onPress={()=>navigation.navigate('Tài khoản')}>
           {dataUser?.data.image ? (
             <Image style={styles.image} source={{uri: dataUser?.data.image}} />
           ) : null}
-        </View>
+        </TouchableOpacity>
       </View>
       <View style={styles.sliderContainer}>
         <Swiper style={styles.wrapper} showsButtons={false} autoplay>
@@ -304,7 +304,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   sliderContainer: {
-    marginTop: 10,
+    marginTop: 15,
   },
   sliderImage: {
     width: 350,
@@ -388,8 +388,7 @@ const styles = StyleSheet.create({
   },
   wrapper: {
     height: 200,
-    alignSelf:'center',
-    gap: 5,
+   alignSelf:'center',
   },
   slide1: {
     height: 200,

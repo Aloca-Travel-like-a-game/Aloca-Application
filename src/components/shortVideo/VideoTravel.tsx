@@ -64,7 +64,7 @@ export default function VideoTravel({navigation}: any) {
     navigation.goBack();
   };
   return (
-    <View style={{flex: 1}}>
+    <View >
       <View style={styles.containerHeader}>
         <TouchableOpacity onPress={handleGoBack}>
           <Ionicons
@@ -76,17 +76,10 @@ export default function VideoTravel({navigation}: any) {
         </TouchableOpacity>
         <Text style={styles.textNotification}> Video </Text>
       </View>
-      <View style={{flex: 1}}>
+      <View  style={styles.headervideo}>
         <FlatList
           numColumns={2}
           data={data}
-          style={{
-            flex: 1,
-            backgroundColor: 'red',
-            alignSelf: 'center',
-            width: '100%',
-            paddingHorizontal: 10,
-          }}
           renderItem={({item}) => (
             <TouchableOpacity
               onPress={() => Linking.openURL(item.youtubeLink)}
@@ -126,10 +119,14 @@ const styles = StyleSheet.create({
     width: 150,
     height: 268,
     borderRadius: 12,
-    //  marginBottom:60,
+    margin:10,
   },
   contentVideo: {
-    // marginLeft:30,
-    // marginTop:20,
+  },
+  headervideo:{
+    alignItems:'center',
+    // margin:10,
+    justifyContent:'space-around',
+    marginBottom:100,
   },
 });
