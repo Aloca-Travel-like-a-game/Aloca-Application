@@ -373,7 +373,8 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   wrapper: {
-    alignSelf:'center',
+    height:210,
+    alignItems:'center',
   },
   imageSlider: {
     height: 200,
