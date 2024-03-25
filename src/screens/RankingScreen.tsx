@@ -9,10 +9,10 @@ import {
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import {ipAddress} from '../Helper/ip';
-interface Top{
+interface Top {
   a: any;
   b: any;
-  experience:number;
+  experience: number;
 }
 export default function RankingScreen() {
   const [data, setData] = useState<any>([]);
@@ -60,14 +60,14 @@ export default function RankingScreen() {
     if (data && data.dataRanks) {
       dataTop = data.dataRanks;
       dataTop.sort((a, b) => b.experience - a.experience);
-      // Sửa vị trí của phần tử lớn nhất để đứng ở vị trí thứ hai
-      if (dataTop.length >= 2) {
-          const temp = dataTop[0];
-          dataTop[0] = dataTop[1];
-          dataTop[1] = temp;
-      }
       const res = dataTop.slice(0, 3);
-      setTopThree(res);
+      // Sửa vị trí của phần tử lớn nhất để đứng ở vị trí thứ hai
+      if (res.length >= 2) {
+        const temp = res[0];
+        res[0] = res[1];
+        res[1] = temp;
+        setTopThree(res);
+      }
     }
   }, [data]);
   return (
@@ -84,11 +84,15 @@ export default function RankingScreen() {
       <View style={styles.contentop}>
         <FlatList
           data={topThree}
-          renderItem={({item}) => (
+          renderItem={({item, index}) => (
             <View style={styles.dataTop}>
               <Image
                 source={{uri: item.image}}
-                style={styles.imageTop}
+                style={
+                  index === 1
+                    ? {...styles.imageTop, width: 80, height: 80}
+                    : styles.imageTop
+                }
               />
             </View>
           )}
@@ -324,18 +328,19 @@ const styles = StyleSheet.create({
   headerRanking: {
     // marginTop:10,
   },
-  dataTop:{
-  margin:10,
+  dataTop: {
+    margin: 10,
+    alignSelf: 'flex-end',
   },
-  imageTop:{
-    width:65,
-    height:65,
-    borderRadius:50,
-    backgroundColor:'#FFFFFF',
+  imageTop: {
+    width: 65,
+    height: 65,
+    borderRadius: 50,
+    backgroundColor: '#FFFFFF',
   },
-  contentop:{
-    position:'absolute',
-    top:'18%',
-   alignSelf:'center',
+  contentop: {
+    position: 'absolute',
+    top: '18%',
+    alignSelf: 'center',
   },
 });

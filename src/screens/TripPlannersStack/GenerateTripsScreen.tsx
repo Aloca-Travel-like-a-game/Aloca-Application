@@ -65,7 +65,6 @@ export const GenerateTripsScreen = () => {
         numberOfDay: numDay,
       });
       setResult(res.data.data);
-      console.log(res.data.data);
     } catch (error) {
       console.error('Lỗi:', error);
       setResult(null);
@@ -84,7 +83,6 @@ export const GenerateTripsScreen = () => {
   };
 
   const PickUpPlan = async (item: any) => {
-    console.log(item);
     try {
       setLoading(true);
       const res = await axios.post(
@@ -235,6 +233,7 @@ export const GenerateTripsScreen = () => {
                   <TextInput
                     onChangeText={onChangePlanName}
                     style={styles.input}
+                    maxLength={35}
                   />
                   <View
                     style={{

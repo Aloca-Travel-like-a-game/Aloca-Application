@@ -97,14 +97,14 @@ const TabArr = [
     unActiveIcon: 'home-outline',
     component: HomeScreens,
   },
-  {
-    route: 'Bảng tin',
-    label: 'Bảng tin',
-    type: Ionicons,
-    activeIcon: 'newspaper',
-    unActiveIcon: 'newspaper-outline',
-    component: HomeScreens,
-  },
+  // {
+  //   route: 'Bảng tin',
+  //   label: 'Bảng tin',
+  //   type: Ionicons,
+  //   activeIcon: 'newspaper',
+  //   unActiveIcon: 'newspaper-outline',
+  //   component: HomeScreens,
+  // },
   {
     route: 'Trợ lý',
     label: 'Trợ lý',
