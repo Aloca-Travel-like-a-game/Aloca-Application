@@ -1,12 +1,8 @@
-/* eslint-disable @typescript-eslint/no-shadow */
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable react-native/no-inline-styles */
-import React, {FC, useEffect, useState} from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import {
   View,
   Text,
   StyleSheet,
-  // Image,
   FlatList,
   Dimensions,
   TouchableOpacity,
@@ -22,12 +18,15 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import LinearGradient from 'react-native-linear-gradient';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useNavigation, useRoute} from '@react-navigation/native';
-import {addCommas, convertDatetoString2} from '../../Helper/convertDate';
-import {JSX} from 'react/jsx-runtime';
-import {BackHandler} from 'react-native';
-import {ipAddress} from '../../Helper/ip';
-import {launchCamera} from 'react-native-image-picker';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { addCommas, convertDatetoString2 } from '../../Helper/convertDate';
+import { JSX } from 'react/jsx-runtime';
+import { BackHandler } from 'react-native';
+import { ipAddress } from '../../Helper/ip';
+import { launchCamera } from 'react-native-image-picker';
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { storage } from "../../firebase/firebaseConfig";
+import Geolocation from '@react-native-community/geolocation';
 
 export const DetailTripScreen: FC = (): JSX.Element => {
   const navigation = useNavigation<any>();
@@ -35,10 +34,25 @@ export const DetailTripScreen: FC = (): JSX.Element => {
   const [result, setResult] = useState<any>(null);
   const [selectDay, setselectDay] = useState<string[]>([]);
   const route = useRoute();
-  const {idTrip}: any = route.params;
+  const { idTrip }: any = route.params;
   const [imageSource, setImageSource] = useState<any>([]);
   const [isChange, setIsChange] = useState<any>([]);
   const [modalVisible, setModalVisible] = useState(false);
+  const [latitude, setLatitude] = useState<any>();
+  const [longitude, setLongitude] = useState<any>();
+
+  Geolocation.getCurrentPosition(
+    async (info: any) => {
+      const getlatitude = info.coords.latitude;
+      const getlongitude = info.coords.longitude;
+      setLatitude(getlatitude)
+      setLongitude(getlongitude)
+    },
+    undefined,
+    undefined,
+  );
+
+
 
   useEffect(() => {
     AsyncStorage.getItem('AccessToken').then((tokenSave: any) =>
@@ -76,6 +90,33 @@ export const DetailTripScreen: FC = (): JSX.Element => {
     return () => backHandler.remove();
   }, []);
 
+  const checkChallengeProgress = async (chaId: any | undefined, fileName: string | undefined, response: string | URL, typeFile: string | undefined) => {
+    try {
+      if (response) {
+        const APIurl = `http://${ipAddress}:8080/challenge/checkProgress`;
+        const res = await axios.post(APIurl, { chaId, lat: latitude, lng: longitude })
+        if (res.data.distance < 250) {
+          const responses = await fetch(response);
+          const blob = await responses.blob();
+          const metadata = {
+            contentType: typeFile
+          };
+          const fileRef = ref(storage, fileName);
+          await uploadBytes(fileRef, blob, metadata);
+          const url = await getDownloadURL(fileRef);
+          await axios.post(`http://${ipAddress}:8080/challenge/updateProgress`, { chaId, imageUrl: url })
+
+          setImageSource((prevState: any) => ({
+            ...prevState,
+            [chaId]: url,
+          }));
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   const handleSelectChange = (item: string) => {
     const isselectDay = selectDay.includes(item);
     if (isselectDay) {
@@ -87,7 +128,7 @@ export const DetailTripScreen: FC = (): JSX.Element => {
     }
   };
 
-  const handleAddImage = (index: any) => {
+  const handleAddImage = async (index: any) => {
     setModalVisible(false);
     launchCamera(
       {
@@ -100,11 +141,12 @@ export const DetailTripScreen: FC = (): JSX.Element => {
           return;
         } else if (response.assets) {
           try {
-            let imageUri = response.assets?.[0]?.uri;
-            setImageSource((prevState: any) => ({
-              ...prevState,
-              [index]: imageUri,
-            }));
+            const fileName = response.assets[0].fileName;
+            const pathToFile = response.assets[0].uri;
+            const typeFile = response.assets[0].type;
+            if (pathToFile !== undefined) {
+              checkChallengeProgress(index, fileName, pathToFile, typeFile);
+            }
           } catch (error) {
             console.error('Error saving image: ', error);
           }
@@ -112,18 +154,18 @@ export const DetailTripScreen: FC = (): JSX.Element => {
       },
     );
   };
-  const renderActivity = ({item: activity}: any) => (
-    <View style={{flexDirection: 'row', marginVertical: 5, marginLeft: 5}}>
-      <View style={{flex: 2}}>
+  const renderActivity = ({ item: activity }: any) => (
+    <View style={{ flexDirection: 'row', marginVertical: 5, marginLeft: 5 }}>
+      <View style={{ flex: 2 }}>
         <Text style={styles.text}>{`${activity.challengeSummary}`}</Text>
         <ScrollView
-          style={{marginLeft: 10}}
+          style={{ marginLeft: 10 }}
           horizontal
           showsHorizontalScrollIndicator={false}>
           <Animatable.Text
             animation={{
-              from: {translateX: 200},
-              to: {translateX: -500},
+              from: { translateX: 200 },
+              to: { translateX: -500 },
             }}
             duration={8000}
             iterationCount="infinite"
@@ -136,22 +178,22 @@ export const DetailTripScreen: FC = (): JSX.Element => {
           </Animatable.Text>
         </ScrollView>
 
-        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
           <Text
             style={
               activity.completed
                 ? {
-                    ...styles.text,
-                    fontWeight: '200',
-                    alignSelf: 'flex-end',
-                    color: 'green',
-                  }
+                  ...styles.text,
+                  fontWeight: '200',
+                  alignSelf: 'flex-end',
+                  color: 'green',
+                }
                 : {
-                    ...styles.text,
-                    fontWeight: '200',
-                    alignSelf: 'flex-end',
-                    color: 'red',
-                  }
+                  ...styles.text,
+                  fontWeight: '200',
+                  alignSelf: 'flex-end',
+                  color: 'red',
+                }
             }>
             {activity.completed ? 'Hoàn thành' : 'Chưa hoàn thành'}
           </Text>
@@ -165,29 +207,29 @@ export const DetailTripScreen: FC = (): JSX.Element => {
           </Text>
         </View>
       </View>
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         {imageSource[activity._id] ? (
           <TouchableOpacity
-            style={{flex: 1, width: '100%', paddingLeft: '5%'}}
+            style={{ flex: 1, width: '100%', paddingLeft: '5%' }}
             onPress={() => {
               setIsChange(activity._id);
               setModalVisible(true);
             }}>
             <Image
-              source={{uri: imageSource[activity._id]}}
-              style={{flex: 1, width: '100%'}}
+              source={{ uri: imageSource[activity._id] }}
+              style={{ flex: 1, width: '100%' }}
               resizeMode="cover"
             />
           </TouchableOpacity>
         ) : (
           <TouchableOpacity onPress={() => handleAddImage(activity._id)}>
-            <Text style={{...styles.text, ...styles.btn}}>Thêm ảnh</Text>
+            <Text style={{ ...styles.text, ...styles.btn }}>Thêm ảnh</Text>
           </TouchableOpacity>
         )}
       </View>
     </View>
   );
-  const renderDay = ({item: day}: any, index: number) => (
+  const renderDay = ({ item: day }: any, index: number) => (
     <View style={styles.dayView}>
       <TouchableOpacity
         style={{
@@ -199,7 +241,7 @@ export const DetailTripScreen: FC = (): JSX.Element => {
         onPress={() => {
           handleSelectChange(index.toString());
         }}>
-        <View style={{maxWidth: '70%'}}>
+        <View style={{ maxWidth: '70%' }}>
           <Text
             style={{
               ...styles.text,
@@ -237,7 +279,7 @@ export const DetailTripScreen: FC = (): JSX.Element => {
           <FlatList
             data={day.challenges}
             keyExtractor={(item, index) => item + index.toString()}
-            renderItem={(item: {index: number}) =>
+            renderItem={(item: { index: number }) =>
               renderActivity(item)
             }
           />
@@ -299,7 +341,7 @@ export const DetailTripScreen: FC = (): JSX.Element => {
                 marginBottom: 45,
               }}
               onPress={() => navigation.navigate('MapScreen')}>
-              <Text style={{...styles.text, color: '#fff'}}>Xem bản đồ</Text>
+              <Text style={{ ...styles.text, color: '#fff' }}>Xem bản đồ</Text>
               <Ionicons name="map" size={20} color="#fff" />
             </TouchableOpacity>
             <LinearGradient
@@ -314,7 +356,7 @@ export const DetailTripScreen: FC = (): JSX.Element => {
                 paddingBottom: 20,
               }}>
               <Text style={styles.heading}>{result?.location}</Text>
-              <Text style={{...styles.heading, fontWeight: '200'}}>
+              <Text style={{ ...styles.heading, fontWeight: '200' }}>
                 {result &&
                   `${convertDatetoString2(
                     result?.startDate,
@@ -323,15 +365,15 @@ export const DetailTripScreen: FC = (): JSX.Element => {
             </LinearGradient>
           </ImageBackground>
         }
-        style={{margin: 0, paddingHorizontal: 15, gap: 5}}
+        style={{ margin: 0, paddingHorizontal: 15, gap: 5 }}
         data={result?.dataTripDays}
-        keyExtractor={(item: any, index: {toString: () => any}) =>
+        keyExtractor={(item: any, index: { toString: () => any }) =>
           item + index.toString()
         }
-        renderItem={(item: {index: number}) => renderDay(item, item.index + 1)}
+        renderItem={(item: { index: number }) => renderDay(item, item.index + 1)}
       />
       <Modal
-        style={{zIndex: 2, backgroundColor: 'black', width: '100%'}}
+        style={{ zIndex: 2, backgroundColor: 'black', width: '100%' }}
         animationType="fade"
         transparent={true}
         visible={modalVisible}
@@ -403,13 +445,13 @@ export const DetailTripScreen: FC = (): JSX.Element => {
   );
 };
 const styles = StyleSheet.create({
-  container: {flex: 1},
+  container: { flex: 1 },
   heading: {
     color: '#fff',
     fontWeight: '600',
     fontSize: 20,
   },
-  sdHeading: {fontWeight: '600'},
+  sdHeading: { fontWeight: '600' },
   dayView: {
     borderRadius: 10,
     borderWidth: 1,

@@ -21,7 +21,7 @@ export default function ProfileScreens({navigation}: any) {
     navigation.navigate('Editprofile');
   };
   const handleLogout = async () => {
-    await AsyncStorage.removeItem('user');
+    await AsyncStorage.clear();
        navigation.navigate('Login');
   };
   return (

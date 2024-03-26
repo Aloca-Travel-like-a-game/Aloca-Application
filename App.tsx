@@ -27,7 +27,7 @@ const toastConfig = {
       style={styles.failNotice}
     />
   ),
-  };
+};
 
 export default function App() {
   useEffect(() => {
@@ -57,6 +57,7 @@ export default function App() {
                 data.items[0].address.county,
               );
             },
+
             () => {
               Alert.alert(
                 'Thông báo',
@@ -108,26 +109,26 @@ export default function App() {
   );
 }
 const styles = StyleSheet.create({
-  sucessnotice:{
+  sucessnotice: {
     borderLeftColor: '#2AB6AD',
   },
-  contentsucess:{
+  contentsucess: {
     paddingHorizontal: 15,
   },
-  sucessText:{
+  sucessText: {
     fontSize: 20,
     fontWeight: '600',
   },
-  sucessText2:{
-    fontSize:13,
+  sucessText2: {
+    fontSize: 13,
   },
-  failText:{
+  failText: {
     fontSize: 20,
   },
-  failText2:{
-    fontSize:13,
+  failText2: {
+    fontSize: 13,
   },
-  failNotice:{
+  failNotice: {
     borderLeftColor: 'red',
   },
 });
