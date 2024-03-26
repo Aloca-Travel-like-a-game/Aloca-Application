@@ -33,6 +33,7 @@ export const DetailTripScreen: FC = (): JSX.Element => {
   const navigation = useNavigation<any>();
   const [token, setToken] = useState<string>();
   const [result, setResult] = useState<any>(null);
+  const [locationChalanges, setLocationChalanges] = useState<any>(null);
   const [selectDay, setselectDay] = useState<string[]>([]);
   const route = useRoute();
   const {idTrip}: any = route.params;
@@ -57,13 +58,21 @@ export const DetailTripScreen: FC = (): JSX.Element => {
             },
           });
           setResult(res.data.tripDatas);
+          const coordinates = res.data.tripDatas.dataTripDays.map((day: any) =>
+            day.challenges.map((challenge: any) => ({
+              latitude: parseFloat(challenge.latitude),
+              longitude: parseFloat(challenge.longitude),
+              challengeSummary: challenge.challengeSummary,
+            })),
+          );
+          setLocationChalanges(coordinates);
         } catch {
           (e: any) => console.log(e);
         }
       };
       senRequest();
     }
-  }, [token]);
+  }, [token, idTrip]);
 
   useEffect(() => {
     const backHandler = BackHandler.addEventListener(
@@ -237,9 +246,7 @@ export const DetailTripScreen: FC = (): JSX.Element => {
           <FlatList
             data={day.challenges}
             keyExtractor={(item, index) => item + index.toString()}
-            renderItem={(item: {index: number}) =>
-              renderActivity(item)
-            }
+            renderItem={(item: {index: number}) => renderActivity(item)}
           />
           <Text
             style={{
@@ -247,14 +254,24 @@ export const DetailTripScreen: FC = (): JSX.Element => {
             }}>
             {`Chi phí di chuyển: ${addCommas(
               day.transportCost,
-            )} VND (Ước tính)`}
+            )} VND/người (Ước tính)`}
           </Text>
           <Text
             style={{
               ...styles.text,
             }}>
-            {`Chi phí ăn uống: ${addCommas(day.transportCost)} VND (Ước tính)`}
+            {`Chi phí ăn uống: ${addCommas(
+              day.transportCost,
+            )} VND/người (Ước tính)`}
           </Text>
+          {day.transportCost === 0 ? (
+            <Text
+              style={{
+                ...styles.text,
+              }}>
+              {`Chi phí khác: ${addCommas(day.otherCost)} VND/người (Ước tính)`}
+            </Text>
+          ) : null}
         </>
       )}
     </View>
@@ -298,7 +315,11 @@ export const DetailTripScreen: FC = (): JSX.Element => {
                 alignSelf: 'center',
                 marginBottom: 45,
               }}
-              onPress={() => navigation.navigate('MapScreen')}>
+              onPress={() =>
+                navigation.navigate('MapScreen', {
+                  locationChalanges: locationChalanges,
+                })
+              }>
               <Text style={{...styles.text, color: '#fff'}}>Xem bản đồ</Text>
               <Ionicons name="map" size={20} color="#fff" />
             </TouchableOpacity>

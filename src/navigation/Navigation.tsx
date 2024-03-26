@@ -42,6 +42,7 @@ const TripPlanStack = (): React.JSX.Element => {
         component={GenerateTripsScreen}
       />
       <Stack.Screen name="DetailTripScreen" component={DetailTripScreen} />
+      <Stack.Screen name="MapScreen" component={MapScreen} />
     </Stack.Navigator>
   );
 };
@@ -199,7 +200,6 @@ export default function Navigation() {
         <Stack.Screen name="Editprofile" component={EditProfile} />
         <Stack.Screen name="Notification" component={Notification} />
         <Stack.Screen name="VideoTravel" component={VideoTravel} />
-        <Stack.Screen name="MapScreen" component={MapScreen} />
         <Stack.Screen name="WhatAloca" component={WhatAloca} />
         <Stack.Screen name="Benefit" component={Benefit} />
       </Stack.Navigator>

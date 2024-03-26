@@ -1,8 +1,8 @@
 import React, {useEffect} from 'react';
 import Navigation from './src/navigation/Navigation';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
-import { StyleSheet } from 'react-native';
-import Toast, { BaseToast, ErrorToast } from 'react-native-toast-message';
+import {StyleSheet} from 'react-native';
+import Toast, {BaseToast, ErrorToast} from 'react-native-toast-message';
 import {Alert, Linking, PermissionsAndroid, Platform} from 'react-native';
 import Geolocation from '@react-native-community/geolocation';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -26,7 +26,7 @@ const toastConfig = {
       style={styles.failNotice}
     />
   ),
-  };
+};
 
 export default function App() {
   useEffect(() => {
@@ -76,6 +76,15 @@ export default function App() {
             },
             undefined,
           );
+          PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.CAMERA, {
+            title: 'Cho phép truy cập máy ảnh',
+            message:
+              'Cool Photo App needs access to your camera ' +
+              'so you can take awesome pictures.',
+            buttonNeutral: 'Để sau',
+            buttonNegative: 'Hủy',
+            buttonPositive: 'Cho phép',
+          });
           console.log('Location permission granted');
         } else {
           console.log('Location permission denied');
@@ -85,16 +94,6 @@ export default function App() {
       }
     };
     requestLocationPermission();
-
-    PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.CAMERA, {
-      title: 'Cho phép truy cập máy ảnh',
-      message:
-        'Cool Photo App needs access to your camera ' +
-        'so you can take awesome pictures.',
-      buttonNeutral: 'Để sau',
-      buttonNegative: 'Hủy',
-      buttonPositive: 'Cho phép',
-    });
   }, []);
   return (
     <QueryClientProvider client={queryClient}>
@@ -104,26 +103,26 @@ export default function App() {
   );
 }
 const styles = StyleSheet.create({
-  sucessnotice:{
+  sucessnotice: {
     borderLeftColor: '#2AB6AD',
   },
-  contentsucess:{
+  contentsucess: {
     paddingHorizontal: 15,
   },
-  sucessText:{
+  sucessText: {
     fontSize: 20,
     fontWeight: '600',
   },
-  sucessText2:{
-    fontSize:13,
+  sucessText2: {
+    fontSize: 13,
   },
-  failText:{
+  failText: {
     fontSize: 20,
   },
-  failText2:{
-    fontSize:13,
+  failText2: {
+    fontSize: 13,
   },
-  failNotice:{
+  failNotice: {
     borderLeftColor: 'red',
   },
 });
