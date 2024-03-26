@@ -15,6 +15,7 @@ import {
   Image,
   Modal,
   Pressable,
+  ActivityIndicator,
 } from 'react-native';
 
 import * as Animatable from 'react-native-animatable';
@@ -28,18 +29,21 @@ import {JSX} from 'react/jsx-runtime';
 import {BackHandler} from 'react-native';
 import {ipAddress} from '../../Helper/ip';
 import {launchCamera} from 'react-native-image-picker';
+import {images} from './provicesBgImg';
 
 export const DetailTripScreen: FC = (): JSX.Element => {
   const navigation = useNavigation<any>();
   const [token, setToken] = useState<string>();
   const [result, setResult] = useState<any>(null);
   const [locationChalanges, setLocationChalanges] = useState<any>(null);
+  const [location, setLocation] = useState<any>(null);
   const [selectDay, setselectDay] = useState<string[]>([]);
   const route = useRoute();
   const {idTrip}: any = route.params;
   const [imageSource, setImageSource] = useState<any>([]);
   const [isChange, setIsChange] = useState<any>([]);
   const [modalVisible, setModalVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     AsyncStorage.getItem('AccessToken').then((tokenSave: any) =>
@@ -48,6 +52,7 @@ export const DetailTripScreen: FC = (): JSX.Element => {
   }, [token]);
 
   useEffect(() => {
+    setLoading(true);
     if (token !== undefined) {
       const senRequest = async () => {
         try {
@@ -58,6 +63,8 @@ export const DetailTripScreen: FC = (): JSX.Element => {
             },
           });
           setResult(res.data.tripDatas);
+          setLocation(res.data.tripDatas.location);
+          console.log(res.data.tripDatas);
           const coordinates = res.data.tripDatas.dataTripDays.map((day: any) =>
             day.challenges.map((challenge: any) => ({
               latitude: parseFloat(challenge.latitude),
@@ -72,6 +79,7 @@ export const DetailTripScreen: FC = (): JSX.Element => {
       };
       senRequest();
     }
+    setLoading(false);
   }, [token, idTrip]);
 
   useEffect(() => {
@@ -103,6 +111,7 @@ export const DetailTripScreen: FC = (): JSX.Element => {
         includeBase64: false,
         mediaType: 'photo',
         quality: 0.8,
+        cameraType: 'front',
       },
       response => {
         if (response.errorCode || response.didCancel) {
@@ -278,149 +287,173 @@ export const DetailTripScreen: FC = (): JSX.Element => {
   );
 
   return (
-    <View style={styles.container}>
-      <FlatList
-        showsVerticalScrollIndicator={false}
-        ListHeaderComponent={
-          <ImageBackground
-            style={{
-              width: '100%',
-              height: 200,
-              marginVertical: 15,
-              justifyContent: 'flex-end',
-            }}
-            resizeMode="cover"
-            source={require('../../Images/location.png')}>
-            <TouchableOpacity
-              style={{
-                position: 'absolute',
-                zIndex: 1,
-                backgroundColor: '#2AB6AD',
-                padding: 10,
-                top: 15,
-                borderTopRightRadius: 50,
-                borderBottomRightRadius: 50,
-              }}
-              onPress={() => navigation.navigate('AddNewTrip')}>
-              <Ionicons name="arrow-back" size={20} color="#fff" />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{
-                ...styles.btn,
-                flexDirection: 'row',
-                justifyContent: 'center',
-                alignItems: 'center',
-                gap: 5,
-                width: '50%',
-                alignSelf: 'center',
-                marginBottom: 45,
-              }}
-              onPress={() =>
-                navigation.navigate('MapScreen', {
-                  locationChalanges: locationChalanges,
-                })
-              }>
-              <Text style={{...styles.text, color: '#fff'}}>Xem bản đồ</Text>
-              <Ionicons name="map" size={20} color="#fff" />
-            </TouchableOpacity>
-            <LinearGradient
-              colors={['#00000000', '#000000']}
-              style={{
-                height: '50%',
-                width: '100%',
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'flex-end',
-                paddingHorizontal: 20,
-                paddingBottom: 20,
-              }}>
-              <Text style={styles.heading}>{result?.location}</Text>
-              <Text style={{...styles.heading, fontWeight: '200'}}>
-                {result &&
-                  `${convertDatetoString2(
-                    result?.startDate,
-                  )} - ${convertDatetoString2(result?.endDate)}`}
-              </Text>
-            </LinearGradient>
-          </ImageBackground>
-        }
-        style={{margin: 0, paddingHorizontal: 15, gap: 5}}
-        data={result?.dataTripDays}
-        keyExtractor={(item: any, index: {toString: () => any}) =>
-          item + index.toString()
-        }
-        renderItem={(item: {index: number}) => renderDay(item, item.index + 1)}
-      />
-      <Modal
-        style={{zIndex: 2, backgroundColor: 'black', width: '100%'}}
-        animationType="fade"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          setModalVisible(!modalVisible);
-        }}>
-        <Pressable
-          onPress={() => setModalVisible(!modalVisible)}
+    <>
+      {loading && (
+        <View
           style={{
             flex: 1,
-            alignItems: 'center',
+            width: '100%',
+            backgroundColor: '#2AB6AD',
             justifyContent: 'center',
-            backgroundColor: 'black',
-            opacity: 0.4,
-          }}
-        />
-        <View style={styles.takePhotoAgain}>
-          <Text
-            style={{
-              width: '100%',
-              color: '#2AB6AD',
-              fontWeight: '600',
-              fontSize: 19.9,
-              marginBottom: 10,
-              alignSelf: 'center',
-              textAlign: 'center',
-            }}>
-            {'Bạn có muốn chụp lại ảnh?'}
+            alignItems: 'center',
+          }}>
+          <ActivityIndicator size={100} color="#2AB6AD" />
+          <Text style={{color: '#2AB6AD', fontSize: 30, fontWeight: '900'}}>
+            Vui lòng chờ
           </Text>
-          <View
-            style={{
-              alignSelf: 'flex-end',
-              width: '50%',
-              flexDirection: 'row',
-              justifyContent: 'flex-end',
-              gap: 10,
-            }}>
-            <TouchableOpacity onPress={() => setModalVisible(!modalVisible)}>
-              <Text
-                style={{
-                  ...styles.btn,
-                  fontWeight: '600',
-                  color: '#2AB6AD',
-                  borderColor: '#2AB6AD',
-                  backgroundColor: '#fff',
-                  borderWidth: 1,
-                }}>
-                Hủy
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => {
-                handleAddImage(isChange);
-                setIsChange(undefined);
-              }}>
-              <Text
-                style={{
-                  ...styles.btn,
-                  fontWeight: '600',
-                  color: '#fff',
-                }}>
-                Xác nhận
-              </Text>
-            </TouchableOpacity>
-          </View>
         </View>
-      </Modal>
-    </View>
+      )}
+      {!loading && result && (
+        <>
+          <FlatList
+            showsVerticalScrollIndicator={false}
+            ListHeaderComponent={
+              <ImageBackground
+                style={{
+                  width: '100%',
+                  height: 200,
+                  marginVertical: 15,
+                  justifyContent: 'flex-end',
+                }}
+                resizeMode="cover"
+                source={{uri: images[location]}}>
+                <TouchableOpacity
+                  style={{
+                    position: 'absolute',
+                    zIndex: 1,
+                    backgroundColor: '#2AB6AD',
+                    padding: 10,
+                    top: 15,
+                    borderTopRightRadius: 50,
+                    borderBottomRightRadius: 50,
+                  }}
+                  onPress={() => navigation.navigate('AddNewTrip')}>
+                  <Ionicons name="arrow-back" size={20} color="#fff" />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={{
+                    ...styles.btn,
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    gap: 5,
+                    width: '50%',
+                    alignSelf: 'center',
+                    marginBottom: 45,
+                  }}
+                  onPress={() =>
+                    navigation.navigate('MapScreen', {
+                      locationChalanges: locationChalanges,
+                    })
+                  }>
+                  <Text style={{...styles.text, color: '#fff'}}>
+                    Xem bản đồ
+                  </Text>
+                  <Ionicons name="map" size={20} color="#fff" />
+                </TouchableOpacity>
+                <LinearGradient
+                  colors={['#00000000', '#000000']}
+                  style={{
+                    height: '50%',
+                    width: '100%',
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'flex-end',
+                    paddingHorizontal: 20,
+                    paddingBottom: 20,
+                  }}>
+                  <Text style={styles.heading}>{result?.location}</Text>
+                  <Text style={{...styles.heading, fontWeight: '200'}}>
+                    {result &&
+                      `${convertDatetoString2(
+                        result?.startDate,
+                      )} - ${convertDatetoString2(result?.endDate)}`}
+                  </Text>
+                </LinearGradient>
+              </ImageBackground>
+            }
+            style={{margin: 0, paddingHorizontal: 15, gap: 5}}
+            data={result?.dataTripDays}
+            keyExtractor={(item: any, index: {toString: () => any}) =>
+              item + index.toString()
+            }
+            renderItem={(item: {index: number}) =>
+              renderDay(item, item.index + 1)
+            }
+          />
+          <Modal
+            style={{zIndex: 2, backgroundColor: 'black', width: '100%'}}
+            animationType="fade"
+            transparent={true}
+            visible={modalVisible}
+            onRequestClose={() => {
+              setModalVisible(!modalVisible);
+            }}>
+            <Pressable
+              onPress={() => setModalVisible(!modalVisible)}
+              style={{
+                flex: 1,
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: 'black',
+                opacity: 0.4,
+              }}
+            />
+            <View style={styles.takePhotoAgain}>
+              <Text
+                style={{
+                  width: '100%',
+                  color: '#2AB6AD',
+                  fontWeight: '600',
+                  fontSize: 19.9,
+                  marginBottom: 10,
+                  alignSelf: 'center',
+                  textAlign: 'center',
+                }}>
+                {'Bạn có muốn chụp lại ảnh?'}
+              </Text>
+              <View
+                style={{
+                  alignSelf: 'flex-end',
+                  width: '50%',
+                  flexDirection: 'row',
+                  justifyContent: 'flex-end',
+                  gap: 10,
+                }}>
+                <TouchableOpacity
+                  onPress={() => setModalVisible(!modalVisible)}>
+                  <Text
+                    style={{
+                      ...styles.btn,
+                      fontWeight: '600',
+                      color: '#2AB6AD',
+                      borderColor: '#2AB6AD',
+                      backgroundColor: '#fff',
+                      borderWidth: 1,
+                    }}>
+                    Hủy
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    handleAddImage(isChange);
+                    setIsChange(undefined);
+                  }}>
+                  <Text
+                    style={{
+                      ...styles.btn,
+                      fontWeight: '600',
+                      color: '#fff',
+                    }}>
+                    Xác nhận
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal>
+        </>
+      )}
+    </>
   );
 };
 const styles = StyleSheet.create({

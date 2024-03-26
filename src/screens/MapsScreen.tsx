@@ -1,10 +1,11 @@
+/* eslint-disable react-native/no-inline-styles */
 /* eslint-disable @typescript-eslint/no-shadow */
 import Geolocation from '@react-native-community/geolocation';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
-import {Alert, Linking, Platform} from 'react-native';
+import {Alert, Linking, Platform, Text, TouchableOpacity} from 'react-native';
 import {BackHandler, StyleSheet, View} from 'react-native';
-import MapView, {Marker, Polyline} from 'react-native-maps';
+import MapView, {Marker} from 'react-native-maps';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const MapScreen = () => {
@@ -13,7 +14,6 @@ export const MapScreen = () => {
   const [latitude, setLatitude] = useState<any>();
   const [longitude, setLongitude] = useState<any>();
   const route = useRoute();
-  const [directions, setDirections] = useState<any>(null);
   const [token, setToken] = useState<string>();
   const {locationChalanges}: any = route.params;
   useEffect(() => {
@@ -57,71 +57,31 @@ export const MapScreen = () => {
     return () => backHandler.remove();
   }, [route, locationChalanges, navigation, token]);
 
-  const getDirections = async () => {
-    const waypoints = locationChalanges
-      .map((locationGroup: any) =>
-        locationGroup
-          .map((location: any) => `${location.latitude},${location.longitude}`)
-          .join('|'),
-      )
-      .join('|');
-
-    // Tạo yêu cầu cho Google Directions API
-    const directionsRequest = {
-      origin: `${latitude},${longitude}`,
-      waypoints,
-      destination: `${locationChalanges[0][0].latitude},${locationChalanges[0][0].longitude}`,
-      key: 'AIzaSyBbWcBrNYVn7rA5o7LEYDZxYGDDKfqhGcg',
-    };
-
-    // Gửi yêu cầu đến Google Directions API
-    const response = await fetch(
-      `https://maps.googleapis.com/maps/api/directions/json?${new URLSearchParams(
-        directionsRequest,
-      )}`,
-    );
-    const data = await response.json();
-
-    // Xử lý kết quả và lưu tuyến đường
-    if (
-      data.routes &&
-      data.routes.length > 0 &&
-      data.routes[0].legs &&
-      data.routes[0].legs.length > 0
-    ) {
-      const route = data.routes[0].legs.reduce(
-        (acc: any, leg: any) => [
-          ...acc,
-          ...leg.steps.reduce(
-            (stepsAcc: any, step: any) => [...stepsAcc, ...step.path],
-            [],
-          ),
-        ],
-        [],
-      );
-      const polylineCoordinates = route.map((step: any) => ({
-        latitude: step.lat,
-        longitude: step.lng,
-      }));
-      setDirections(polylineCoordinates);
-    }
-  };
-
-  useEffect(() => {
-    if (latitude && longitude && locationChalanges) {
-      getDirections();
-    }
-  }, [latitude, longitude, locationChalanges]);
-
   return (
     <View style={styles.container}>
+      <TouchableOpacity
+        style={{
+          ...styles.btn,
+          flexDirection: 'row',
+          justifyContent: 'center',
+          top: 12,
+          gap: 5,
+          width: '50%',
+          alignSelf: 'center',
+          zIndex: 3,
+        }}
+        onPress={() => navigation.goBack()}>
+        <Text style={{fontWeight: '500', fontSize: 16, color: '#fff'}}>
+          Quay lại kế hoạch
+        </Text>
+      </TouchableOpacity>
       <MapView
         style={styles.map}
         initialRegion={{
           latitude: latitude !== undefined ? latitude : 16.0583,
           longitude: longitude !== undefined ? longitude : 105.7772,
-          latitudeDelta: 7.5,
-          longitudeDelta: 7.5,
+          latitudeDelta: 8,
+          longitudeDelta: 8,
         }}
         showsUserLocation={true}
         showsMyLocationButton={true}
@@ -136,8 +96,8 @@ export const MapScreen = () => {
                       <Marker
                         key={markerIndex}
                         coordinate={{
-                          latitude: marker.latitude,
-                          longitude: marker.longitude,
+                          latitude: marker.latitude + 0.0025,
+                          longitude: marker.longitude - 0.0195,
                         }}
                         title={marker.challengeSummary}
                       />
@@ -146,13 +106,6 @@ export const MapScreen = () => {
                 ))}
             </React.Fragment>
           ))}
-        {directions && (
-          <Polyline
-            coordinates={directions}
-            strokeWidth={4}
-            strokeColor="blue"
-          />
-        )}
       </MapView>
     </View>
   );
@@ -168,5 +121,10 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
+  },
+  btn: {
+    backgroundColor: '#2AB6AD',
+    padding: 10,
+    borderRadius: 10,
   },
 });
