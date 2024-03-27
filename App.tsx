@@ -78,6 +78,15 @@ export default function App() {
             },
             undefined,
           );
+          PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.CAMERA, {
+            title: 'Cho phép truy cập máy ảnh',
+            message:
+              'Cool Photo App needs access to your camera ' +
+              'so you can take awesome pictures.',
+            buttonNeutral: 'Để sau',
+            buttonNegative: 'Hủy',
+            buttonPositive: 'Cho phép',
+          });
           console.log('Location permission granted');
         } else {
           console.log('Location permission denied');
@@ -87,16 +96,6 @@ export default function App() {
       }
     };
     requestLocationPermission();
-
-    PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.CAMERA, {
-      title: 'Cho phép truy cập máy ảnh',
-      message:
-        'Cool Photo App needs access to your camera ' +
-        'so you can take awesome pictures.',
-      buttonNeutral: 'Để sau',
-      buttonNegative: 'Hủy',
-      buttonPositive: 'Cho phép',
-    });
   }, []);
   useEffect(() => {
     requestPermission();

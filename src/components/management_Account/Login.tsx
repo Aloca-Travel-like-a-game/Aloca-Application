@@ -17,7 +17,7 @@ import axios from 'axios';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-toast-message';
-import { ipAddress } from '../../Helper/ip';
+import {ipAddress} from '../../Helper/ip';
 interface Account {
   username: string;
   password: string;
@@ -41,6 +41,7 @@ export default function Login({ navigation }: any) {
         if (res.status === 200) {
           const token = res.data;
           const user = JSON.stringify(token);
+          await AsyncStorage.multiRemove(['fcm_token', 'AccessToken', 'user']);
           await AsyncStorage.setItem('AccessToken', token.accessToken);
           await AsyncStorage.setItem('user', user);
           Toast.show({
@@ -106,7 +107,7 @@ export default function Login({ navigation }: any) {
               />
               {errors.username && touched.username ? (
                 <Text style={styles.errorText}>* {errors.username}</Text>
-                ) : null}
+              ) : null}
               <Text style={styles.label}>MẬT KHẨU</Text>
               <View style={styles.content}>
                 <TextInput
@@ -126,7 +127,7 @@ export default function Login({ navigation }: any) {
               </View>
               {errors.password && touched.password ? (
                 <Text style={styles.errorText}>* {errors.password}</Text>
-                ) : null}
+              ) : null}
             </View>
             <TouchableOpacity
               style={styles.contentRegister}
@@ -276,9 +277,9 @@ const styles = StyleSheet.create({
   errorText: {
     fontWeight: 'bold',
     color: 'red',
-   marginBottom:12,
+    marginBottom: 12,
   },
-  content:{
-    position:'relative',
+  content: {
+    position: 'relative',
   },
 });

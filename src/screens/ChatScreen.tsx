@@ -54,9 +54,8 @@ export const ChatScreen: FC = (): JSX.Element => {
       );
       return res;
     } catch (error) {
-      // Xử lý lỗi ở đây
       console.error('Có lỗi xảy ra khi gửi yêu cầu:', error);
-      throw error; // Rethrow lỗi để cho phép caller của hàm handle lỗi
+      throw error;
     } finally {
       setAnalyzing(false);
     }
