@@ -4,10 +4,23 @@ import {
   StyleSheet,
   TouchableOpacity,
   ImageBackground,
+  BackHandler,
 } from 'react-native';
 import React, {useEffect} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-export default function LandingPage({navigation}: any) {
+import { useNavigation } from '@react-navigation/native';
+export default function LandingPage() {
+  const navigation = useNavigation<any>();
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => {
+        navigation.goBack();
+        return true;
+      },
+    );
+    return () => backHandler.remove();
+  }, [navigation]);
   useEffect(() => {
     const checkWelcomeScreen = async () => {
       try {

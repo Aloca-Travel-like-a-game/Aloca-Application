@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -9,6 +9,8 @@ import {
   Platform,
   TouchableOpacity,
   ScrollView,
+  Alert,
+  BackHandler,
 } from 'react-native';
 import { Formik } from 'formik';
 import { Login_validate } from './Login_validate';
@@ -27,6 +29,25 @@ export default function Login({ navigation }: any) {
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
   };
+  useEffect(() => {
+    const backAction = () => {
+      Alert.alert('Chờ đã', 'Bạn chắc chắn muốn thoát chứ?', [
+        {
+          text: 'Không',
+          onPress: () => null,
+          style: 'cancel',
+        },
+        {text: 'Có', onPress: () => BackHandler.exitApp()},
+      ]);
+      return true;
+    };
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
+
+    return () => backHandler.remove();
+  }, []);
   const mutationLogin = useMutation({
     mutationFn: async (data: Account) => {
       try {

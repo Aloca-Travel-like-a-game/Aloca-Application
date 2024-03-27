@@ -7,8 +7,9 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  BackHandler,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {TouchableOpacity} from 'react-native';
 import {Formik} from 'formik';
 import axios from 'axios';
@@ -17,10 +18,21 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useMutation} from '@tanstack/react-query';
 import Toast from 'react-native-toast-message';
 import { ipAddress } from '../../Helper/ip';
-export default function Registration({navigation}: any) {
+import { useNavigation } from '@react-navigation/native';
+export default function Registration() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
+  const navigation = useNavigation<any>();
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => {
+        navigation.goBack();
+        return true;
+      },
+    );
+    return () => backHandler.remove();
+  }, [navigation]);
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
   };

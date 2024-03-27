@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import {
   View,
   Text,
@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   ImageBackground,
   StyleSheet,
+  BackHandler,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
@@ -14,8 +15,20 @@ interface InputRef {
   focus: () => void;
 }
 import { ipAddress } from '../../Helper/ip';
+import { useNavigation } from '@react-navigation/native';
 
-export default function VerifyAccount({navigation}: any) {
+export default function VerifyAccount() {
+  const navigation = useNavigation<any>();
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => {
+        navigation.goBack();
+        return true;
+      },
+    );
+    return () => backHandler.remove();
+  }, [navigation]);
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const firstInput = useRef<InputRef>(null);
   const secondInput = useRef<InputRef>(null);

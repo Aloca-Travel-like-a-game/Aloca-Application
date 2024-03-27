@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import {
   View,
   Text,
@@ -5,14 +6,15 @@ import {
   TouchableOpacity,
   FlatList,
   Image,
+  ImageBackground,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import {ipAddress} from '../Helper/ip';
-interface Top{
+interface Top {
   a: any;
   b: any;
-  experience:number;
+  experience: number;
 }
 export default function RankingScreen() {
   const [data, setData] = useState<any>([]);
@@ -73,10 +75,22 @@ export default function RankingScreen() {
   return (
     <View style={styles.containerContent}>
       <View style={styles.headerRanking}>
-        <Image
+        <ImageBackground
           source={require('../Images/imageRanking.png')}
-          style={styles.backgroundRanking}
-        />
+          style={styles.backgroundRanking}>
+          <Image
+            source={require('../Images/topRanking.png')}
+            style={styles.imgeRankTop}
+          />
+          <Image
+            source={require('../Images/top3ranking.png')}
+            style={styles.imgeRankTop2}
+          />
+          <Image
+            source={require('../Images/top2ranking.png')}
+            style={styles.imgeRankTop3}
+          />
+        </ImageBackground>
         <Text style={styles.text}>
           Chào mừng bạn đến với cuộc {'\n'} đua của Aloca
         </Text>
@@ -100,22 +114,7 @@ export default function RankingScreen() {
           horizontal
         />
       </View>
-      <Image
-        source={require('../Images/topRanking.png')}
-        style={styles.imgeRankTop}
-      />
-      <Image
-        source={require('../Images/top3ranking.png')}
-        style={styles.imgeRankTop2}
-      />
-      <Image
-        source={require('../Images/top2ranking.png')}
-        style={styles.imgeRankTop3}
-      />
-      <Image
-        source={require('../Images/top3ranking.png')}
-        style={styles.imgeRankTop2}
-      />
+
       <View style={styles.option}>
         <TouchableOpacity
           style={[
@@ -154,12 +153,38 @@ export default function RankingScreen() {
       <View style={styles.contentRanking}>
         <FlatList
           data={data.dataRanks}
-          renderItem={({item}) => {
+          renderItem={({item, index}) => {
             return (
               <View style={styles.ShowdataRanking}>
+                <Text style={{fontSize: 20, fontWeight: '500', marginLeft: 15}}>
+                  {index + 1}
+                </Text>
                 <Image source={{uri: item.image}} style={styles.imageStyle} />
                 <View style={styles.textContainer}>
-                  <Text style={styles.textname}>{item?.fullname}</Text>
+                  <View style={{flexDirection: 'column'}}>
+                    <Text
+                      style={{
+                        ...styles.textname,
+                        fontWeight: 'normal',
+                        fontSize: 14,
+                      }}>
+                      {item?.fullname}
+                    </Text>
+                    <Text style={styles.textname}>
+                      {item.experience < 200 &&
+                        item.experience >= 0 &&
+                        'Tập sự'}
+                      {item.experience < 500 &&
+                        item.experience >= 200 &&
+                        'Lữ khách phiêu lưu'}
+                      {item.experience < 1000 &&
+                        item.experience >= 500 &&
+                        'Hiệp sĩ Khám phá'}
+                      {item.experience < 2000 &&
+                        item.experience >= 1000 &&
+                        'Nhà thám hiểm siêu phàm'}
+                    </Text>
+                  </View>
                   <Text style={styles.textexperience}>
                     {item.experience} điểm
                   </Text>
@@ -240,11 +265,13 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 14,
     width: 60,
+    alignSelf: 'center',
   },
   textname: {
     color: '#FFFFFF',
-    fontSize: 14,
-    width: 150,
+    fontSize: 12,
+    maxWidth: '100%',
+    fontWeight: '300',
   },
   imageStyle: {
     width: 50,
@@ -262,7 +289,8 @@ const styles = StyleSheet.create({
   textContainer: {
     flex: 1,
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
   },
   option: {
     flexDirection: 'row',
@@ -270,35 +298,25 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 10,
   },
-  imgeRank: {
-    position: 'absolute',
-    width: 80,
-    height: 75,
-    marginTop: 130,
-    alignSelf: 'center',
-    backgroundColor: 'red',
-    borderRadius: 50,
-  },
   imgeRankTop: {
     position: 'absolute',
-    width: '20%',
-    height:'5%',
     alignSelf: 'center',
-    top:'25.6%',
-  },
-  imgeRankTop3: {
-    position: 'absolute',
-    width: '17%',
-    height:'4%',
-    top:'26.6%',
-    left: '19.4%',
+    bottom: 75,
+    zIndex: 2,
   },
   imgeRankTop2: {
     position: 'absolute',
-    width: '16%',
-    height:'4%',
-    top:'26.6%',
-    left: '64.4%',
+    alignSelf: 'center',
+    left: '18.5%',
+    bottom: 60,
+    zIndex: 2,
+  },
+  imgeRankTop3: {
+    position: 'absolute',
+    alignSelf: 'center',
+    right: '18.5%',
+    bottom: 60,
+    zIndex: 2,
   },
   buttonTitle: {
     color: '#FFFFFF',

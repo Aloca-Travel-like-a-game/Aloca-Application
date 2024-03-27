@@ -1,10 +1,22 @@
-import {View, Text, StyleSheet, TouchableOpacity, FlatList} from 'react-native';
-import React from 'react';
+import {View, Text, StyleSheet, TouchableOpacity, FlatList, BackHandler} from 'react-native';
+import React, { useEffect } from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
 import {useQuery} from '@tanstack/react-query';
 import { Image } from 'react-native-animatable';
-export default function Notification({navigation}: any) {
+import { useNavigation } from '@react-navigation/native';
+export default function Notification() {
+  const navigation = useNavigation<any>();
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => {
+        navigation.goBack();
+        return true;
+      },
+    );
+    return () => backHandler.remove();
+  }, [navigation]);
   const {data} = useQuery({
     queryKey: ['getData'],
     queryFn: async () => {

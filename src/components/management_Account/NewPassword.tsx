@@ -8,8 +8,9 @@ import {
   Platform,
   ToastAndroid,
   ScrollView,
+  BackHandler,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {TouchableOpacity} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {Formik} from 'formik';
@@ -19,11 +20,23 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NewPassword_validate } from './NewPassword_validate';
 import Toast from 'react-native-toast-message';
 import { ipAddress } from '../../Helper/ip';
+import { useNavigation } from '@react-navigation/native';
 interface NewAccount {
   password: string;
   confirmPassword: string;
 }
-export default function NewPassword({navigation}: any) {
+export default function NewPassword() {
+  const navigation = useNavigation<any>();
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => {
+        navigation.goBack();
+        return true;
+      },
+    );
+    return () => backHandler.remove();
+  }, [navigation]);
   const [showPassword, setShowPassword] = useState(false);
   const [confirmShow, setConfirmShow] = useState(false);
   const toggleShowPassword = () => {

@@ -7,8 +7,9 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  BackHandler,
 } from 'react-native';
-import React from 'react';
+import React, { useEffect } from 'react';
 import {TouchableOpacity} from 'react-native';
 import {Formik} from 'formik';
 import {useMutation} from '@tanstack/react-query';
@@ -17,10 +18,22 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {validateSchema} from './ForgotPassword_Validate';
 import Toast from 'react-native-toast-message';
 import { ipAddress } from '../../Helper/ip';
+import { useNavigation } from '@react-navigation/native';
 interface Account {
   email: string;
 }
-export default function ForgotPassword({navigation}: any) {
+export default function ForgotPassword() {
+  const navigation = useNavigation<any>();
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => {
+        navigation.goBack();
+        return true;
+      },
+    );
+    return () => backHandler.remove();
+  }, [navigation]);
   const mutationForgotpassword = useMutation({
     mutationFn: async (email: Account) => {
       try {

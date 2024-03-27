@@ -5,11 +5,24 @@ import {
   StyleSheet,
   FlatList,
   Linking,
+  BackHandler,
 } from 'react-native';
-import React from 'react';
+import React, { useEffect } from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Video from 'react-native-video';
-export default function VideoTravel({navigation}: any) {
+import { useNavigation } from '@react-navigation/native';
+export default function VideoTravel() {
+  const navigation = useNavigation<any>();
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => {
+        navigation.goBack();
+        return true;
+      },
+    );
+    return () => backHandler.remove();
+  }, [navigation]);
   const data = [
     {
       id: 1,

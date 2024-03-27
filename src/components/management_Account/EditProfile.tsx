@@ -6,6 +6,7 @@ import {
   TextInput,
   Image,
   ScrollView,
+  BackHandler,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -16,6 +17,7 @@ import {launchImageLibrary} from 'react-native-image-picker';
 import {string} from 'yup';
 import Toast from 'react-native-toast-message';
 import {ipAddress} from '../../Helper/ip';
+import {useNavigation} from '@react-navigation/native';
 interface getProfile {
   fullname: string;
   email: string;
@@ -24,7 +26,7 @@ interface getProfile {
   selectedImage: string;
   image: string;
 }
-export default function EditProfile({navigation}: any): getProfile[] {
+export default function EditProfile(): getProfile[] {
   const [_userData, setUserData] = useState<any>();
   const [newName, setNewName] = useState<string>('');
   const [newPhone, setNewPhone] = useState<string>();
@@ -32,6 +34,17 @@ export default function EditProfile({navigation}: any): getProfile[] {
   const [selectedImage, setSelectedImage] = useState(null);
   const queryClient = useQueryClient();
   const formData = new FormData();
+  const navigation = useNavigation<any>();
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => {
+        navigation.goBack();
+        return true;
+      },
+    );
+    return () => backHandler.remove();
+  }, [navigation]);
   formData.append('files', {
     uri: selectedImage,
     type: 'image/jpeg',
@@ -56,8 +69,6 @@ export default function EditProfile({navigation}: any): getProfile[] {
           }
           if (userData.data.image !== undefined) {
             setSelectedImage(userData.data.image);
-          } else {
-            setSelectedImage(null);
           }
         }
       } catch (error) {
