@@ -96,8 +96,8 @@ export const MapScreen = () => {
                       <Marker
                         key={markerIndex}
                         coordinate={{
-                          latitude: marker.latitude + 0.0025,
-                          longitude: marker.longitude - 0.0195,
+                          latitude: marker.latitude,
+                          longitude: marker.longitude,
                         }}
                         title={marker.challengeSummary}
                       />
