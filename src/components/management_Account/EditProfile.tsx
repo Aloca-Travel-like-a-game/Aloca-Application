@@ -17,6 +17,8 @@ import {launchImageLibrary} from 'react-native-image-picker';
 import {string} from 'yup';
 import Toast from 'react-native-toast-message';
 import {ipAddress} from '../../Helper/ip';
+import {storage} from '../../firebase/firebaseConfig';
+import {getDownloadURL, ref, uploadBytes} from 'firebase/storage';
 import {useNavigation} from '@react-navigation/native';
 interface getProfile {
   fullname: string;
@@ -32,6 +34,7 @@ export default function EditProfile(): getProfile[] {
   const [newPhone, setNewPhone] = useState<string>();
   const [newAddress, setNewAddress] = useState<string>('');
   const [selectedImage, setSelectedImage] = useState(null);
+  const [dataImage, setDataImage] = useState<any>();
   const queryClient = useQueryClient();
   const formData = new FormData();
   const navigation = useNavigation<any>();
@@ -145,16 +148,27 @@ export default function EditProfile(): getProfile[] {
           text2: 'Số điện thoại không hợp lệ ',
         });
       } else {
+        const responses = await fetch(selectedImage);
+        const blob = await responses.blob();
+        const metadata = {
+          contentType: dataImage.type,
+        };
+
+        const fileRef = ref(storage, dataImage.fileName);
+        await uploadBytes(fileRef, blob, metadata);
+        const url = await getDownloadURL(fileRef);
         const response = await mutationEdit.mutate({
           fullname: newName,
           phone: newPhone,
           address: newAddress,
-          image: selectedImage,
+          image: url,
         });
 
         setUserData(response.data);
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   };
   const handleGoBack = () => {
     navigation.goBack();
@@ -175,6 +189,8 @@ export default function EditProfile(): getProfile[] {
         } else {
           try {
             let imageUri = response.uri || response.assets?.[0]?.uri;
+            let dataImage = response.assets?.[0];
+            setDataImage(dataImage);
             setSelectedImage(imageUri);
           } catch (error) {
             console.error('Error saving image: ', error);

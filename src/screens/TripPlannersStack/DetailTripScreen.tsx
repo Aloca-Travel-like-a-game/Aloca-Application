@@ -273,22 +273,7 @@ export const DetailTripScreen: FC = (): JSX.Element => {
         </View>
       </View>
       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        {loading && (
-          <View
-            style={{
-              flex: 1,
-              width: '100%',
-              backgroundColor: '#2AB6AD',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <ActivityIndicator size={100} color="#2AB6AD" />
-            <Text style={{color: '#2AB6AD', fontSize: 30, fontWeight: '900'}}>
-              Vui lòng chờ
-            </Text>
-          </View>
-        )}
-        {(!loading && imageSource[activity._id]) || activity.imageUrl ? (
+        {imageSource[activity._id] || activity.imageUrl ? (
           <TouchableOpacity
             disabled={activity.completed}
             style={{flex: 1, width: '100%', paddingLeft: '5%'}}
