@@ -156,7 +156,13 @@ export default function RankingScreen() {
           renderItem={({item, index}) => {
             return (
               <View style={styles.ShowdataRanking}>
-                <Text style={{fontSize: 20, fontWeight: '500', marginLeft: 15}}>
+                <Text
+                  style={{
+                    fontSize: 20,
+                    fontWeight: '500',
+                    marginLeft: 15,
+                    width: 30,
+                  }}>
                   {index + 1}
                 </Text>
                 <Image source={{uri: item.image}} style={styles.imageStyle} />
