@@ -208,7 +208,7 @@ export const DetailTripScreen: FC = (): JSX.Element => {
         </View>
       </View>
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        {imageSource[activity._id] ? (
+        {imageSource[activity._id] || activity.imageUrl ? (
           <TouchableOpacity
             style={{ flex: 1, width: '100%', paddingLeft: '5%' }}
             onPress={() => {
@@ -216,7 +216,7 @@ export const DetailTripScreen: FC = (): JSX.Element => {
               setModalVisible(true);
             }}>
             <Image
-              source={{ uri: imageSource[activity._id] }}
+              source={{ uri: imageSource[activity._id] || activity.imageUrl }}
               style={{ flex: 1, width: '100%' }}
               resizeMode="cover"
             />

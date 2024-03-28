@@ -7,15 +7,17 @@ import {
   Image,
   ScrollView,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useMutation, useQueryClient} from '@tanstack/react-query';
-import {launchImageLibrary} from 'react-native-image-picker';
-import {string} from 'yup';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { launchImageLibrary } from 'react-native-image-picker';
+import { string } from 'yup';
 import Toast from 'react-native-toast-message';
-import {ipAddress} from '../../Helper/ip';
+import { ipAddress } from '../../Helper/ip';
+import { storage } from '../../firebase/firebaseConfig';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 interface getProfile {
   fullname: string;
   email: string;
@@ -24,12 +26,14 @@ interface getProfile {
   selectedImage: string;
   image: string;
 }
-export default function EditProfile({navigation}: any): getProfile[] {
+export default function EditProfile({ navigation }: any): getProfile[] {
   const [_userData, setUserData] = useState<any>();
   const [newName, setNewName] = useState<string>('');
   const [newPhone, setNewPhone] = useState<string>();
   const [newAddress, setNewAddress] = useState<string>('');
   const [selectedImage, setSelectedImage] = useState(null);
+  const [dataImage, setDataImage] = useState<any>();
+  setDataImage
   const queryClient = useQueryClient();
   const formData = new FormData();
   formData.append('files', {
@@ -94,7 +98,7 @@ export default function EditProfile({navigation}: any): getProfile[] {
             newUser.data[key] = value;
           }
           await AsyncStorage.setItem('user', JSON.stringify(newUser));
-          queryClient.invalidateQueries({queryKey: ['profile']});
+          queryClient.invalidateQueries({ queryKey: ['profile'] });
           navigation.navigate('Tài khoản');
         } else {
           Toast.show({
@@ -134,16 +138,27 @@ export default function EditProfile({navigation}: any): getProfile[] {
           text2: 'Số điện thoại không hợp lệ ',
         });
       } else {
+        const responses = await fetch(selectedImage);
+        const blob = await responses.blob();
+        const metadata = {
+          contentType: dataImage.type
+        };
+
+        const fileRef = ref(storage, dataImage.fileName);
+        await uploadBytes(fileRef, blob, metadata);
+        const url = await getDownloadURL(fileRef);
         const response = await mutationEdit.mutate({
           fullname: newName,
           phone: newPhone,
           address: newAddress,
-          image: selectedImage,
+          image: url,
         });
 
         setUserData(response.data);
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   };
   const handleGoBack = () => {
     navigation.goBack();
@@ -164,6 +179,8 @@ export default function EditProfile({navigation}: any): getProfile[] {
         } else {
           try {
             let imageUri = response.uri || response.assets?.[0]?.uri;
+            let dataImage = response.assets?.[0];
+            setDataImage(dataImage)
             setSelectedImage(imageUri);
           } catch (error) {
             console.error('Error saving image: ', error);
@@ -188,7 +205,7 @@ export default function EditProfile({navigation}: any): getProfile[] {
       <View style={styles.contentTextInput}>
         <View style={styles.contentImage} onTouchEnd={openImagePicker}>
           {selectedImage ? (
-            <Image source={{uri: selectedImage}} style={styles.image} />
+            <Image source={{ uri: selectedImage }} style={styles.image} />
           ) : (
             <TouchableOpacity style={styles.cameraIcon}>
               <View style={styles.imagePlaceholder}>
